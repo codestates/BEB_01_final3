@@ -3,8 +3,6 @@ const app = express()
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const config = require('./config/key');
-const { auth } = require('./middleware/auth');
-const { User } = require("./models/User");
 const apiRouter = require("./routes/apiRouter")
 
 //DB connect 
@@ -16,20 +14,16 @@ mongoose.connect(config.mongoURI
 //dotenv
 require("dotenv").config();
 
+
+app.get('/api/hello', (req, res) => res.send('Hello World!~~ '))
+
+
+
 //application/x-www-form-urlencoded //application/json // use 사용 부분 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use('/api',apiRouter);
-
-
-
-
-
-
-
-
-
 
 
 const port = 5000
