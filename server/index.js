@@ -24,6 +24,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use('/api',apiRouter);
+app.use('/uploads', express.static('uploads'));
+app.use('/api/video', require('./routes/video'));
 
 console.log(1);
 const port = 5000
