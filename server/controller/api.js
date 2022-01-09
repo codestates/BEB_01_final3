@@ -16,6 +16,7 @@ module.exports= {
           })
         })
     },
+
     userLogin : (req,res)=>{
           // console.log('ping')
     //요청된 이메일을 데이터베이스에서 있는지 찾는다.
@@ -64,6 +65,7 @@ module.exports= {
             image: req.user.image
           })
     },
+
     userLogout : (req,res)=>{
         // console.log('req.user', req.user)
     User.findOneAndUpdate({ _id: req.user._id },
@@ -74,6 +76,22 @@ module.exports= {
             success: true
           })
         })
+    },
+
+    Search : (req, res) => {
+      console.log('req.user', req.user)
+      // let productId = req.query._id;
+
+      User.find({ _id: req.user._id }),
+      { token: ""}
+      , (err, user) => {
+        if (err) return res.json({message : "요청하신 id가 없습니다."}, err);
+        return res.status(200).send(user)
+          
+      
     }
-    
+  }
+
+
+
 }
