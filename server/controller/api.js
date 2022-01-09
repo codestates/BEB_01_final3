@@ -7,14 +7,20 @@ const { User } = require("../models/User");
 module.exports= {
 
     userJoin : (req,res)=>{
+      
+      console.log('req', req.body)
         const user = new User(req.body)
   
         user.save((err, userInfo) => {
-          if (err) return res.json({ success: false, err })
-          return res.status(200).json({
+          if (err) {res.json({ success: false, err })
+          return;
+        }
+        console.log('ui',userInfo)
+          res.status(200).json({
             success: true
           })
         })
+        
     },
     userLogin : (req,res)=>{
           // console.log('ping')
@@ -75,5 +81,4 @@ module.exports= {
           })
         })
     }
-    
 }
