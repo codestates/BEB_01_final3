@@ -3,7 +3,8 @@ import {
     LOGIN_USER,
     REGISTER_USER,
     AUTH_USER,
-    LOGOUT_USER
+    LOGOUT_USER,
+    SEARCH_USER
 } from './types';
 
 
@@ -48,5 +49,16 @@ export function logoutUser(dataToSubmit) {
     return {
         type: LOGOUT_USER,
         payload: request
+    } 
+}
+
+export function searchNFT(dataToSubmit) {
+    const request = axios.post('api/users/Search', dataToSubmit)
+        .then(response => response.data)
+    console.log(dataToSubmit)
+    return {
+        type: SEARCH_USER,
+        payload: request
+        
     } 
 }

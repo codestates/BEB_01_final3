@@ -15,7 +15,7 @@ router.get('/users/auth', auth, Auth);
   
 router.get('/users/logout', auth, userLogout);
 
-router.get('/users/Search', auth, Search);
+router.post('/users/Search', Search);
 
 
 module.exports = router;

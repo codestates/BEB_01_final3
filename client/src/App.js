@@ -8,7 +8,8 @@ import RegisterPage from './components/RegisterPage/RegisterPage';
 import UploadPage from './components/UploadPage/UploadPage';
 import Bar from './components/NavBar/Bar';
 import VideoDetailPage from './components/VideoDetailPage/VideoDetailPage';
-import Auth from './hoc/auth'
+import Auth from './hoc/auth';
+import Search from './components/Search/Search';
 
 function App(props) {
 
@@ -50,6 +51,7 @@ function App(props) {
           <Route exact path="/register" element={<RegisterPage />} />
           <Route exact path="/video/upload" element={<UploadPage />} />
           <Route exact path="/video/:videoId" element={<VideoDetailPage/>} />
+          <Route exact path="/Search" element={<Search />} />
           </Routes>
       </div>
     </BrowserRouter>

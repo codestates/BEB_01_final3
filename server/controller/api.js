@@ -85,17 +85,18 @@ module.exports= {
     },
 
     Search : (req, res) => {
-      console.log('req.user', req.user)
+      // console.log('req.user', req.user)
+      console.log(req.body);
+      let val = req.body.name;
+      console.log(val);
       // let productId = req.query._id;
 
-      User.find({ _id: req.user._id }),
-      { token: ""}
-      , (err, user) => {
-        if (err) return res.json({message : "요청하신 id가 없습니다."}, err);
-        return res.status(200).send(user)
+      User.find({ name: val }, (err, user) => {
+        if (err) res.json({message : "요청하신 id가 없습니다."}, err);
+        
+        res.status(200).send(user)
           
-      
-    }
+    })  
   }
 
 

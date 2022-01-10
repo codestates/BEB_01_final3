@@ -5,6 +5,9 @@ import { auth, logoutUser } from '../../actions/user_action'
 import axios from 'axios';
 import watto from '../img/watto.png'
 
+import { searchNFT } from '../../actions/user_action.js'
+
+
 function Bar({ isLogin }) {
 
     const [show, setShow] = useState(false);
@@ -12,6 +15,9 @@ function Bar({ isLogin }) {
     const [isAdmin, setIsAdmin] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+    const [searchValue, setSearchValue] = useState(false);
+    const [name, setName] = useState("");
+
 
 
     const dispatch = useDispatch();
@@ -39,6 +45,17 @@ function Bar({ isLogin }) {
             })
     }
     
+    const onSubmit = (e) => {
+        e.preventDefault();
+
+        let search = {name: name};
+
+        dispatch(searchNFT(search))
+        .then(response => {
+            // setMessage(response.payload.message);
+            if(response.payload.success) setSearchValue(true);
+        })
+    }
 
     return (
 
@@ -75,12 +92,12 @@ function Bar({ isLogin }) {
                         </Nav.Link>
                     </Nav> */}
                     <Navbar.Toggle aria-controls="navbarScroll" />
-                    <Navbar.Collapse id="navbarScroll">
+                    <Navbar.Collapse id="navbarScroll" method='get' onSubmit={onSubmit}>
                         <Form className="d-flex">
                             <FormControl
                                 type="search"
                                 placeholder="Search"
-                                className="me-4"
+                                
                                 aria-label="Search"
                             />
                             <Button variant="outline-success">Search</Button>
