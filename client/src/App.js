@@ -1,16 +1,42 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import LandingPage from './components/LandingPgae/LandingPage';
 import LoginPage from './components/LoginPage/LoginPage';
 import RegisterPage from './components/RegisterPage/RegisterPage';
+import UploadPage from './components/UploadPage/UploadPage';
+import Bar from './components/NavBar/Bar';
+import VideoDetailPage from './components/VideoDetailPage/VideoDetailPage';
+import Auth from './hoc/auth'
 
+function App(props) {
 
-function App() {
+  const [isLogin, setIsLogin] = useState(false);
+  const [userInfo, setUserInfo] = useState(null);
+
+  const isAuthenticated = () => {
+    if (userInfo) {
+      console.log('have userInfo')
+      setIsLogin(true);
+    }
+  };
+
+  const handleLogin = (req) => {
+    const addr = req.address;
+    console.log(addr);
+    setUserInfo(addr);
+    isAuthenticated();
+  }
+
+  useEffect(() => {
+    isAuthenticated();
+  }, []);
+
   return (
     <BrowserRouter>
-      <div>
+      <div className = "App">
+        <Bar isLogin={isLogin}/>
         {/*
         A <Switch> looks through all its children <Route>
         elements and renders the first one whose path
@@ -20,8 +46,10 @@ function App() {
       */}
         <Routes>
           <Route exact path="/" element={<LandingPage />} />
-          <Route exact path="/login" element={<LoginPage />} />
+          <Route exact path="/login" element={<LoginPage /> } />
           <Route exact path="/register" element={<RegisterPage />} />
+          <Route exact path="/video/upload" element={<UploadPage />} />
+          <Route exact path="/video/:videoId" element={<VideoDetailPage/>} />
           </Routes>
       </div>
     </BrowserRouter>
