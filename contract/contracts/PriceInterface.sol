@@ -1,0 +1,7 @@
+// SPDX-License-Identifier: GPL-3.0
+pragma solidity ^0.8.10;
+
+contract PriceInterface {
+
+    function price() public virtual view returns (uint){}
+}
