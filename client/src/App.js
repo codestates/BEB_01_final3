@@ -8,7 +8,7 @@ import RegisterPage from './components/RegisterPage/RegisterPage';
 import UploadPage from './components/UploadPage/UploadPage';
 import Bar from './components/NavBar/Bar';
 import VideoDetailPage from './components/VideoDetailPage/VideoDetailPage';
-import Auth from './hoc/auth'
+// import Auth from './hoc/auth'
 
 function App(props) {
 

@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const config = require('./config/key');
 const apiRouter = require("./routes/apiRouter")
 
+
 //DB connect 
 const mongoose = require('mongoose')
 mongoose.connect(config.mongoURI
@@ -26,6 +27,7 @@ app.use(cookieParser());
 app.use('/api',apiRouter);
 app.use('/uploads', express.static('uploads'));
 app.use('/api/video', require('./routes/video'));
+app.use('/api/subscribe', require('./routes/subscribe'));
 
 console.log(1);
 const port = 5000
