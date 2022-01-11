@@ -4,18 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import { Typography, Button, Form, Input, message, Row, Col } from 'antd';
 import axios from 'axios';
 import { SwapOutlined } from '@ant-design/icons';
-import { useDispatch } from 'react-redux';
-import { userTokenAmount } from '../../actions/user_action';
-
-// const user = useSelector(state => state.user)]
-// import {useSelector,useDispatch} from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+// import { userTokenAmount } from '../../actions/user_action';
 
 const { TextArea } = Input;
 const { Title, Text } = Typography;
 
 function ExchangePage() {
-	// send({success:true,user:user})
-
 	// 현재 토큰 보유량 표시
 	// 가격을 넣으면 상점으로 가기 -> 나중에
 	// 가라로 가격을 넣었다 치고 그 가격에 맞는 토큰 지급
@@ -27,7 +22,11 @@ function ExchangePage() {
 
 	const [WTBalance, setWTBalance] = useState(''); // 변환시킬 wt tokens
 	const [NWTBalance, setNWTBalance] = useState('');
-	const [Price, setPrice] = useState(''); // string 값
+	const [Price, setPrice] = useState(''); // string 값ß
+
+	const user = useSelector((state) => state.user);
+
+	// console.log('user token : ', user);
 
 	const onPaymentChange = (e) => {
 		setPrice(e.currentTarget.value);
@@ -37,30 +36,32 @@ function ExchangePage() {
 		setWTBalance(e.currentTarget.value);
 	};
 
-	// useEffect(() => {
-	// 	dispatch(userTokenAmount()).then((res) => {
-	// 		console.log(res);
-	// 	});
-	// }, []);
+	// 유저의 보유 토큰량 표시
+	useEffect(() => {
+		async function getTokens() {
+			try {
+				const res = await axios.get('/api/users/tokens');
+				const tokens = await res.data;
+				setMyWTTokens(tokens.wtToken);
+				setMyNWTTokens(tokens.nwtToken);
+			} catch (err) {
+				console.log(err);
+			}
+		}
+		getTokens();
+	}, []);
 
+	// won -> wt
 	const onSubmit1 = async (e) => {
 		e.preventDefault(); //새로고침방지
 		console.log('Price: ', Price);
-		// await axios
-		// 	.post('http://localhost:5000/contract/exchange', {
-		// 		price: Price,
-		// 	})
-		// 	.then((res) => {
-		// 		console.log(res);
-		// 	})
-		// 	.catch((err) => {
-		// 		console.log(err);
-		// 	});
+		// dispatch()
 	};
 
+	// wt -> nwt
 	const onSubmit2 = (e) => {
 		e.preventDefault(); //새로고침방지
-		// console.log(WTBalance);
+		console.log('WTBal : ', WTBalance);
 	};
 
 	return (
@@ -86,9 +87,9 @@ function ExchangePage() {
 					}}></div>
 				<label style={{ fontSize: 'x-large' }}>Token Balance</label>
 				<br />
-				<strong style={{ fontSize: 'large' }}>{1111} WT</strong>
+				<strong style={{ fontSize: 'large' }}>{myWTTokens} WT</strong>
 				<br />
-				<strong style={{ fontSize: 'large' }}>{5} NWT</strong>
+				<strong style={{ fontSize: 'large' }}>{myNWTTokens} NWT</strong>
 				<br />
 				<br />
 				<Form.Item>
