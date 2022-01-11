@@ -8,6 +8,9 @@ import RegisterPage from './components/RegisterPage/RegisterPage';
 import UploadPage from './components/UploadPage/UploadPage';
 import Bar from './components/NavBar/Bar';
 import VideoDetailPage from './components/VideoDetailPage/VideoDetailPage';
+import CreateNFT from './components/NFTcreate/CreateNFT'
+import NftList from './components/NFTcreate/NftList'
+import MyPage from './components/MyPage/MyPage'
 import Auth from './hoc/auth'
 
 function App(props) {
@@ -50,6 +53,9 @@ function App(props) {
           <Route exact path="/register" element={<RegisterPage />} />
           <Route exact path="/video/upload" element={<UploadPage />} />
           <Route exact path="/video/:videoId" element={<VideoDetailPage/>} />
+          <Route exact path="/nft/create" element={<CreateNFT/>} />
+          <Route exact path="/nft/list" element={<NftList/>} />
+          <Route exact path="/user/mypage" element={<MyPage/>} />
           </Routes>
       </div>
     </BrowserRouter>

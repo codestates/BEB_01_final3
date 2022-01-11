@@ -29,9 +29,10 @@ function LoginPage() {
 
         dispatch(loginUser(body))
             .then(response => {
+                console.log(response);
                 if (response.payload.loginSuccess) {
                     navigate('/')
-                }
+                }   
             })
             .then(() => {
 
