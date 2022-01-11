@@ -2,8 +2,11 @@ import {
     LOGIN_USER,
     REGISTER_USER,
     LOGOUT_USER,
-    AUTH_USER
+    AUTH_USER,
+    MYPAGE
 } from '../actions/types';
+
+
 
 export default function (state = {}, action) {
     switch (action.type) {
@@ -11,15 +14,19 @@ export default function (state = {}, action) {
             return { ...state, loginSuccess: action.payload }
             
         case REGISTER_USER:
-            console.log('ap',action.payload)
+           
             return { ...state, register: action.payload }
             
         
         case AUTH_USER:
+           
             return { ...state, userData: action.payload }
             
         case LOGOUT_USER:  
             return { ...state }
+        
+        case MYPAGE:
+             return {...state,userInfo:action.payload}    
         default:
             return state;
     }

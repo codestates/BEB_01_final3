@@ -32,7 +32,32 @@ const userSchema = mongoose.Schema({
     },
     tokenExp: {
         type: Number
-    }
+    },
+    publicKey: {
+        type: String,
+        trim: true,
+        unique: 1
+    },
+    privateKey: {
+        type: String,
+        trim: true,
+        unique: 1
+    },
+    wtToken: {
+        type: String,
+        trim: true,
+        unique: 1
+    },
+   erc20Token: {
+        type: String,
+        trim: true,
+        unique: 1
+    },
+    nftToken: {
+        type: String,
+        trim: true,
+        unique: 1
+    },
 })
 
 

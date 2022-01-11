@@ -1,15 +1,20 @@
 const { User } = require("../models/User");
-
-
+const Web3 = require('web3');
+const web3 = new Web3(new Web3.providers.HttpProvider("https://ropsten.infura.io/v3/c2cc008afe67457fb9a4ee32408bcac6"));
 
 
 
 module.exports= {
 
-    userJoin : (req,res)=>{
-      
-      console.log('req', req.body)
-        const user = new User(req.body)
+    userJoin : async(req,res)=>{
+      //지갑을 생성하고 지갑을 추가해주는 메서드
+      const account = await web3.eth.accounts.create(web3.utils.randomHex(32));
+      await web3.eth.accounts.wallet.add({
+        address : account.address,
+        privateKey : account.privateKey
+      })
+      const userInfo = {...req.body,publicKey:account.address,privateKey:account.privateKey,wtToken:1,erc20Token:1,nftToken:""}
+        const user = new User(userInfo)
   
         user.save((err, userInfo) => {
           if (err) {res.json({ success: false, err })
