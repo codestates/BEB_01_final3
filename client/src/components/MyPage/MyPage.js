@@ -21,29 +21,37 @@ function MyPage() {
     const [isCheck, setIsCheck] = useState(false)
     const user = useSelector(state => state.user)
     
+    
 
-    // const email = user.userData.email;
+    
       
 
    useEffect(()=>{
    
 
-      dispatch(myPageCheck("test@test")) //reducer
-      .then(response => {
-        
-   if(response.payload.nftInfo[0] !== undefined){
-    // console.log(res.data.userInfo[0]);
-    setNftInfo(response.payload.nftInfo)
-    setPrivKey(response.payload.userInfo.privateKey);
-    setPbKey(response.payload.userInfopublicKey);
-    setUserInfo(response.payload.userInfo[0]);
-    setIsCheck(true)
-    
-   }
-    })
-       
-   },[])
+    async function page (){
+
+        // const email = user.userData.email;
+        // console.log(email);
+        dispatch(myPageCheck("test@test")) //reducer
+        .then(response => {
+            console.log(response);
+     if(response.payload.nftInfo[0] !== undefined){
+    //   console.log(res.data.userInfo[0]);
+      setNftInfo(response.payload.nftInfo)
+      setPrivKey(response.payload.userInfo.privateKey);
+      setPbKey(response.payload.userInfopublicKey);
+      setUserInfo(response.payload.userInfo[0]);
+      setIsCheck(true) 
+     }
+      })
+           
+    }
+    page();
    
+   },[])
+
+
 
      
 
@@ -132,14 +140,14 @@ function MyPage() {
                   </Card.Text>
                   <Card.Title>Name : {el.nftName}</Card.Title>
                   
-                  <Button variant="primary">buy</Button>
+                  <Button variant="primary" >buy</Button>
                 </Card.Body>
               </Card>
                )
              })
              :<div style={{height:'300px'}}> NFT를 소유하고 있지않습니다.</div>
            }
-           {isCheck === true ? '123' : '321'}
+         
           
          </div>
          

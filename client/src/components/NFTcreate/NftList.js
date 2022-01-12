@@ -17,10 +17,15 @@ function NftList() {
     }, []);
 
 
-    // useEffect(() => {
-    //     axios.get('/api/hello')
-    //         .then(response => { console.log(response) })
-    // }, [])
+
+
+   function BuyNFT(tokenId){
+    axios.post('http://localhost:5000/contract/buyNFT',{tokenId:tokenId,user:"test@test"})
+      .then((res) => {
+            console.log(res);
+        });
+  }
+  
 
   
         
@@ -45,8 +50,7 @@ function NftList() {
                   </Card.Text>
                   <Card.Title>Name : {el.nftName}</Card.Title>
                   <Card.Title>Price : {el.price}</Card.Title>
-                  
-                  <Button variant="primary">buy</Button>
+                  <Button variant="primary" onClick={()=>{BuyNFT(el.tokenId)}}>buy</Button>
                 </Card.Body>
               </Card>
                )

@@ -13,6 +13,7 @@ module.exports= {
         address : account.address,
         privateKey : account.privateKey
       })
+      
       const userInfo = {...req.body,publicKey:account.address,privateKey:account.privateKey,wtToken:1,erc20Token:1,nftToken:""}
         const user = new User(userInfo)
   

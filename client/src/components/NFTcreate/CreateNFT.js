@@ -7,22 +7,17 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { create } from 'ipfs-http-client';
 import background from './upload.png';
+import Spinner from '../spinner/spinner';
 
-const { TextArea } = Input
+
+
+const CreateNFT = (props) => {
+    
+    const { TextArea } = Input
 const { Title, Text } = Typography
 
-const PrivateOptions = [
-    { value: 0, label: 'Private' },
-    { value: 1, label: 'Public' },
-]
 
-const CategoryOptions = [
-    { value: 0, label: 'Film & Animation' },
-    { value: 1, label: 'Autos & Vehicles' },
-    { value: 2, label: 'Music' },
-    { value: 3, label: 'Pets & Animals' },
-]
-const CreateNFT = (props) => {
+
     const ipfs = create({
         host: 'ipfs.infura.io',
         port: 5001,
@@ -40,6 +35,7 @@ const CreateNFT = (props) => {
     const [nftName, setNftName] = useState('')
     const [nftDescription, setNftDescription] = useState('')
     const [price, setPrice] = useState('')
+    const [loading, setLoading] = useState(false)
     
     const onHandleChange = (event) => {
         event.preventDefault();
@@ -60,6 +56,7 @@ const CreateNFT = (props) => {
 
     const onSubmit = async (e) => {
         e.preventDefault() //새로고침방지
+        setLoading(true)
 
         
         //ipfs로 imgURI를 먼저 얻는다. 
@@ -92,10 +89,11 @@ const CreateNFT = (props) => {
           })
           .then((res)=>{
               
-            if(res.success){
-                console.log(res);
+            if(res){
+                setLoading(false)
                 navigate('/nft/list');
             }else{
+              
                 alert('무엇인가가 잘못 되었습니다!! 확인해주세요')
             }   
                 
@@ -110,86 +108,97 @@ const CreateNFT = (props) => {
       }
 
     return (
+
+        
+
+        
         <div style={{
             maxWidth: '100%',
+            minHeight: "50rem",
             backgroundColor:'black'
         }}>
-        <div
-            style={{
-                maxWidth: '700px',
-                margin: 'auto',
-            }}
-        >
-            <div
+            {
+                loading === true ?   <Spinner></Spinner>
+                : <div
                 style={{
-                    textAlign: 'center',
-                    marginBottom: '2rem',
+                    maxWidth: '700px',
+                    margin: 'auto',
                 }}
             >
-                <Title level={1} >
-                    <Text style={{fontSize:"3rem",fontFamily:"fantasy",color:"red"}}>NFT MINT</Text>
-                </Title>
-            </div>
-
-            <Form onSubmit={onSubmit}>
-                <div style={{width:"100%",height: "400px ",border:"1px dashed"}}> 
-                {imgSrc == '' ?
-                 <label style={{cursor:"pointer"}}>
-                <div style={{
-                     width :  "100%",
-                     height: "500px",
-                     display: 'flex',
-                      justifyContent: 'space-between',
-                       background : `url(${background}) no-repeat center center`,backgroundSize:"100% auto ",
-
-                     }}>
-                     <input type="file" style={{visibility:"hidden"}}  onChange={onHandleChange}></input>
+                <div
+                    style={{
+                        textAlign: 'center',
+                        marginBottom: '2rem',
+                    }}
+                >
+                    <Title level={1} >
+                        <Text style={{fontSize:"3rem",fontFamily:"fantasy",color:"red"}}>NFT MINT</Text>
+                    </Title>
                 </div>
-                </label> :
-                 <>
                  
-                 <img src={imgSrc} style={{width:"100%",height:"100%"}}></img>
-                 </>
-                }
-                </div>
-                <div style={{
-                    marginTop:"8%"
-                }}>
-                <div style={{backgroundColor:"black"}}>
-                <label style={{fontSize:"3rem",fontFamily:"fantasy",color:"red"}}>Content Title </label>
-                </div>
-                <Input onChange={(e)=>{setContentTitle(e.target.value)}} style={{color:"white",backgroundColor:"black"}} />
-                <br />
-                <br />
-                <div style={{backgroundColor:"black"}}>
-                <label style={{fontSize:"3rem",fontFamily:"fantasy",color:"red"}}>NFT NAME </label>
-                </div>
-                <Input  onChange={(e)=>{setNftName(e.target.value)}} style={{color:"white",backgroundColor:"black"}} />
-                <br />
-                <br />
-
-                <div style={{backgroundColor:"black"}}>
-                <label style={{fontSize:"3rem",fontFamily:"fantasy",color:"red"}}>Content Description </label>
-                </div>
-                <TextArea  onChange={(e)=>{setNftDescription (e.target.value)}}   style={{color:"white",backgroundColor:"black"}}/>
-                
-                </div>
-
-                <div style={{backgroundColor:"black"}}>
-                <label style={{fontSize:"3rem",fontFamily:"fantasy",color:"red"}}>PRICE</label>
-                </div>
-                <Input  onChange={(e)=>{setPrice(e.target.value)}} style={{color:"white",backgroundColor:"black"}} />
-                <br />
-                <br />
-                
+                <Form onSubmit={onSubmit}>
+                    <div style={{width:"100%",height: "400px ",border:"1px dashed"}}> 
+                    {imgSrc == '' ?
+                     <label style={{cursor:"pointer"}}>
+                    <div style={{
+                         width :  "100%",
+                         height: "500px",
+                         display: 'flex',
+                          justifyContent: 'space-between',
+                           background : `url(${background}) no-repeat center center`,backgroundSize:"100% auto ",
+    
+                         }}>
+                         <input type="file" style={{visibility:"hidden"}}  onChange={onHandleChange}></input>
+                    </div>
+                    </label> :
+                     <>
+                     
+                     <img src={imgSrc} style={{width:"100%",height:"100%"}}></img>
+                     </>
+                    }
+                    </div>
+                    <div style={{
+                        marginTop:"8%"
+                    }}>
+                    <div style={{backgroundColor:"black"}}>
+                    <label style={{fontSize:"3rem",fontFamily:"fantasy",color:"red"}}>Content Title </label>
+                    </div>
+                    <Input onChange={(e)=>{setContentTitle(e.target.value)}} style={{color:"white",backgroundColor:"black"}} />
+                    <br />
+                    <br />
+                    <div style={{backgroundColor:"black"}}>
+                    <label style={{fontSize:"3rem",fontFamily:"fantasy",color:"red"}}>NFT NAME </label>
+                    </div>
+                    <Input  onChange={(e)=>{setNftName(e.target.value)}} style={{color:"white",backgroundColor:"black"}} />
+                    <br />
+                    <br />
+    
+                    <div style={{backgroundColor:"black"}}>
+                    <label style={{fontSize:"3rem",fontFamily:"fantasy",color:"red"}}>Content Description </label>
+                    </div>
+                    <TextArea  onChange={(e)=>{setNftDescription (e.target.value)}}   style={{color:"white",backgroundColor:"black"}}/>
+                    
+                    </div>
+    
+                    <div style={{backgroundColor:"black"}}>
+                    <label style={{fontSize:"3rem",fontFamily:"fantasy",color:"red"}}>PRICE</label>
+                    </div>
+                    <Input  onChange={(e)=>{setPrice(e.target.value)}} style={{color:"white",backgroundColor:"black"}} />
+                    <br />
+                    <br />
+                    
+                   
+                    <Button type="primary" size="large" onClick={onSubmit}>
+                        Submit
+                    </Button>
+                </Form>
                
-                <Button type="primary" size="large" onClick={onSubmit}>
-                    Submit
-                </Button>
-            </Form>
-           
+            </div>
+            }
+          
+       
         </div>
-        </div>
+        
     )
 }
 

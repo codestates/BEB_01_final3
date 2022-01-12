@@ -7,6 +7,7 @@ const config = require('./config/prod');
 const apiRouter = require('./routes/apiRouter');
 const cors = require('cors');
 const contractRouter = require('./routes/coinRouter');
+const { auth } = require('./middleware/auth');
 
 const {User} = require('./models/User')
 const {Nft} = require('./models/Nft')
@@ -46,6 +47,7 @@ app.post('/',(req,res)=>{
 const email = req.body.email
 
 
+
 console.log(email);
 User.find({email:email},(err,userResult)=>{
 	//정보에 해당되는 Nft정보를 다시 긁어와서 보내준다.
@@ -62,7 +64,10 @@ User.find({email:email},(err,userResult)=>{
 
 })
 
+
 })
+
+
 const port = 5000
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
