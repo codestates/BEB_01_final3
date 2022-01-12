@@ -23,7 +23,7 @@ contract WTToken is ERC20, Ownable, Price {
         // _approve(to, contractAddress, allowance(to, contractAddress) + amount);  // approve 추가
 
         return true;
-    }
+    }   
 
     function getPrice() public view returns (uint256) {
         return _price;
