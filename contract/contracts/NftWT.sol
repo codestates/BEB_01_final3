@@ -50,7 +50,7 @@ contract WATTONFT is ERC721URIStorage, Ownable {
         return newItemId;
     }
 
-   // 3. approveSale함수를 사용해서 소유자가 msg.seder에게 대납소유권을 허락해주는 방식. 그래야지 safeTransferFrom을 사용할 수 가 있다.
+   // 3. approveSale함수를 사용해서 소유자가 msg.sender에게 대납소유권을 허락해주는 방식. 그래야지 safeTransferFrom을 사용할 수 가 있다.
     function approveSale(address receipent) onlyOwner public {
          _setApprovalForAll(receipent, msg.sender, true);
     }

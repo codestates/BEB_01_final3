@@ -33,6 +33,10 @@ app.use(cookieParser());
 app.use('/api', apiRouter);
 app.use('/uploads', express.static('uploads'));
 app.use('/api/video', require('./routes/video'));
+app.use('/api/subscribe', require('./routes/subscribe'));
+app.use('/api/comment', require('./routes/comment'));
+app.use('/api/like', require('./routes/like'));
+//routes폴더로 보내준다
 
 app.use('/contract', contractRouter);
 

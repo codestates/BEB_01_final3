@@ -12,7 +12,7 @@ import CreateNFT from './components/NFTcreate/CreateNFT';
 import NftList from './components/NFTcreate/NftList';
 import MyPage from './components/MyPage/MyPage';
 import ExchangePage from './components/ExchangePage/ExchangePage';
-import Auth from './hoc/auth';
+// import Auth from './hoc/auth';
 
 function App(props) {
 	const [isLogin, setIsLogin] = useState(false);
