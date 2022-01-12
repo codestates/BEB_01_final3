@@ -5,7 +5,7 @@ import { Typography, Button, Form, Input, message, Row, Col } from 'antd';
 import axios from 'axios';
 import { SwapOutlined } from '@ant-design/icons';
 import { useSelector, useDispatch } from 'react-redux';
-// import { userTokenAmount } from '../../actions/user_action';
+import { wtTokenExchange } from '../../actions/token_action';
 
 const { TextArea } = Input;
 const { Title, Text } = Typography;
@@ -55,7 +55,9 @@ function ExchangePage() {
 	const onSubmit1 = async (e) => {
 		e.preventDefault(); //새로고침방지
 		console.log('Price: ', Price);
-		// dispatch()
+		dispatch(wtTokenExchange(Price)).then((response) => {
+			console.log(response);
+		});
 	};
 
 	// wt -> nwt
