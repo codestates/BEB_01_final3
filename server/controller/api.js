@@ -113,4 +113,10 @@ module.exports = {
 			res.json({ success: false, err });
 		}
 	},
+
+	exchange_WTToken: (req, res) => {
+		console.log('Aa');
+		console.log(req.body);
+		res.json({ success: true });
+	},
 };
