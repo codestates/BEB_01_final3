@@ -30,6 +30,39 @@ function Subscribe(props) {
       }
     );
   }, []);
+
+  const onSubscribe = () => {
+    let subscribedVariable = {
+      userTo: props.userTo,
+      userFrom: props.userFrom,
+    };
+    if (Subscribed) {
+      //이미구독중이라면
+      axios.post('/api/subscribe/unSubscribe', subscribedVariable).then(
+        (response) => {
+          if (response.data.success) {
+            setSubscribeNumber(SubscribeNumber - 1);
+            setSubscribed(!Subscribed);
+          } else {
+            alert('구독 취소 하는데 실패 했습니다.');
+          }
+        }
+      );
+    } else {
+      //구독중이 아니라면
+      axios.post('/api/subscribe/Subscribe', subscribedVariable).then(
+        (response) => {
+          if (response.data.success) {
+            setSubscribeNumber(SubscribeNumber + 1);
+            setSubscribed(!Subscribed);
+          } else {
+            alert('구독 하는데 실패 했습니다.');
+          }
+        }
+      );
+    }
+  };
+
   return (
     <div>
       <button
@@ -42,7 +75,7 @@ function Subscribe(props) {
           fontSize: '1rem',
           textTransform: 'uppercase',
         }}
-        onClick
+        onClick={onSubscribe}
       >
         {SubscribeNumber} {Subscribed ? 'Subscribed' : 'Subscribe'}
       </button>

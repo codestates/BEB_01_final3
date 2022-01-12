@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+require('dotenv').config();
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const config = require('./config/prod');
@@ -8,13 +9,14 @@ const apiRouter = require('./routes/apiRouter');
 
 //DB connect
 const mongoose = require('mongoose');
+
+
 mongoose
 	.connect(config.mongoURI)
 	.then(() => console.log('MongoDB Connected success !!'))
 	.catch((err) => console.log(err));
 
-//dotenv
-require('dotenv').config();
+
 
 app.get('/api/hello', (req, res) => res.send('Hello World!~~ '));
 
@@ -26,6 +28,9 @@ app.use('/api', apiRouter);
 app.use('/uploads', express.static('uploads'));
 app.use('/api/video', require('./routes/video'));
 app.use('/api/subscribe', require('./routes/subscribe'));
+app.use('/api/comment', require('./routes/comment'));
+app.use('/api/like', require('./routes/like'));
+//routes폴더로 보내준다
 
 // app.use('/contract', contractRouter);
 
