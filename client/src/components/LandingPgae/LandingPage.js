@@ -33,7 +33,7 @@ function LandingPage() {
         var seconds = Math.floor(video.duration - minutes * 60);
     
         return (
-          <Col lg={10} md={5} xs={24} key={index}>
+          <Col lg={7} md={10} xs={24} key={index}>
             {/*lg:가장클때 6그리드를쓰겠다. md:중간크기일때 8그리드를 쓰겠다. 
             xs:가장작은 크기일때는 24그리드를 쓰겠다. 총24그리드 */}
             <div style={{ position: 'relative' }}>
@@ -82,12 +82,15 @@ function LandingPage() {
         );
       });
       return (
-        <div style={{ width: '85%', margin: '3rem auto' }}>
+        <div style={{ width: '70%', margin: '3rem auto', marginRight: '100px' }}>
           <Title level={0}>Survivals</Title>
           <hr />
           <Row gutter={16}>
           {renderCards}
           </Row>
+          <hr />
+          <Title level={0}>General Contents</Title>
+          <hr />
         </div>
       );
     };
