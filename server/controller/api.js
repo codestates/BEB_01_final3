@@ -1,3 +1,4 @@
+require('dotenv').config();
 const { User } = require('../models/User');
 const { Nft } = require('../models/Nft');
 const Web3 = require('web3');
@@ -7,17 +8,23 @@ const web3 = new Web3(
 	)
 );
 const fs = require('fs');
-const { infuraWeb3Provider, newContract } = require('./index');
-// abi json
-var jsonFile = fs.readFileSync('server/abi/WTToken.json', 'utf-8');
-const WTtokenAbi = JSON.parse(jsonFile);
-require('dotenv').config();
+const { newContract } = require('./index');
+
+//계정부분
 const serverAddress = process.env.SERVERADDRESS;
 const serverPrivateKey = process.env.SERVERPRIVATEKEY;
 
+
+// abi json
+const WTABI = fs.readFileSync('server/abi/WTToken.json', 'utf-8');
 const NFTABI = fs.readFileSync('server/abi/NFTWT.json', 'utf8');
 const nftAbi = JSON.parse(NFTABI);
-const nftContract = new web3.eth.Contract(nftAbi, process.env.NFTCA);
+const wtAbi = JSON.parse(WTABI);
+
+//contract
+const nftContract = newContract(web3,nftAbi,process.env.NFTTOKENCA);	
+const wtContract = newContract(web3,wtAbi,process.env.WTTOKENCA);	
+
 
 module.exports = {
 	userJoin: async (req, res) => {
@@ -43,7 +50,7 @@ module.exports = {
 
 			const tx = {
 				from: sendAccount,
-				to: process.env.NFTCA,
+				to: process.env.NFTTOKENCA,
 				nonce: nonce,
 				gas: 5000000,
 				data: data,
@@ -175,11 +182,9 @@ module.exports = {
 			userPK.privateKey.length - 1
 		);
 		// infura network
-		const web3 = infuraWeb3Provider(
-			'https://ropsten.infura.io/v3/c2cc008afe67457fb9a4ee32408bcac6'
-		);
+		
 
-		web3.eth.accounts.wallet.add(privateKey); // user의 개인키
+		// web3.eth.accounts.wallet.add(privateKey); // user의 개인키
 		// 963c26c5e6e6b4229961bf77c901e8634ba200cfac91798ecf0a8c9e460437cf
 
 		// contract 불러오기
@@ -275,18 +280,14 @@ module.exports = {
 		);
 
 		// infura network
-		const web3 = infuraWeb3Provider(
-			'https://ropsten.infura.io/v3/c2cc008afe67457fb9a4ee32408bcac6'
-		);
+		
 	},
 
 	// 수정중.. (server 계정의 auth 유지.. 방법알기)
 	// 서버계정 wt token 받는 방법 : http://localhost:5000/api/contract/token/faucet - postman get 요청
 	serverWT_faucet: async (req, res) => {
 		// web3.eth.accounts.wallet.add(serverPrivateKey);
-		const web3 = infuraWeb3Provider(
-			'https://ropsten.infura.io/v3/c2cc008afe67457fb9a4ee32408bcac6'
-		); // infura ropsten 으로 바꾸기
+		
 
 		// contract 가져오기
 		const myContract = await newContract(
@@ -355,15 +356,14 @@ module.exports = {
 			price,
 		} = req.body.result;
 
-		const sendAccount = process.env.serverAddress;
-		const privateKey = process.env.serverAddress_PK;
+		
 		const data = await nftContract.methods
 			.mintNFT(tokenURI, web3.utils.toWei(price, 'ether'))
 			.encodeABI();
-		const nonce = await web3.eth.getTransactionCount(sendAccount, 'latest');
+		const nonce = await web3.eth.getTransactionCount(serverAddress, 'latest');
 		const tx = {
-			from: sendAccount,
-			to: process.env.NFTCA,
+			from: serverAddress,
+			to: process.env.NFTTOKENCA,
 			nonce: nonce,
 			gas: 5000000,
 			data: data,
@@ -372,7 +372,7 @@ module.exports = {
 		try {
 			const signedTx = await web3.eth.accounts.signTransaction(
 				tx,
-				privateKey
+				serverPrivateKey
 			);
 			await web3.eth
 				.sendSignedTransaction(signedTx.rawTransaction)
@@ -380,7 +380,7 @@ module.exports = {
 					console.log(txHash);
 					let logs = txHash.logs;
 					const tokenId = web3.utils.hexToNumber(logs[0].topics[3]);
-					console.log('🎉 The hash of your transaction is: ');
+					console.log('🎉 The hash of your transaction is');
 					const nft = new Nft();
 					nft.address = sendAccount;
 					(nft.tokenId = tokenId), (nft.contentTitle = contentTitle);
@@ -426,8 +426,8 @@ module.exports = {
 		const nonce = await web3.eth.getTransactionCount(sendAccount, 'latest');
 
 		const tx = {
-			from: sendAccount,
-			to: process.env.NFTCA,
+			from: serverAddress,
+			to: process.env.NFTTOKENCA,
 			nonce: nonce,
 			gas: 5000000,
 			data: data,
@@ -482,15 +482,13 @@ module.exports = {
 		const tokenId = req.body.tokenId;
 		console.log(tokenId);
 		const sellPrice = req.body.sellPrice;
-		const sendAccount = process.env.serverAddress;
-		const privateKey = process.env.serverAddress_PK;
 		const data = await nftContract.methods
 			.setForSale(tokenId, web3.utils.toWei(sellPrice, 'ether'))
 			.encodeABI();
-		const nonce = await web3.eth.getTransactionCount(sendAccount, 'latest');
+		const nonce = await web3.eth.getTransactionCount(serverAddress,'latest');
 		const tx = {
-			from: sendAccount,
-			to: process.env.NFTCA,
+			from: serverAddress,
+			to: process.env.NFTTOKENCA,
 			nonce: nonce,
 			gas: 5000000,
 			data: data,
@@ -501,7 +499,7 @@ module.exports = {
 		try {
 			const signedTx = await web3.eth.accounts.signTransaction(
 				tx,
-				privateKey
+				serverPrivateKey
 			);
 			await web3.eth
 				.sendSignedTransaction(signedTx.rawTransaction)

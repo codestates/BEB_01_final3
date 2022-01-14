@@ -16,7 +16,7 @@ function NFTbuy ({nftlist}) {
     
 
    function BuyNFT(tokenId){
-    axios.post('http://localhost:5000/contract/buyNFT',{tokenId:tokenId,buyer:"test1@test1"})
+    axios.post('http://localhost:5000/api/contract/buyNFT',{tokenId:tokenId,buyer:"test1@test1"})
       .then((res) => {
               
         
