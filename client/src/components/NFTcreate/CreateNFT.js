@@ -6,7 +6,7 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { create } from 'ipfs-http-client';
-import background from './upload.png';
+import background from '../img/wtimg.png';
 import Spinner from '../spinner/spinner';
 
 
@@ -84,27 +84,19 @@ const { Title, Text } = Typography
           }
 
           
-          axios.post("http://localhost:5000/contract/",{
+          axios.post("http://localhost:5000/contract/nft/create",{
               result : result
           })
           .then((res)=>{
               
-            if(res){
+            if(res.data.success){
                 setLoading(false)
                 navigate('/nft/list');
-            }else{
-              
+            }else if(res.data.failed === false){
+                setLoading(false)   
                 alert('무엇인가가 잘못 되었습니다!! 확인해주세요')
             }   
-                
-            
-         
-            
           })
-    
-        
-        
-        
       }
 
     return (

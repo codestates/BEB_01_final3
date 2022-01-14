@@ -1,61 +1,47 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
-// import { Facoad } from 'react-icons/fa'
-import {Card,Button} from 'react-bootstrap'
-
+import { useNavigate } from 'react-router-dom';
+import NftListSpinner from '../spinner/nftListSpinner';
+import NFTbuy from './NFTbuy'
 
 
 function NftList() {
 
     const [nft, setNft] = useState([]);
+    const navigate = useNavigate();
+    const [loading, setLoading] = useState(false)
+    
 
     useEffect(() => {
-        axios.get('http://localhost:5000/contract/nftList').then((res) => {
+        axios.get('http://localhost:5000/contract/nft/list').then((res) => {
+          if(res.data.data.length !== 0){
             setNft(res.data.data)
-            console.log(res.data.data);
+            console.log(res.data.data.length);
+            setLoading(true)
+          }else if( res.data.data.lenght === 0){
+            setLoading(false)
+          }
+          
         });
     }, []);
 
-
-
-
-   function BuyNFT(tokenId){
-    axios.post('http://localhost:5000/contract/buyNFT',{tokenId:tokenId,user:"test@test"})
-      .then((res) => {
-            console.log(res);
-        });
-  }
-  
-
-  
-        
         return (
           <div style={{
-            display:'flex',
+            width:'100%', 
+            height:'100%',
+             display:'flex',
             flexWrap:'wrap',
-            margin:'2%',
-            backgroundColor:'gray'
-            
+            justifyContent: 'center',
+             alignContent: 'center',
+            backgroundColor:'black'
           }}>
-           {
-             nft.map((el)=>{
-               return(
-                <Card style={{ width: '18rem', margin:"1%"}}>
-                <Card.Img variant="top" src={el.imgUri} style={{height:'220px'}} />
-                <Card.Body>
-                  <Card.Title>Content : {el.contentTitle}</Card.Title>
-                  <Card.Title>Name : {el.nftName}</Card.Title>
-                  <Card.Text>
-                    desription : {el.description}
-                  </Card.Text>
-                  <Card.Title>Name : {el.nftName}</Card.Title>
-                  <Card.Title>Price : {el.price}</Card.Title>
-                  <Button variant="primary" onClick={()=>{BuyNFT(el.tokenId)}}>buy</Button>
-                </Card.Body>
-              </Card>
-               )
-             })
-           }
+
+            {
+             loading === false ?
+             <NftListSpinner></NftListSpinner>
+             : <NFTbuy nftlist={nft}></NFTbuy>
+} 
+           
           </div>
         );
 

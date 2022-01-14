@@ -68,6 +68,7 @@ export function searchNFT(dataToSubmit) {
 }
 
 export function myPageCheck(email){
+                                
     const request = axios.post('http://localhost:5000',{
          email:email
     }).then(res => res.data);
