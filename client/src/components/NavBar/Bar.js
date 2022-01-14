@@ -41,7 +41,7 @@ function Bar({ isLogin }) {
 					setIsAuth(false);
 				} else {
 					console.log('로그아웃 실패');
-					alert('로그아웃 하는데 실패 했습니다.');
+					alert('로그아웃 하는데 실패 했습니다');
 				}
 			});
 	};
