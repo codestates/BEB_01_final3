@@ -8,15 +8,21 @@ import RegisterPage from './components/RegisterPage/RegisterPage';
 import UploadPage from './components/UploadPage/UploadPage';
 import Bar from './components/NavBar/Bar';
 import VideoDetailPage from './components/VideoDetailPage/VideoDetailPage';
+import Auth from './hoc/auth';
+import Search from './components/Search/Search';
 import CreateNFT from './components/NFTcreate/CreateNFT';
 import NftList from './components/NFTcreate/NftList';
 import MyPage from './components/MyPage/MyPage';
 import ExchangePage from './components/ExchangePage/ExchangePage';
-// import Auth from './hoc/auth';
+
+// const express = require("express");
+// const app = express();
+// const cors = require("cors");
 
 function App(props) {
 	const [isLogin, setIsLogin] = useState(false);
 	const [userInfo, setUserInfo] = useState(null);
+
 
 	const isAuthenticated = () => {
 		if (userInfo) {
@@ -36,21 +42,19 @@ function App(props) {
 		isAuthenticated();
 	}, []);
 
-	return (
-		<BrowserRouter>
-			<div className='App'>
-				<Bar isLogin={isLogin} />
-				{/*
-        A <Switch> looks through all its children <Route>
-        elements and renders the first one whose path
-        matches the current URL. Use a <Switch> any time
-        you have multiple routes, but you want only one
-        of them to render at a time
-      */}
-				<Routes>
+  useEffect(() => {
+    isAuthenticated();
+  }, []);
+  return (
+    <BrowserRouter>
+      	<div className = "App">
+		<Bar isLogin={isLogin} />
+
+	  	<Routes>
 					<Route exact path='/' element={<LandingPage />} />
 					<Route exact path='/login' element={<LoginPage />} />
 					<Route exact path='/register' element={<RegisterPage />} />
+					<Route exact path='/Search' element={<Search />} />
 					<Route
 						exact
 						path='/video/upload'
@@ -69,6 +73,10 @@ function App(props) {
 			</div>
 		</BrowserRouter>
 	);
+				
 }
+
+// app.use(cors());
+
 
 export default App;
