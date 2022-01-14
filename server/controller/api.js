@@ -1,10 +1,15 @@
 const { User } = require('../models/User');
+const { Nft } = require('../models/Nft');
 const Web3 = require('web3');
 const web3 = new Web3(
 	new Web3.providers.HttpProvider(
 		'https://ropsten.infura.io/v3/c2cc008afe67457fb9a4ee32408bcac6'
 	)
 );
+const fs = require('fs');
+const NFTABI = fs.readFileSync('server/abi/NFTWT.json', 'utf8');
+const nftAbi = JSON.parse(NFTABI);
+const nftContract = new web3.eth.Contract(nftAbi, process.env.NFTCA);
 
 module.exports = {
 	userJoin: async (req, res) => {
@@ -16,26 +21,50 @@ module.exports = {
 			address: account.address,
 			privateKey: account.privateKey,
 		});
-		const userInfo = {
-			...req.body,
-			publicKey: account.address,
-			privateKey: account.privateKey,
-			wtToken: 5,
-			nwtToken: 5,
-			nftToken: '',
-		};
-		const user = new User(userInfo);
 
-		user.save((err, userInfo) => {
-			if (err) {
-				res.json({ success: false, err });
-				return;
-			}
-			console.log('ui', userInfo);
-			res.status(200).json({
-				success: true,
+		 try{
+		const sendAccount = process.env.serverAddress;
+		const privateKey = process.env.serverAddress_PK;
+		  const data =  await nftContract.methods.approveSale(account.address).encodeABI();
+		  const nonce = await web3.eth.getTransactionCount(sendAccount, 'latest');
+	
+		const tx = {
+			from: sendAccount,
+			to: process.env.NFTCA,
+			nonce: nonce,
+			gas: 5000000,
+			data: data,
+		  };
+	  
+		  const signedTx = await web3.eth.accounts.signTransaction(tx, privateKey);
+		  const hash = await web3.eth.sendSignedTransaction(signedTx.rawTransaction).on('receipt',(txHash)=>{
+	
+			const userInfo = {
+				...req.body,
+				publicKey: account.address,
+				privateKey: account.privateKey,
+				wtToken: 5,
+				nwtToken: 5,
+				nftToken: '',
+			};
+			const user = new User(userInfo);
+	
+			user.save((err, userInfo) => {
+				if (err) {
+					res.json({ success: false, err });
+					return;
+				}
+				console.log('ui', userInfo);
+				res.status(200).json({
+					success: true,
+				});
 			});
-		});
+		  })
+		}catch(e){
+			console.log(e);
+			res.json({failed:false})
+		}
+		
 	},
 	userLogin: (req, res) => {
 		// console.log('ping')
@@ -119,4 +148,190 @@ module.exports = {
 		console.log(req.body);
 		res.json({ success: true });
 	},
+	NFTlist : (req,res)=>{
+		Nft.find({sale:true}, (err, result) => {
+			res.json({ data: result });
+		});
+	},
+	createNFT : async (req,res)=>{
+
+	const {
+		userId,
+		contentTitle,
+		nftName,
+		nftDescription,
+		imgURI,
+		tokenURI,
+		price,
+	} = req.body.result;
+
+		const sendAccount = process.env.serverAddress;
+	const privateKey = process.env.serverAddress_PK;
+		const data =  await nftContract.methods.mintNFT(tokenURI,web3.utils.toWei(price,'ether')).encodeABI();
+		const nonce = await web3.eth.getTransactionCount(sendAccount, 'latest');
+	const tx = {
+		from: sendAccount,
+		to: process.env.NFTCA,
+		nonce: nonce,
+		gas: 5000000,
+		data: data,
+		};
+
+
+		try{
+		
+
+	const signedTx = await web3.eth.accounts.signTransaction(tx, privateKey);
+	await web3.eth.sendSignedTransaction(signedTx.rawTransaction).on('receipt',(txHash)=>{
+	      
+		console.log(txHash);
+		let logs = txHash.logs;
+		const tokenId = web3.utils.hexToNumber(logs[0].topics[3]);
+		console.log("🎉 The hash of your transaction is: ");
+			const nft = new Nft();
+			nft.address = sendAccount     
+				nft.tokenId = tokenId,
+				nft.contentTitle = contentTitle
+				nft.nftName = nftName
+				nft.description = nftDescription
+				nft.imgUri = imgURI
+				nft.tokenUrl = tokenURI
+			nft.price = price
+
+			nft.save((err, userInfo) => {
+					
+			if(!err){
+			res.json({success:true})
+			}else{
+				res.json({failed:false})
+			}
+				})
+		
+	})
+}catch(e){
+   console.log("err"+e);
+   res.json({failed:false})
+}
+	},
+	buyNFT : async (req,res)=>{
+    
+	const tokenId = req.body.tokenId;
+	const email = req.body.buyer;
+
+	const userInfo = await User.findOne({ email:email}).exec();
+	const buyer = userInfo.publicKey;
+
+	console.log(tokenId);
+	const owner = await nftContract.methods.ownerOf(tokenId).call();
+
+  
+	if(owner === buyer){
+	  res.json({failed: false, reason : "owner is not buy "})
+	  return
+	}
+  
+	const sendAccount = process.env.serverAddress;
+	const privateKey = process.env.serverAddress_PK;
+	  const data =  await nftContract.methods.purchaseToken(tokenId,buyer).encodeABI();
+	  const nonce = await web3.eth.getTransactionCount(sendAccount, 'latest');
+
+	const tx = {
+		from: sendAccount,
+		to: process.env.NFTCA,
+		nonce: nonce,
+		gas: 5000000,
+		data: data,
+	  };
+	  try{
+	  const signedTx = await web3.eth.accounts.signTransaction(tx, privateKey);
+	  await web3.eth.sendSignedTransaction(signedTx.rawTransaction,(err,hash)=>{
+		  
+		  Nft.findOneAndUpdate({tokenId:tokenId},{address:buyer,sale:false},(err,result)=>{
+		   console.log('DB success');
+		 
+		   res.json({success:true , detail : 'db store success and block update success'});
+	   })
+
+	})
+  }catch(e){
+	  console.log(e);
+	  res.json({failed:false , reason:'i do not know'})
+  }
+  
+	},
+	myPage : (req,res)=>{
+
+		try{
+			
+		const email = req.body.email
+		console.log(email);
+       User.find({email:email},(err,userResult)=>{
+		   console.log(userResult[0].publicKey);
+	   Nft.find({address : userResult[0].publicKey},(req,nftResult)=>{
+		res.json({userInfo : userResult,
+		          nftInfo : nftResult
+		})
+	})
+})
+		}
+		catch(e){
+			console.log(e);
+			res.json({faile:false, reason:'i do not know'})
+		}
+	},
+
+	setForSell : async (req,res)=>{
+		 
+			const tokenId = req.body.tokenId;
+			console.log(tokenId);
+			const sellPrice = req.body.sellPrice;
+			const sendAccount = process.env.serverAddress;
+	const privateKey = process.env.serverAddress_PK;
+	  const data =  await nftContract.methods.setForSale(tokenId,sellPrice).encodeABI();
+	  const nonce = await web3.eth.getTransactionCount(sendAccount, 'latest');
+	const tx = {
+		from: sendAccount,
+		to: process.env.NFTCA,
+		nonce: nonce,
+		gas: 5000000,
+		data: data,
+	  };
+
+	  console.log(tx);
+  
+	    try{
+	  const signedTx = await web3.eth.accounts.signTransaction(tx, privateKey);
+	  await web3.eth.sendSignedTransaction(signedTx.rawTransaction).on('receipt',(txHash)=>{
+
+		console.log(txHash);
+	
+		Nft.findOneAndUpdate({tokenId:tokenId},{sale:true},(err,result)=>{
+			console.log('DB success');
+			res.json({success:true , detail : 'db store success and block update success'});
+			if(err) console.log(err);
+		})
+		
+	  })
+	}catch(e){
+		console.log(e);
+		res.json({failed:false})
+	}
+	  
+	  
+
+	},
+	ownerOf : async (req,res)=>{
+		const owner = await nftContract.methods.ownerOf('85').call();
+
+		console.log(owner);
+	},
+	cancel : (req,res)=>{
+		const tokenId = req.body.tokenId;
+		Nft.findOneAndUpdate({tokenId:tokenId},{sale:false},(err,result)=>{
+			console.log('user gonna cancel sell for nft');
+			res.json({success:true , detail : 'user gonna cancel sell for nft'});
+			if(err) console.log(err);
+		})
+	}
+	
 };
