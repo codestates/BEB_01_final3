@@ -55,10 +55,7 @@ contract WATTONFT is ERC721URIStorage, Ownable {
          _setApprovalForAll(receipent, msg.sender, true);
     }
 
-     // TokenId를 얻는 함수.
-    function TokenId(string memory tokenUri) public view returns(uint256){
-        return getTokenId[tokenUri];
-    }
+   
 
      // 4.setForSale함수를 이용해서 소유자가 tokenId에 가격을 지정할 수 있다. 
     function setForSale(uint256 _tokenId, uint256 _price) public onlyOwner {

@@ -26,7 +26,7 @@ export default function (state = {}, action) {
             return { ...state }
         
         case SEARCH_NFT:
-            console.log('reducer', action.payload);
+            // console.log('reducer', action.payload);
             return {...state, searchNft: action.payload}
 
         case MYPAGE:
