@@ -3,7 +3,7 @@ import {
     REGISTER_USER,
     LOGOUT_USER,
     AUTH_USER,
-    SEARCH_USER,
+    SEARCH_NFT,
     MYPAGE
 } from '../actions/types';
 
@@ -25,9 +25,9 @@ export default function (state = {}, action) {
         case LOGOUT_USER:  
             return { ...state }
         
-        case SEARCH_USER:
+        case SEARCH_NFT:
             console.log('reducer', action.payload);
-            return {...state, searchUser: action.payload}
+            return {...state, searchNft: action.payload}
 
         case MYPAGE:
              return {...state,userInfo:action.payload}    

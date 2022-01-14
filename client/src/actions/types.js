@@ -3,7 +3,7 @@ export const LOGOUT_USER = 'logout_user';
 export const REGISTER_USER = 'register_user';
 export const AUTH_USER = 'auth_user';
 export const MYPAGE = 'mypage';
-export const SEARCH_USER = "search_user";
+export const SEARCH_NFT = "search_nft";
 
 
 // coin change
