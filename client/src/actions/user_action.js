@@ -55,7 +55,7 @@ export function logoutUser(dataToSubmit) {
 export function searchNFT(dataToSubmit) {
     const request = axios.post('api/users/Search', dataToSubmit)
         .then(response => response.data)
-    console.log(dataToSubmit)
+    // console.log(dataToSubmit)
     return {
         type: SEARCH_USER,
         payload: request

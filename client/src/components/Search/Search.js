@@ -3,43 +3,91 @@ import { Navbar, Nav, NavDropdown, Button, Container, Offcanvas, Form, FormContr
 // import { searchPosts } from './searchPost';
 import { useDispatch } from 'react-redux';
 
+import axios from "axios";
+import { Col, Icon, Row } from 'antd';
+import { Card } from 'antd';
+import Meta from 'antd/lib/card/Meta';
+import { useSelector } from 'react-redux';
 
 import { searchNFT } from '../../actions/user_action.js'
 
 const Search = (props) => {
     const dispatch = useDispatch();
     const [searchValue, setSearchValue] = useState("");
+    const [Products, setProducts] = useState([])
 
+    const [Skip, setSkip] = useState(0)
+    const [Limit, setLimit] = useState(8)
 
-    // const result = "";
+    const user = useSelector(state=> state.user)
+    console.log('user', user)
+    
+    // export function searchNFT(dataToSubmit) {
+    //     const request = axios.post('api/users/Search', dataToSubmit)
+    //         .then(response => response.data)
+    //     // console.log(dataToSubmit)
+    //     return {
+    //         type: SEARCH_USER,
+    //         payload: request
+            
+    //     } 
+    // }
 
-    // const products = [
+    // useEffect(() => {
 
-    //     "desktop",
-    
-    //     "notebook",
-    
-    //     "smart phone",
-    
-    //     "clock",
-    
-    //     "chair",
-    
-    //     "iPad"
-    
-    //   ]
+    //     let body = {
+    //         skip: Skip,
+    //         limit: Limit
+    //     }
 
-    // const onSubmit = (e) => {
-    //     e.preventDefault();
-    //     const { page } = qs.parse(location.search, {
-    //         ignoreQueryPrefix: true,
-    //     });
+    //     getProducts(body)
+    // }, [])
+
+    // const getProducts = (e) => {
+    //     // e.preventDefault();
+    //     console.log('searchvalue', searchValue)
+    //     let search = {name: searchValue};
+
+    //     dispatch(searchNFT(search))
+    //     .then(response => {
+    //         // setMessage(response.payload.message);
+    //         if(response.payload.success) {
+    //             console.log(response);
+    //             setProducts(response.payload.user)
+
+    //         }
+    //         // console.log(response.payload);
+
+    //     })
+    // }
+    // const [ result, setresult ] = useState([{
+    //     name: '',
+    //     email: ''
+    // }])
+
+    // useEffect(async() => {
+    //     try{
+    //         const res = await user.searchUser.user
+    //         const inputData = await res.prototype.map((rowData) => ({
+    //             name: rowData.name,
+    //             email: rowData.email
+    //             })
+    //         )
+    //         setresult(result.concat(inputData))
+    //     } catch(e){
+    //         console.error(e.message)
+    //     }
+    // },[])
+    const renderResult = user.searchUser.user.map((product, index) => {
+
+        console.log('product', product)
+        return <nav>
+            result = {product.name}, {product.email}
+        </nav>
+            
         
-    //     dispatch(searchPosts({ page: page, content: searchValue }));
-    //     // option: options
-    //     setValue('');
-    // };
-
+    })
+   
     const onSubmit = (e) => {
         // console.log(searchValue);        
 
@@ -50,11 +98,11 @@ const Search = (props) => {
         dispatch(searchNFT(search))
         .then(response => {
             // setMessage(response.payload.message);
-            if(response.payload.success) {
+            if(response.payload.searchUser) {
                 // console.log(response.payload);
 
             }
-            console.log(response.payload);
+            // console.log(response.payload);
 
         })
 
@@ -90,24 +138,9 @@ const Search = (props) => {
                 /> */}
             </Navbar.Brand>
             <Navbar.Toggle aria-controls="navbarScroll" />
-            <Navbar.Collapse id="navbarScroll" method='get' onSubmit={onSubmit}>
+            <Navbar.Collapse id="navbarScroll">
                 <Form className="d-flex">
-                    <FormControl
-                        type="search"
-                        className="me-4"
-                        // value={searchValue}
-                        placeholder="search the value or NFT"
-                        onChange={(e) => {
-                            setSearchValue(e.target.value);
-                        }}    
-                        
-                    />
-                    <Button variant="outline-success" method='get' onClick={onSubmit}>Search</Button>
-    
-                </Form>
-
-                <Form className="d-flex">
-                    {/* {result} */}
+                    {renderResult}
                 </Form>
 
                 {/* <Form>

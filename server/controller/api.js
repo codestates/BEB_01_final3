@@ -91,12 +91,20 @@ module.exports= {
       console.log(val);
       // let productId = req.query._id;
 
-      User.find({ name: val }, (err, user) => {
+      // $text로 인덱싱 된 search: val 검색
+      User.find({ $text : { $search: val }}, (err, user) => {
         if (err) res.json({message : "요청하신 id가 없습니다."}, err);
-        
-        res.status(200).send(user)
-          
+        console.log(user);  
+
+        return res.status(200).json({
+          success: true, user
+        })
     })  
+
+  //   User.find({name: val}).toArray(function (err, docs) {
+  //     // console.log('== Find ALL with Projection');
+  //     console.log(docs);
+  //  });
   }
 
 

@@ -11,8 +11,12 @@ import VideoDetailPage from './components/VideoDetailPage/VideoDetailPage';
 import Auth from './hoc/auth';
 import Search from './components/Search/Search';
 
-function App(props) {
+// const express = require("express");
+// const app = express();
+// const cors = require("cors");
 
+
+function App(props) {
   const [isLogin, setIsLogin] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
 
@@ -33,7 +37,6 @@ function App(props) {
   useEffect(() => {
     isAuthenticated();
   }, []);
-
   return (
     <BrowserRouter>
       <div className = "App">
@@ -52,10 +55,13 @@ function App(props) {
           <Route exact path="/video/upload" element={<UploadPage />} />
           <Route exact path="/video/:videoId" element={<VideoDetailPage/>} />
           <Route exact path="/Search" element={<Search />} />
-          </Routes>
+        </Routes>
       </div>
     </BrowserRouter>
   );
 }
+
+// app.use(cors());
+
 
 export default App;

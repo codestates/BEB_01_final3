@@ -22,6 +22,7 @@ export default function (state = {}, action) {
             return { ...state }
         
         case SEARCH_USER:
+            console.log('reducer', action.payload);
             return {...state, searchUser: action.payload}
 
         default:

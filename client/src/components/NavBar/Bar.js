@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Navbar, Nav, NavDropdown, Button, Container, Offcanvas, Form, FormControl } from 'react-bootstrap';
+import { Navbar, Nav, NavDropdown, Button, Container, Offcanvas, Form, FormControl, NavLink } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { auth, logoutUser } from '../../actions/user_action'
 import axios from 'axios';
 import watto from '../img/watto.png'
+import { useNavigate } from 'react-router-dom';
+
 
 import { searchNFT } from '../../actions/user_action.js'
 
@@ -16,8 +18,8 @@ function Bar({ isLogin }) {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const [searchValue, setSearchValue] = useState(false);
-    const [name, setName] = useState("");
 
+    const navigate = useNavigate();
 
 
     const dispatch = useDispatch();
@@ -27,8 +29,8 @@ function Bar({ isLogin }) {
             // console.log(res.payload);
             setIsAuth(res.payload.isAuth);
             setIsAdmin(res.payload.isAdmin);
-           console.log('SA',res.payload.isAuth)
-           console.log('SD',res.payload.isAdmin)
+        //    console.log('SA',res.payload.isAuth)
+        //    console.log('SD',res.payload.isAdmin)
         })
 
     const handleLogout = () => {
@@ -46,15 +48,22 @@ function Bar({ isLogin }) {
     }
     
     const onSubmit = (e) => {
+        // console.log(searchValue);        
+
         e.preventDefault();
 
-        let search = {name: name};
+        let search = {name: searchValue};
 
         dispatch(searchNFT(search))
         .then(response => {
             // setMessage(response.payload.message);
-            if(response.payload.success) setSearchValue(true);
+            if(response.payload.success) {
+                navigate('/Search');
+                // window.location.replace('/Search');
+            }
+            console.log('bar', response);
         })
+
     }
 
     return (
@@ -92,15 +101,18 @@ function Bar({ isLogin }) {
                         </Nav.Link>
                     </Nav> */}
                     <Navbar.Toggle aria-controls="navbarScroll" />
-                    <Navbar.Collapse id="navbarScroll" method='get' onSubmit={onSubmit}>
+                    <Navbar.Collapse id="navbarScroll" >
                         <Form className="d-flex">
                             <FormControl
                                 type="search"
-                                placeholder="Search"
-                                
-                                aria-label="Search"
+                                className="me-4"
+                                // value={searchValue}
+                                placeholder="search the value or NFT"
+                                onChange={(e) => {
+                                    setSearchValue(e.target.value);
+                                }}
                             />
-                            <Button variant="outline-success">Search</Button>
+                            <Button variant="outline-success" method='get' onClick={onSubmit}>Search</Button>                            
                         </Form>
                     </Navbar.Collapse>
 
