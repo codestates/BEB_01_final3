@@ -18,9 +18,7 @@ import watto from '../img/watto.png';
 function Bar({ isLogin }) {
 	// const [show, setShow] = useState(false);
 	const [isAuth, setIsAuth] = useState(false);
-	const [isAdmin, setIsAdmin] = useState(false);
-	const handleClose = () => setShow(false);
-	const handleShow = () => setShow(true);
+	const [isAdmin, setIsAdmin] = useState(false);	
 	const [searchValue, setSearchValue] = useState(false);
 	const navigate = useNavigate();
 
