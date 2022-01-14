@@ -7,6 +7,7 @@ const config = require('./config/prod');
 const apiRouter = require('./routes/apiRouter');
 const cors = require('cors');
 const contractRouter = require('./routes/coinRouter');
+const { auth } = require('./middleware/auth');
 
 const { User } = require('./models/User');
 const { Nft } = require('./models/Nft');

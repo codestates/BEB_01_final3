@@ -14,11 +14,10 @@ const serverPrivateKey = '';
 
 // web3
 const Web3 = require('web3');
-const web3 = new Web3(
-	new Web3.providers.HttpProvider(
-		'https://ropsten.infura.io/v3/c2cc008afe67457fb9a4ee32408bcac6'
-	)
-);
+const { LogTimings } = require('concurrently');
+const web3 = new Web3(new Web3.providers.HttpProvider("https://ropsten.infura.io/v3/c2cc008afe67457fb9a4ee32408bcac6"));
+
+
 
 // server 계정 토큰 민팅 - WT (stable coin)
 router.get('/faucet', (req, res) => {
@@ -110,3 +109,4 @@ router.post('/', async (req, res) => {
 });
 
 module.exports = router;
+ 
