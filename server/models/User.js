@@ -45,14 +45,17 @@ const userSchema = mongoose.Schema({
 	wtToken: {
 		type: Number,
 		trim: true,
+		
 	},
 	nwtToken: {
 		type: Number,
 		trim: true,
+		
 	},
 	nftToken: {
 		type: String,
 		trim: true,
+		
 	},
 });
 

@@ -3,6 +3,7 @@ import {
     REGISTER_USER,
     LOGOUT_USER,
     AUTH_USER,
+    SEARCH_NFT,
     MYPAGE
 } from '../actions/types';
 
@@ -17,7 +18,6 @@ export default function (state = {}, action) {
            
             return { ...state, register: action.payload }
             
-        
         case AUTH_USER:
            
             return { ...state, userData: action.payload }
@@ -25,6 +25,10 @@ export default function (state = {}, action) {
         case LOGOUT_USER:  
             return { ...state }
         
+        case SEARCH_NFT:
+            console.log('reducer', action.payload);
+            return {...state, searchNft: action.payload}
+
         case MYPAGE:
              return {...state,userInfo:action.payload}    
         default:

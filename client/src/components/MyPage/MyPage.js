@@ -4,6 +4,7 @@ import {useSelector,useDispatch} from 'react-redux';
 import { loginUser, auth } from  '../../actions/user_action'
 import { useNavigate, useParams } from 'react-router-dom';
 import {Card,Button} from 'react-bootstrap'
+import wtImg from '../img/wtimg.png'
 
 import { myPageCheck} from '../../actions/user_action'
 import axios from 'axios';
@@ -18,35 +19,80 @@ function MyPage() {
     const [privKey, setPrivKey] = useState('');
     const [nftInfo, setNftInfo] = useState([]);
     const [userInfo, setUserInfo] = useState('');
+    const [wtToken, setWtToken] = useState('');
+    const [nwtToken, setNwtToken] = useState('');
     const [isCheck, setIsCheck] = useState(false)
-    const user = useSelector(state => state.user)
+    const [sellPrice, setSellPrice] = useState('');
+   
+     const user = useSelector(state => state.user)
+    
     
 
-    // const email = user.userData.email;
+    
       
 
    useEffect(()=>{
    
 
-      dispatch(myPageCheck("test@test")) //reducer
-      .then(response => {
-        
-   if(response.payload.nftInfo[0] !== undefined){
-    // console.log(res.data.userInfo[0]);
-    setNftInfo(response.payload.nftInfo)
-    setPrivKey(response.payload.userInfo.privateKey);
-    setPbKey(response.payload.userInfopublicKey);
-    setUserInfo(response.payload.userInfo[0]);
-    setIsCheck(true)
+   function page (){
+
+        // const email = user.userData.email;
+        // console.log(email);
+        dispatch(myPageCheck("test1@test1")) //reducer
+        .then(response => {
+            console.log(response.payload.userInfo[0]);
+     if(response.payload.userInfo[0] !== undefined){
+    //   console.log(res.data.userInfo[0]);
+      if(response.payload.nftInfo[0] !== undefined){
+          console.log('nft exist');
+        setNftInfo(response.payload.nftInfo)
+        setIsCheck(true) 
+      }
     
-   }
-    })
-       
-   },[])
+      setPrivKey(response.payload.userInfo[0].privateKey);
+      setPbKey(response.payload.userInfo[0].publicKey);
+      setUserInfo(response.payload.userInfo[0]);
+      setWtToken(response.payload.userInfo[0].wtToken)
+      setNwtToken(response.payload.userInfo[0].nwtToken)
+    
+     }
+      })
+           
+    }
+    page();
    
+   },[])
 
-     
+   
+  function sellNFT(tokenId){
+      
 
+    console.log(tokenId);
+    console.log(sellPrice);
+
+    axios.post('http://localhost:5000/contract/nft/sell',{tokenId,sellPrice})
+    .then(res=>{
+        if(res.data.success){
+            window.location.reload()
+        }
+    })
+      
+  }
+  function cancel(tokenId){
+      
+
+    console.log(tokenId);
+
+    axios.post('http://localhost:5000/contract/nft/cancel',{tokenId})
+    .then(res=>{
+        if(res.data.success){
+            window.location.reload()
+        }
+    })
+      
+  }
+
+  console.log(pbKey);
     return (
         <div style={{
             margin:'2% auto',
@@ -72,14 +118,16 @@ function MyPage() {
                 
             }}>
                 <p>보유 유동성 토큰</p>
-                <p><input value={userInfo.erc20Token} readOnly style={{border:"none", backgroundColor:"#eee"}}/></p>
+                <p><input value={wtToken} readOnly style={{border:"none", backgroundColor:"#eee"}}/></p>
             </div>
             <div style={{
                 width:'100%',
                 height:"50%",
                
             }}>
-                <p>보유 스테이블 토큰</p>
+               <p>스테이블 토큰</p>
+                <p><input value={nwtToken} readOnly style={{border:"none", backgroundColor:"#eee"}}/></p>
+                
             </div>
          </div>
          <div style={{
@@ -113,8 +161,12 @@ function MyPage() {
              <div style={{
                  width:'100%'
              }}>
-                 <p>My NFT</p>
+                 <div style={{padding:"1%", borderBottom:"1px dashed"}}>
+                    <span><img src={wtImg}></img></span> 
+                    <p style={{fontWeight:"bold",fontSize:"10rem"}}>MY NFT</p>
+                 </div>
              </div>
+           
 
         
            {
@@ -122,7 +174,7 @@ function MyPage() {
            isCheck ? 
              nftInfo.map((el)=>{
                return(
-                <Card style={{ width: '20rem',margin:"1%"}}>
+                <Card style={{ width: '20rem',margin:"1%" ,cursor:"pointer"}} >
                 <Card.Img variant="top" src={el.imgUri} style={{height:'220px'}} />
                 <Card.Body style={{marginRight:'1%'}}>
                   <Card.Title>Content : {el.contentTitle}</Card.Title>
@@ -131,15 +183,25 @@ function MyPage() {
                     desription : {el.description}
                   </Card.Text>
                   <Card.Title>Name : {el.nftName}</Card.Title>
-                  
-                  <Button variant="primary">buy</Button>
+                  {el.sale ? 
+                   <>
+                  <Button variant="primary" style={{marginRight:"2%"}}>판매중</Button> 
+                  <Button variant="danger" onClick={()=>{cancel(el.tokenId)}}>판매취소</Button> 
+                 </>
+                  :  <>
+                  <Button variant="primary" style={{marginRight:"2%"}} onClick={()=>{sellNFT(el.tokenId)}}>판매</Button>
+                  <input type="text" size="10" style={{border:"none",borderBottom:"1px solid"}} 
+                  onChange={(e)=>{setSellPrice(e.target.value)}}></input><span><img src={wtImg} style={{height:'3vh',width:'1.5vw'}}></img></span> 
+                   </>}
+              
+                 
                 </Card.Body>
               </Card>
                )
              })
              :<div style={{height:'300px'}}> NFT를 소유하고 있지않습니다.</div>
            }
-           {isCheck === true ? '123' : '321'}
+         
           
          </div>
          
