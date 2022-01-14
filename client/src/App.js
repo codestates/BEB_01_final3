@@ -9,7 +9,7 @@ import UploadPage from './components/UploadPage/UploadPage';
 import Bar from './components/NavBar/Bar';
 import VideoDetailPage from './components/VideoDetailPage/VideoDetailPage';
 import Auth from './hoc/auth';
-import Search from './components/Search/SearchNft';
+import SearchNft from './components/Search/SearchNft';
 import CreateNFT from './components/NFTcreate/CreateNFT';
 import NftList from './components/NFTcreate/NftList';
 import MyPage from './components/MyPage/MyPage';
@@ -54,7 +54,7 @@ function App(props) {
 					<Route exact path='/' element={<LandingPage />} />
 					<Route exact path='/login' element={<LoginPage />} />
 					<Route exact path='/register' element={<RegisterPage />} />
-					<Route exact path='/SearchNft' element={<Search />} />
+					<Route exact path='/SearchNft' element={<SearchNft />} />
 					<Route
 						exact
 						path='/video/upload'
