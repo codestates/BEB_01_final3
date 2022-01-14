@@ -10,6 +10,10 @@ import Bar from './components/NavBar/Bar';
 import VideoDetailPage from './components/VideoDetailPage/VideoDetailPage';
 import Auth from './hoc/auth';
 import Search from './components/Search/Search';
+import CreateNFT from './components/NFTcreate/CreateNFT';
+import NftList from './components/NFTcreate/NftList';
+import MyPage from './components/MyPage/MyPage';
+import ExchangePage from './components/ExchangePage/ExchangePage';
 
 // const express = require("express");
 // const app = express();
@@ -18,10 +22,7 @@ import Search from './components/Search/Search';
 function App(props) {
 	const [isLogin, setIsLogin] = useState(false);
 	const [userInfo, setUserInfo] = useState(null);
-	import CreateNFT from './components/NFTcreate/CreateNFT';
-	import NftList from './components/NFTcreate/NftList';
-	import MyPage from './components/MyPage/MyPage';
-	import ExchangePage from './components/ExchangePage/ExchangePage';
+
 
 	const isAuthenticated = () => {
 		if (userInfo) {

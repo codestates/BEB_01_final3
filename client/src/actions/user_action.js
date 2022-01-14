@@ -5,7 +5,8 @@ import {
     REGISTER_USER,
     AUTH_USER,
     LOGOUT_USER,
-    MYPAGE
+    MYPAGE,
+    SEARCH_USER
 } from './types';
 
 
