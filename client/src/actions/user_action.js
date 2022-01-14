@@ -57,7 +57,7 @@ export function logoutUser(dataToSubmit) {
 }
 
 export function searchNFT(dataToSubmit) {
-    const request = axios.post('api/users/Search', dataToSubmit)
+    const request = axios.post('http://localhost:5000/contract/users/Search', dataToSubmit)
         .then(response => response.data)
     // console.log(dataToSubmit)
     return {

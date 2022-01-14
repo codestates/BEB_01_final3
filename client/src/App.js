@@ -47,8 +47,10 @@ function App(props) {
   }, []);
   return (
     <BrowserRouter>
-      <div className = "App">
-	  <Routes>
+      	<div className = "App">
+		<Bar isLogin={isLogin} />
+
+	  	<Routes>
 					<Route exact path='/' element={<LandingPage />} />
 					<Route exact path='/login' element={<LoginPage />} />
 					<Route exact path='/register' element={<RegisterPage />} />

@@ -12,7 +12,8 @@ const {
 	buyNFT,
 	setForSell,
 	ownerOf,
-	cancel
+	cancel,
+	Search
   
     } = require('../controller/api');
 
@@ -64,6 +65,8 @@ router.post('/myPage',(req,res)=>{
 		})
 	})
 	})
+
+router.post('/users/Search', Search);
 
 module.exports = router;
  

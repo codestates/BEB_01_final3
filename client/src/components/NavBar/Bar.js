@@ -9,82 +9,10 @@ import {
 	Form,
 	FormControl,
 } from 'react-bootstrap';
-import { useDispatch } from 'react-redux';
-import { auth, logoutUser } from '../../actions/user_action';
-import axios from 'axios';
-import watto from '../img/watto.png'
 import { useNavigate } from 'react-router-dom';
-
-
-import { searchNFT } from '../../actions/user_action.js'
-
-
-function Bar({ isLogin }) {
-
-    const [show, setShow] = useState(false);
-    const [isAuth, setIsAuth] = useState(false);
-    const [isAdmin, setIsAdmin] = useState(false);
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-    const [searchValue, setSearchValue] = useState(false);
-
-    const navigate = useNavigate();
-
-
-    const dispatch = useDispatch();
-
-    dispatch(auth())
-        .then((res) => {
-            // console.log(res.payload);
-            setIsAuth(res.payload.isAuth);
-            setIsAdmin(res.payload.isAdmin);
-        //    console.log('SA',res.payload.isAuth)
-        //    console.log('SD',res.payload.isAdmin)
-        })
-
-    const handleLogout = () => {
-        console.log("logoout");
-        axios.get(`/api/users/logout`, { withCredentials: true })
-            .then(response => {
-                if (response.data.success) {
-                    console.log('로그아웃 성공')
-                    setIsAuth(false);
-                } else {
-                    console.log('로그아웃 실패')
-                    alert('로그아웃 하는데 실패 했습니다.')
-                }
-            })
-    }
-    
-    const onSubmit = (e) => {
-        // console.log(searchValue);        
-
-        e.preventDefault();
-
-        let search = {name: searchValue};
-
-        dispatch(searchNFT(search))
-        .then(response => {
-            // setMessage(response.payload.message);
-            if(response.payload.success) {
-                navigate('/Search');
-                // window.location.replace('/Search');
-            }
-            console.log('bar', response);
-        })
-
-    }
-
-    return (
-
-        <Navbar bg="black" expand="lg">
-            <Navbar.Brand href="/" al >
-                <img
-                    src={watto}
-                    width="250"
-                />
-            </Navbar.Brand>
-            {/* <Button variant="dark" onClick={handleShow} className='ms-1'>
+import { useDispatch } from 'react-redux';
+import { auth, logoutUser, searchNFT } from '../../actions/user_action';
+import axios from 'axios';
 import watto from '../img/watto.png';
 
 function Bar({ isLogin }) {
@@ -93,6 +21,8 @@ function Bar({ isLogin }) {
 	const [isAdmin, setIsAdmin] = useState(false);
 	const handleClose = () => setShow(false);
 	const handleShow = () => setShow(true);
+	const [searchValue, setSearchValue] = useState(false);
+	const navigate = useNavigate();
 
 	const dispatch = useDispatch();
 
@@ -103,6 +33,25 @@ function Bar({ isLogin }) {
 		console.log('SA', res.payload.isAuth);
 		console.log('SD', res.payload.isAdmin);
 	});
+
+	const onSubmit = (e) => {
+		// console.log(searchValue); 
+		
+		e.preventDefault();
+		
+		let search = {name: searchValue};
+		
+		dispatch(searchNFT(search))
+		.then(response => {
+		// setMessage(response.payload.message);
+		if(response.payload.success) {
+		navigate('/Search');
+		// window.location.replace('/Search');
+		}
+		console.log('bar', response);
+		})
+		
+		}
 
 	const handleLogout = () => {
 		console.log('logoout');
@@ -139,7 +88,6 @@ function Bar({ isLogin }) {
                         style={{ maxHeight: '100px' }}
                         navbarScroll
                     >
-
                         <Nav.Link href="/Tl">Today's likes</Nav.Link>
                         <Nav.Link href="/CS">Customor Service</Nav.Link>
                         <Nav.Link href="/CA">Commercial application</Nav.Link>
@@ -148,6 +96,7 @@ function Bar({ isLogin }) {
                             Market Price Review Token : $
                         </Nav.Link>
                     </Nav> */}
+					<Navbar.Toggle aria-controls='navbarScroll' />
 					<Navbar.Collapse id="navbarScroll" >
 						<Form className="d-flex">
 						<FormControl
@@ -159,10 +108,9 @@ function Bar({ isLogin }) {
 						setSearchValue(e.target.value);
 						}}
 						/>
-							<Button variant="outline-success" method='get' onClick={onSubmit}>Search</Button> 
+						<Button variant="outline-success" method='get' onClick={onSubmit}>Search</Button> 
 						</Form>
 					</Navbar.Collapse>
-
 
 					<Nav
 						className='me-auto my-2 my-lg-0'
