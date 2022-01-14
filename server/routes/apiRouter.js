@@ -6,7 +6,6 @@ const {
 	userLogin,
 	Auth,
 	userLogout,
-	test,
 	userTokens,
 } = require('../controller/api');
 

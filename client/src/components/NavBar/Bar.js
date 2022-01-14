@@ -15,11 +15,11 @@ import axios from 'axios';
 import watto from '../img/watto.png';
 
 function Bar({ isLogin }) {
-	const [show, setShow] = useState(false);
+	// const [show, setShow] = useState(false);
 	const [isAuth, setIsAuth] = useState(false);
 	const [isAdmin, setIsAdmin] = useState(false);
-	const handleClose = () => setShow(false);
-	const handleShow = () => setShow(true);
+	// const handleClose = () => setShow(false);
+	// const handleShow = () => setShow(true);
 
 	const dispatch = useDispatch();
 
@@ -51,30 +51,12 @@ function Bar({ isLogin }) {
 			<Navbar.Brand href='/' al>
 				<img src={watto} width='250' />
 			</Navbar.Brand>
-			{/* <Button variant="dark" onClick={handleShow} className='ms-1'>
-                <img
-                    src={watto}
-                    width="100"
-                />
-            </Button> */}
+		
 
 			<Container fluid>
 				<Navbar.Toggle aria-controls='navbarScroll' />
 				<Navbar.Collapse id='navbarScroll'>
-					{/* <Nav
-                        className="me-auto my-2 my-lg-0"
-                        style={{ maxHeight: '100px' }}
-                        navbarScroll
-                    >
-
-                        <Nav.Link href="/Tl">Today's likes</Nav.Link>
-                        <Nav.Link href="/CS">Customor Service</Nav.Link>
-                        <Nav.Link href="/CA">Commercial application</Nav.Link>
-                        <Nav.Link href="/TD">Today's deal</Nav.Link>
-                        <Nav.Link href="#" disabled>
-                            Market Price Review Token : $
-                        </Nav.Link>
-                    </Nav> */}
+				
 					<Navbar.Toggle aria-controls='navbarScroll' />
 					<Navbar.Collapse id='navbarScroll'>
 						<Form className='d-flex'>
@@ -88,26 +70,9 @@ function Bar({ isLogin }) {
 						</Form>
 					</Navbar.Collapse>
 
-					<Nav
-						className='me-auto my-2 my-lg-0'
-						style={{ maxHeight: '100px' }}
-						navbarScroll>
-						<NavDropdown title='Link' id='navbarScrollingDropdown'>
-							<NavDropdown.Item href='#action3'>
-								Action
-							</NavDropdown.Item>
-							<NavDropdown.Item href='#action4'>
-								Another action
-							</NavDropdown.Item>
-							<NavDropdown.Divider />
-							<NavDropdown.Item href='#action5'>
-								Something else here
-							</NavDropdown.Item>
-						</NavDropdown>
-					</Nav>
 					<Nav>
 						<div className='mb-2'>
-							{isAuth ? (
+							{isAdmin ? (
 								<Button
 									variant='dark'
 									href='/exchange'
@@ -124,7 +89,7 @@ function Bar({ isLogin }) {
 									href='/Adupload'
 									size='md'
 									className='me-1'>
-									Upload
+									AdUpload
 								</Button>
 							) : (
 								''
