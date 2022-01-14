@@ -132,6 +132,7 @@ module.exports = {
 			image: req.user.image,
 		});
 	},
+	
 	userLogout: (req, res) => {
 		// console.log('req.user', req.user)
 		User.findOneAndUpdate(

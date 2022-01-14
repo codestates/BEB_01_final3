@@ -21,7 +21,7 @@ router.post("/getlikes", (req, res) => {
 
   Like.find(variable).exec((err, likes) => {
     if (err) return res.status(400).send(err);
-    console.log('likes', likes)
+    // console.log('likes', likes)
     res.status(200).json({ success: true, likes });
   });
 });
