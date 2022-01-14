@@ -287,7 +287,7 @@ module.exports = {
 			const sellPrice = req.body.sellPrice;
 			const sendAccount = process.env.serverAddress;
 	const privateKey = process.env.serverAddress_PK;
-	  const data =  await nftContract.methods.setForSale(tokenId,sellPrice).encodeABI();
+	  const data =  await nftContract.methods.setForSale(tokenId,web3.utils.toWei(sellPrice,'ether')).encodeABI();
 	  const nonce = await web3.eth.getTransactionCount(sendAccount, 'latest');
 	const tx = {
 		from: sendAccount,
