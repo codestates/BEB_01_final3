@@ -334,28 +334,6 @@ module.exports = {
 		})
 	},
 
-	// Search : (req, res) => {
-	// 	// console.log('req.user', req.user)
-  
-	// 	let name = req.body.name;
-	// 	console.log(name);
-	// 	// let productId = req.query._id;
-		
-	// 	// aggregate 내부의 파라미터는 배열러 받을 수 있으며 json형식으로 구성되어 있다
-	// 	User.aggregate([{$search: {
-	// 		index:"nftName",
-	// 		text: {
-	// 			query: name,
-	// 			path: "nftName"
-	// 		}
-	// 	}
-	// }], (err, user) => {
-	// 	  console.log(user);
-			
-	//   })
-	// 	// { token: ""}
-	
-	// }
 
 	SearchNft : async (req, res) => {
 		// console.log('req.user', req.user)
