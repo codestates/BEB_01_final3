@@ -12,7 +12,7 @@ const Spinner = () => {
     margin: 8px;
     margin-bottom: 96px;
     text-align: center;
-    color:gray;
+    color:white;
     fontFamily:fantasy;
 `;
 
@@ -34,7 +34,7 @@ const Div = styled.div`
         <Flex>
         <Col>
          <Row>
-        <Title>Request ------- NFTING</Title>
+        <Title>Please wait a little bit.</Title>
         </Row>
         <Row>
         <Div>
