@@ -332,6 +332,24 @@ module.exports = {
 			res.json({success:true , detail : 'user gonna cancel sell for nft'});
 			if(err) console.log(err);
 		})
-	}
+	},
+
+
+	SearchNft : async (req, res) => {
+		// console.log('req.user', req.user)
+		let name = req.body.name;
+
+		const nftInfo = await Nft.find()
+            .find({ nftName: { $regex: name, $options: "i" } })
+            res.status(201).json({success:true,data:nftInfo,type:"nft"})
+            // if(err){
+            //     res.status(404).json({failed:false})
+            // }
+			console.log(nftInfo);
+    }
+	
+	
+	
+	
 	
 };
