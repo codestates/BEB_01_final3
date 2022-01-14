@@ -45,11 +45,18 @@ function Bar({ isLogin }) {
 		.then(response => {
 		// setMessage(response.payload.message);
 		if(response.payload.success) {
-		navigate('/Search');
-		// window.location.replace('/Search');
+			if(response.payload.type === "nft"){
+				console.log('bar.nft', response);
+				navigate('/SearchNft');
+			} else if(response.payload.type === "content"){
+				console.log('bar.content', response)
+			}
+		
 		}
-		console.log('bar', response);
 		})
+
+		// navigate('/SearchNft');
+		// window.location.replace('/Search');
 		
 		}
 
