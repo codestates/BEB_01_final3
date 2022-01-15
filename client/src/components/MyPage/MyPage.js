@@ -23,9 +23,16 @@ function MyPage() {
     const [nwtToken, setNwtToken] = useState('');
     const [isCheck, setIsCheck] = useState(false)
     const [sellPrice, setSellPrice] = useState('');
+<<<<<<< HEAD
    
     const user = useSelector(state => state.user)
+=======
+    const user = useSelector(state => state.user)
     
+>>>>>>> upstream/main
+    
+
+     
 
     
       
@@ -35,10 +42,19 @@ function MyPage() {
 
    function page (){
 
+<<<<<<< HEAD
         let body = { 
             email : Email ,
         }
         dispatch(myPageCheck(body)) //reducer
+=======
+        // const email = user.userData.email;
+        // console.log(email);
+
+   
+     
+        dispatch(myPageCheck('test@test')) //reducer
+>>>>>>> upstream/main
         .then(response => {
             console.log(response.payload.userInfo[0]);
      if(response.payload.userInfo[0] !== undefined){
@@ -63,6 +79,8 @@ function MyPage() {
    
    },[])
 
+   console.log(user);
+
    
   function sellNFT(tokenId){
       
@@ -70,7 +88,7 @@ function MyPage() {
     console.log(tokenId);
     console.log(sellPrice);
 
-    axios.post('http://localhost:5000/contract/nft/sell',{tokenId,sellPrice})
+    axios.post('http://localhost:5000/api/contract/nft/sell',{tokenId,sellPrice})
     .then(res=>{
         if(res.data.success){
             window.location.reload()

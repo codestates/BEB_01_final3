@@ -57,7 +57,11 @@ router.post('/nft/sell', auth,setForSell);
 //user gonna cancel for selling the nft
 router.post('/nft/cancel', auth,cancel);
 
+<<<<<<< HEAD
 router.post('/myPage', auth, (req, res) => {
+=======
+router.post('/myPage',auth,(req, res) => {
+>>>>>>> upstream/main
 	const email = req.body.email;
 	// console.log(email);
 	// console.log('email', email);

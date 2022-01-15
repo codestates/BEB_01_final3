@@ -84,7 +84,7 @@ const { Title, Text } = Typography
           }
 
           
-          axios.post("http://localhost:5000/contract/nft/create",{
+          axios.post("http://localhost:5000/api/contract/nft/create",{
               result : result
           })
           .then((res)=>{
