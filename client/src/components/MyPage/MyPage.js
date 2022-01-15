@@ -24,8 +24,7 @@ function MyPage() {
     const [isCheck, setIsCheck] = useState(false)
     const [sellPrice, setSellPrice] = useState('');
    
-     const user = useSelector(state => state.user)
-    
+    const user = useSelector(state => state.user)
     
 
     
@@ -36,9 +35,10 @@ function MyPage() {
 
    function page (){
 
-        // const email = user.userData.email;
-        // console.log(email);
-        dispatch(myPageCheck("test1@test1")) //reducer
+        let body = { 
+            email : Email ,
+        }
+        dispatch(myPageCheck(body)) //reducer
         .then(response => {
             console.log(response.payload.userInfo[0]);
      if(response.payload.userInfo[0] !== undefined){

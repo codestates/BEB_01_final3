@@ -32,7 +32,7 @@ const upload = multer({
 
 
 //=====================================================
-//                      Video
+//                      Videos
 //=====================================================
 
 router.post("/uploads", (req, res) => {
@@ -77,8 +77,8 @@ router.post("/thumbnail", (req, res) => {
   //비디오 정보 가져오기
   ffmpeg.ffprobe(req.body.url, function (err, metadata) {
     //url을 받으면 해당 비디오에대한 정보가 metadata에담김
-    // console.log('rbu', req.body.url);
-    // console.log('meta', metadata); //metadata안에담기는 모든정보들 체킹
+    console.log('rbu', req.body);
+    console.log('meta', metadata);//metadata안에담기는 모든정보들 체킹
     fileDuration = metadata.format.duration; //동영상길이대입
   });
   //썸네일 생성
