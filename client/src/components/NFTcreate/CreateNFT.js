@@ -94,7 +94,7 @@ const { Title, Text } = Typography
                 navigate('/nft/list');
             }else if(res.data.failed === false){
                 setLoading(false)   
-                alert('무엇인가가 잘못 되었습니다!! 확인해주세요')
+                alert(res.data.reason)
             }   
           })
       }
@@ -116,7 +116,7 @@ const { Title, Text } = Typography
                     maxWidth: '700px',
                     margin: 'auto',
                 }}
-            >
+            >   
                 <div
                     style={{
                         textAlign: 'center',

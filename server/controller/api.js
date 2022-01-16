@@ -386,8 +386,8 @@ module.exports = {
 			price,
 		} = req.body.result;
 
-		const reg = /[0-9]/;
-		if (!reg.test(price)) {
+		var regexp = /^[0-9]*$/
+		if (!regexp.test(price)) {
 			res.json({ failed: false, reason: '정확한 가격을 작성해주세요!!' });
 		}
 
@@ -430,12 +430,12 @@ module.exports = {
 				if (!err) {
 					res.json({ success: true });
 				} else {
-					res.json({ failed: false });
+					res.json({ failed: false,reason: '블록체인에는 올라갔지만 DB에 문제가 생겼습니다.' });
 				}
 			});
 		} catch (e) {
 			console.log('err' + e);
-			res.json({ failed: false });
+			res.json({ failed: false,reason: '블록체인에 문제가있습니다'  });
 		}
 	},
 	buyNFT: async (req, res) => {
