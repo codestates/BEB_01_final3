@@ -1,98 +1,81 @@
-import React, {useState, useEffect} from 'react';
-import { Navbar, Nav, NavDropdown, Button, Container, Offcanvas, Form, FormControl, Card } from 'react-bootstrap';
-// import { searchPosts } from './searchPost';
-import { useDispatch } from 'react-redux';
-
-import axios from "axios";
-import { Col, Icon, Row } from 'antd';
-
-import Meta from 'antd/lib/card/Meta';
-import { useSelector } from 'react-redux';
-
-import { searchNFT } from '../../actions/user_action.js'
-
+import React, { useState } from "react";
+import {  Card } from "react-bootstrap";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { searchNFT } from "../../actions/user_action.js";
+import NFTbuy from '../NFTcreate/NFTbuy'
 
 
 const SearchNft = (props) => {
-    const dispatch = useDispatch();
-    const [searchValue, setSearchValue] = useState("");
-    const [Products, setProducts] = useState([])
+  const dispatch = useDispatch();
+  const [searchValue, setSearchValue] = useState("");
+  const user = useSelector((state) => state.user);
+  console.log("user", user);
 
-    const [Skip, setSkip] = useState(0)
-    const [Limit, setLimit] = useState(8)
+  // const renderResult = user.searchNft.data.map((product) => {
 
-    const user = useSelector(state=> state.user)
-    console.log('user', user)
+  //     console.log('product', product)
 
-    
-    
-    // const renderResult = user.searchNft.data.map((product) => {
-
-    //     console.log('product', product)
+  // })
+//   function BuyNFT(tokenId){
+//     axios.post('http://localhost:5000/contract/buyNFT',{tokenId:tokenId,buyer:"test1@test1"})
+//       .then((res) => {
+              
         
-            
-        
-    // })
-   
-    const onSubmit = (e) => {
-        // console.log(searchValue);        
+//            if(res.data.failed === false){
+//              alert('구매가 되지 않았습니다. 확인해주세요!!!, reason :'+res.data.reason)
+//            }else if(res.data.success){
+//              alert('구매가 완료되었습니다. 구매자의 mypage로 이동하겠습니다.')
+//              navigate('/user/myPage')
 
-        e.preventDefault();
+//            }
+          
+//         });
+//   }
 
-        let search = {name: searchValue};
+  const onSubmit = (e) => {
+    // console.log(searchValue);
 
-        dispatch(searchNFT(search))
-        .then(response => {
-            // setMessage(response.payload.message);
-            if(response.payload.searchUser) {
-                // console.log(response.payload);
+    e.preventDefault();
 
-            }
-            // console.log(response.payload);
+    let search = { name: searchValue };
 
-        })
+    dispatch(searchNFT(search)).then((response) => {
+      // setMessage(response.payload.message);
+      if (response.payload.searchUser) {
+        // console.log(response.payload);
+      }
+      // console.log(response.payload);
+    });
+  };
 
-    }
+  const handleInputChange = (event) => {
+    // console.log(event.target.value);
 
-    const handleInputChange = (event) => {
+    setSearchValue(event.target.value);
+  };
 
-        // console.log(event.target.value);        
+  // const filteredProducts = products.filter((product) => {
 
-        setSearchValue(event.target.value)
+  //     return product.includes(searchValue);
 
-    }
+  // })
 
-    // const filteredProducts = products.filter((product) => {
-
-    //     return product.includes(searchValue);
-
-    // })
-
-    
-
-
-
-
+  return user.searchNft.data.map((el) => {
     return (
-        user.searchNft.data.map((el)=>{
-            return (
-                <Card style={{ width: '18rem', margin:"1%", cursor:"pointer"}}>
-                <Card.Img variant="top" src={el.imgUri} style={{height:'220px'}} />
-                <Card.Body>
-                  <Card.Title>Content : {el.contentTitle}</Card.Title>
-                  <Card.Title>Name : {el.nftName}</Card.Title>
-                  <Card.Title>Name : {el.nftName}</Card.Title>
-                  <Card.Text>
-                    desription : {el.description}
-                  </Card.Text>
-                  <Card.Title>Price : {el.price}</Card.Title>
-                  {/* <Button variant="warning" style={{fontWeight:"bold"}}  onClick={()=>{BuyNFT(el.tokenId)}}>판매중</Button> */}
-                </Card.Body>
-              </Card>
-            )
-        })
-        
-    )
-}
+      <Card style={{ width: "18rem", margin: "1%", cursor: "pointer" }}>
+        <Card.Img variant="top" src={el.imgUri} style={{ height: "220px" }} />
+        <Card.Body>
+          <Card.Title>Content : {el.contentTitle}</Card.Title>
+          <Card.Title>Name : {el.nftName}</Card.Title>
+          <Card.Title>Name : {el.nftName}</Card.Title>
+          <Card.Text>desription : {el.description}</Card.Text>
+          <Card.Title>Price : {el.price}</Card.Title>
+          {/* <Button variant="warning" style={{fontWeight:"bold"}}  onClick={()=>{BuyNFT(el.tokenId)}}>판매중</Button> */}
+        </Card.Body>
+      </Card>
+    );
+  });
+};
 
-export default SearchNft
+export default SearchNft;

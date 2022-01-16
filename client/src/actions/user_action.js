@@ -6,7 +6,8 @@ import {
     AUTH_USER,
     LOGOUT_USER,
     MYPAGE,
-    SEARCH_NFT
+    SEARCH_NFT,
+    SEARCH_CONTENT
 } from './types';
 
 
@@ -57,11 +58,24 @@ export function logoutUser(dataToSubmit) {
 }
 
 export function searchNFT(dataToSubmit) {
-    const request = axios.post('http://localhost:5000/contract/users/SearchNft', dataToSubmit)
+    const request = axios.post('api/contract/users/SearchNft', dataToSubmit)
         .then(response => response.data)
     // console.log(dataToSubmit)
     return {
         type: SEARCH_NFT,
+        payload: request
+        
+    }
+}
+
+export function searchContent(dataToSubmit) {
+        console.log('action',dataToSubmit)
+
+    const request = axios.post('/api/video/SearchVideos', dataToSubmit)
+        .then(response => response.data)
+    // console.log('action',dataToSubmit)
+    return {
+        type: SEARCH_CONTENT,
         payload: request
         
     }

@@ -4,7 +4,8 @@ import {
     LOGOUT_USER,
     AUTH_USER,
     SEARCH_NFT,
-    MYPAGE
+    MYPAGE,
+    SEARCH_CONTENT
 } from '../actions/types';
 
 
@@ -26,8 +27,11 @@ export default function (state = {}, action) {
             return { ...state }
         
         case SEARCH_NFT:
-            console.log('reducer', action.payload);
+            // console.log('reducer', action.payload);
             return {...state, searchNft: action.payload}
+
+        case SEARCH_CONTENT:
+            return {...state, searchContent: action.payload}
 
         case MYPAGE:
              return {...state,userInfo:action.payload}    

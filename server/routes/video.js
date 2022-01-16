@@ -3,7 +3,8 @@ const router = express.Router();
 // const { Video } = require("../models/Video");
 const multer = require("multer");
 const ffmpeg = require("fluent-ffmpeg");
-const Video = require("../models/Video");
+const {Video} = require("../models/Video");
+const {SearchContent} = require('../controller/api');
 
 let storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -115,6 +116,7 @@ router.post("/thumbnail", (req, res) => {
 });
 
 router.post("/getVideoDetail", (req, res) => {
+  console.log('detail',req.body);
   Video.findOne({ _id: req.body.videoId })
     .populate("writer")
     .exec((err, videoDetail) => {
@@ -133,5 +135,8 @@ router.get("/getVideos", (req, res) => {
       res.status(200).json({ success: true, videos });
     });
 });
+
+router.post("/SearchVideos", SearchContent);
+
 
 module.exports = router;

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import './App.css';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import "./App.css";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import LandingPage from './components/LandingPgae/LandingPage';
 import LoginPage from './components/LoginPage/LoginPage';
@@ -14,14 +14,15 @@ import CreateNFT from './components/NFTcreate/CreateNFT';
 import NftList from './components/NFTcreate/NftList';
 import MyPage from './components/MyPage/MyPage';
 import ExchangePage from './components/ExchangePage/ExchangePage';
+import SearchContent from "./components/Search/SearchContent";
 
 // const express = require("express");
 // const app = express();
 // const cors = require("cors");
 
 function App(props) {
-	const [isLogin, setIsLogin] = useState(false);
-	const [userInfo, setUserInfo] = useState(null);
+  const [isLogin, setIsLogin] = useState(false);
+  const [userInfo, setUserInfo] = useState(null);
 
 
 	const isAuthenticated = () => {
@@ -31,50 +32,53 @@ function App(props) {
 		}
 	};
 
-	const handleLogin = (req) => {
-		const addr = req.address;
-		console.log(addr);
-		setUserInfo(addr);
-		isAuthenticated();
-	};
-
-	useEffect(() => {
-		isAuthenticated();
-	}, []);
+  const handleLogin = (req) => {
+    const addr = req.address;
+    console.log(addr);
+    setUserInfo(addr);
+    isAuthenticated();
+  };
 
   useEffect(() => {
     isAuthenticated();
   }, []);
+
   return (
     <BrowserRouter>
-      	<div className = "App">
-		<Bar isLogin={isLogin} />
+      <div className="App">
+        <Bar isLogin={isLogin} />
+        {/*
+        A <Switch> looks through all its children <Route>
+        elements and renders the first one whose path
+        matches the current URL. Use a <Switch> any time
+        you have multiple routes, but you want only one
+        of them to render at a time
+      */}
+	  	
+        <Routes>
+          <Route exact path="/" element={Auth(LandingPage, null)} />
+          <Route exact path="/login" element={Auth(LoginPage, false)} />
+          <Route exact path="/register" element={Auth(RegisterPage, false)} />
+          <Route exact path="/video/upload" element={Auth(UploadPage, true)} />
+          <Route exact path="/video/:videoId" element={Auth(VideoDetailPage, null)} />
+          <Route exact path="/nft/create" element={Auth(CreateNFT, true, true)} />
+          <Route exact path="/nft/list" element={Auth(NftList, null)} />
+          <Route exact path="/user/mypage" element={Auth(MyPage, true)} />
+          <Route exact path="/exchange" element={Auth(ExchangePage, true)} />
+          <Route exact path='/SearchNft' element={Auth(SearchNft, null)} />
+		  <Route exact path='/SearchContent' element={Auth(SearchContent, null)} />
 
-	  	<Routes>
-					<Route exact path='/' element={<LandingPage />} />
-					<Route exact path='/login' element={<LoginPage />} />
-					<Route exact path='/register' element={<RegisterPage />} />
-					<Route exact path='/SearchNft' element={<SearchNft />} />
-					<Route
-						exact
-						path='/video/upload'
-						element={<UploadPage />}
-					/>
-					<Route
-						exact
-						path='/video/:videoId'
-						element={<VideoDetailPage />}
-					/>
-					<Route exact path='/nft/create' element={<CreateNFT />} />
-					<Route exact path='/nft/list' element={<NftList />} />
-					<Route exact path='/user/mypage' element={<MyPage />} />
-					<Route exact path='/exchange' element={<ExchangePage />} />
-				</Routes>
-			</div>
-		</BrowserRouter>
-	);
-				
+        </Routes>
+      </div>
+    </BrowserRouter>
+  );
 }
+//  null    =>  아무나 출입이 가능한 페이지
+//     true    =>  로그인한 유저만 출입이 가능한 페이지
+//     false   =>  로그인한 유저는 출입 불가능한 페이지
+ 
+				
+
 
 // app.use(cors());
 

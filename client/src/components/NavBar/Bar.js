@@ -8,12 +8,15 @@ import {
 	Offcanvas,
 	Form,
 	FormControl,
+	Dropdown,
+	DropdownButton
 } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { auth, logoutUser, searchNFT } from '../../actions/user_action';
+import { auth, logoutUser, searchNFT, searchContent } from '../../actions/user_action';
 import axios from 'axios';
 import watto from '../img/watto.png';
+import DropdownMenu from 'react-bootstrap/esm/DropdownMenu';
 
 function Bar({ isLogin }) {
 	const [show, setShow] = useState(false);
@@ -22,6 +25,8 @@ function Bar({ isLogin }) {
 	const handleClose = () => setShow(false);
 	const handleShow = () => setShow(true);
 	const [searchValue, setSearchValue] = useState(false);
+	const [searchOption, setSearchOption] = useState("");
+
 	const navigate = useNavigate();
 
 	const dispatch = useDispatch();
@@ -35,25 +40,54 @@ function Bar({ isLogin }) {
 	});
 
 	const onSubmit = (e) => {
-		// console.log(searchValue); 
+		console.log('value', searchValue);
+		console.log('option', searchOption) ;
 		
 		e.preventDefault();
 		
 		let search = {name: searchValue};
 		
-		dispatch(searchNFT(search))
-		.then(response => {
-		// setMessage(response.payload.message);
-		if(response.payload.success) {
-			if(response.payload.type === "nft"){
-				console.log('bar.nft', response);
-				navigate('/SearchNft');
-			} else if(response.payload.type === "content"){
-				console.log('bar.content', response)
-			}
-		
+		if(searchOption === "NFT"){
+			console.log("NFT 컨텐츠에 들어왔구나");
+
+			dispatch(searchNFT(search))
+				.then(response => {
+				// setMessage(response.payload.message);
+				if(response.payload.success) {
+
+					console.log('bar.nft', response);
+					navigate('/SearchNft');
+									
+				}
+				else{
+					navigate('/')
+					alert("실패");
+				}
+			})
 		}
-		})
+		else if(searchOption === "CONTENT"){
+			console.log("옵션 컨텐츠에 들어왔구나");
+			console.log('c.t', search);
+
+			dispatch(searchContent(search))
+				.then(response => {
+					console.log(response);
+				// setMessage(response.payload.message);
+				if(response.payload.success) {
+						console.log('bar.content', response);
+						navigate('/SearchContent');
+				}
+				else{
+						navigate('/')
+						alert("실패");
+
+				}
+				
+				
+			})
+		}
+
+		
 
 		// navigate('/SearchNft');
 		// window.location.replace('/Search');
@@ -80,12 +114,7 @@ function Bar({ isLogin }) {
 			<Navbar.Brand href='/' al>
 				<img src={watto} width='250' />
 			</Navbar.Brand>
-			{/* <Button variant="dark" onClick={handleShow} className='ms-1'>
-                <img
-                    src={watto}
-                    width="100"
-                />
-            </Button> */}
+		
 
 			<Container fluid>
 				<Navbar.Toggle aria-controls='navbarScroll' />
@@ -106,6 +135,26 @@ function Bar({ isLogin }) {
 					<Navbar.Toggle aria-controls='navbarScroll' />
 					<Navbar.Collapse id="navbarScroll" >
 						<Form className="d-flex">
+							<DropdownButton>
+									<Dropdown.Item
+									type="option"
+									// value={option}
+									onClick={(e) => {
+										setSearchOption('NFT');
+									}}>
+										NFT
+										</Dropdown.Item>
+									
+									<Dropdown.Item
+									type="option"
+									// value={option}
+									onClick={(e) => {
+										setSearchOption('CONTENT');
+									}}>
+										CONTENT
+										</Dropdown.Item>
+								
+							</DropdownButton>
 						<FormControl
 						type="search"
 						className="me-4"
@@ -119,26 +168,9 @@ function Bar({ isLogin }) {
 						</Form>
 					</Navbar.Collapse>
 
-					<Nav
-						className='me-auto my-2 my-lg-0'
-						style={{ maxHeight: '100px' }}
-						navbarScroll>
-						<NavDropdown title='Link' id='navbarScrollingDropdown'>
-							<NavDropdown.Item href='#action3'>
-								Action
-							</NavDropdown.Item>
-							<NavDropdown.Item href='#action4'>
-								Another action
-							</NavDropdown.Item>
-							<NavDropdown.Divider />
-							<NavDropdown.Item href='#action5'>
-								Something else here
-							</NavDropdown.Item>
-						</NavDropdown>
-					</Nav>
 					<Nav>
 						<div className='mb-2'>
-							{isAuth ? (
+							{isAdmin ? (
 								<Button
 									variant='dark'
 									href='/exchange'
@@ -155,7 +187,7 @@ function Bar({ isLogin }) {
 									href='/Adupload'
 									size='md'
 									className='me-1'>
-									Upload
+									AdUpload
 								</Button>
 							) : (
 								''
