@@ -260,7 +260,6 @@ module.exports = {
 
 	// WT <-> NWT
 	exchange_NWTToken: async (req, res) => {
-		console.log('aa');
 		const nwtAmount = req.body.nwtToken; // 가격에 대한 wt token 개수
 		const nwt = parseInt(nwtAmount) / 5;
 		// console.log(nwtAmount, nwt);
@@ -275,8 +274,44 @@ module.exports = {
 			serverAddress,
 			'latest'
 		);
+		// 실행할 컨트랙트 함수 데이터
+		const data = await wtContract.methods
+			.approve(process.env.SWAPCA, inputWT)
+			.encodeABI();
 
-		// infura network
+		// transaction
+		const tx = {
+			from: serverAddress,
+			to: process.env.WTTOKENCA,
+			nonce: nonce,
+			gas: 5000000,
+			data: data,
+		};
+
+		// 서명 트랜잭션
+		const signedTx = await web3.eth.accounts.signTransaction(
+			tx,
+			serverPrivateKey
+			// userPK.privateKey
+		);
+
+		try {
+			await web3.eth
+				.sendSignedTransaction(signedTx.rawTransaction)
+				.on('receipt', async (txHash) => {
+					try {
+						const allow = await wtContract.methods.allowance(
+							userPK.publicKey,
+							process.env.SWAPCA
+						);
+						console.log(allow);
+					} catch (err) {
+						console.log(err);
+					}
+				});
+		} catch (err) {
+			console.log(err);
+		}
 	},
 
 	// 수정중.. (server 계정의 auth 유지.. 방법알기)
