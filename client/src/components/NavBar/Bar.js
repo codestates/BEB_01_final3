@@ -12,8 +12,10 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { auth, logoutUser, searchNFT } from '../../actions/user_action';
+import {BankOutlined, } from "@ant-design/icons";
 import axios from 'axios';
 import watto from '../img/watto.png';
+
 
 function Bar({ isLogin }) {
 	// const [show, setShow] = useState(false);
@@ -114,13 +116,27 @@ function Bar({ isLogin }) {
 
 					<Nav>
 						<div className='mb-2'>
+
+						{isAdmin ? (
+								<Button
+									variant='warning'
+									href='/Developer'
+									size='md'
+									className='me-1'>
+									Developer
+								</Button>
+							) : (
+								''
+							)}
 							
 							{isAuth ? (
 								<Button
 									variant='dark'
 									href='/exchange'
 									size='md'
-									className='me-1'>
+									className='me-1'
+									icon={<BankOutlined />}
+									>
 									Exchange
 								</Button>
 							) : (
@@ -159,8 +175,9 @@ function Bar({ isLogin }) {
 								}}>
 								{isAuth ? 'Sign Out' : 'Sign In'}
 							</Button>
+							
 
-							<Button variant='dark' href='/register' size='md'>
+							<Button variant='dark' href={isAuth ? '/user/mypage' : '/register' } size='md'>
 								{isAuth ? 'My Page' : 'Sign Up'}
 							</Button>
 						</div>
