@@ -262,15 +262,18 @@ module.exports = {
 	exchange_NWTToken: async (req, res) => {
 		console.log('aa');
 		const nwtAmount = req.body.nwtToken; // 가격에 대한 wt token 개수
-		const nwt = nwtAmount / 5;
-		console.log(nwtAmount, nwt);
+		const nwt = parseInt(nwtAmount) / 5;
+		// console.log(nwtAmount, nwt);
+
+		const inputWT = web3.utils.toWei(nwtAmount, 'ether'); // user가 nwt로 바꿀 wt 양
+		const outputNWT = web3.utils.toWei(String(nwt), 'ether'); // server가 wt로 바꿔줄 nwt 양
 
 		const userPK = await User.findOne({ _id: req.user._id }).exec(); // user의 정보
 
-		// user의 개인키 앞에 0x 자름
-		const privateKey = userPK.privateKey.substr(
-			2,
-			userPK.privateKey.length - 1
+		// nonce 값
+		const nonce = await web3.eth.getTransactionCount(
+			serverAddress,
+			'latest'
 		);
 
 		// infura network
