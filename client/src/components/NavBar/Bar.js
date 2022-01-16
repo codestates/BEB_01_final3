@@ -114,6 +114,7 @@ function Bar({ isLogin }) {
 
 					<Nav>
 						<div className='mb-2'>
+							
 							{isAdmin ? (
 								<Button
 									variant='dark'
@@ -125,6 +126,7 @@ function Bar({ isLogin }) {
 							) : (
 								''
 							)}
+
 							{isAdmin ? (
 								<Button
 									variant='dark'

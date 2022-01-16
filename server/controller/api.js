@@ -495,6 +495,7 @@ module.exports = {
 	},
 
 	myPage: (req, res) => {
+		// console.log('here api')
 		try {
 			// 현재 로그인된 user 정보 찾아서
 			User.findOne({ _id: req.user._id }, (err, user) => {

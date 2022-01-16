@@ -68,16 +68,15 @@ export function searchNFT(dataToSubmit) {
 }
 
 export function myPageCheck(dataToSubmit) {
-  // const request = axios.post('http://localhost:5000',{
-  //      email:email
-  // }).then(res => res.data);
-  // console.log(request);
+//   const request = axios.post('http://localhost:5000',{
+//        email:email
+//   }).then(res => res.data);
+//   console.log(request);
 
-  // return {
-  //     type : MYPAGE,
-  //     payload : request
-  // }
-
+//   return {
+//       type : MYPAGE,
+//       payload : request
+//   }
   const request = axios
     .post("/api/contract/myPage", dataToSubmit)
     .then((response) => response.data);

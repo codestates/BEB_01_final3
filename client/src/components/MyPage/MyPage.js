@@ -23,7 +23,6 @@ function MyPage() {
     const [nwtToken, setNwtToken] = useState('');
     const [isCheck, setIsCheck] = useState(false)
     const [sellPrice, setSellPrice] = useState('');
-
     
     
 
