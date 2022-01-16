@@ -34,7 +34,7 @@ export default function (state = {}, action) {
             return {...state, searchContent: action.payload}
 
         case MYPAGE:
-             return {...state,userInfo:action.payload}    
+             return {...state, userInfo: action.payload}    
         default:
             return state;
     }

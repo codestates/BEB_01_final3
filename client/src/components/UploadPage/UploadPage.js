@@ -73,6 +73,7 @@ const UploadPage = (props) => {
 
                 };
                 console.log('url', response.data.url)
+                console.log('fileName', response.data.fileName)
                 setFilePath(response.data.url) //동영상주소
 
 
