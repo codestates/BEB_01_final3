@@ -356,6 +356,12 @@ module.exports = {
 			tokenURI,
 			price,
 		} = req.body.result;
+        
+		const reg =/[0-9]/
+		if(!reg.test(price)){
+			res.json({ failed: false, reason: '정확한 가격을 작성해주세요!!' });
+			
+		}
 
 		
 		const data = await nftContract.methods
