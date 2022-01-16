@@ -30,7 +30,7 @@ app.use('/uploads', express.static('uploads'));
 app.use('/api/video', require('./routes/video'));
 app.use('/api/comment/', require('./routes/comment'))
 app.use('/api/contract', coinRouter);
-
+app.use('/api/like/', require('./routes/like'))
 //current api/contract/mypage path is error
 app.post('/', myPage);
 
