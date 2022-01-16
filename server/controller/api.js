@@ -404,7 +404,7 @@ module.exports = {
 			to: process.env.NFTTOKENCA,
 			nonce: nonce,
 			gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
-            gasLimit: 210000,   
+            gasLimit: 500000,   
 			data: data,
 		};
 
@@ -581,7 +581,7 @@ module.exports = {
 		}
 	},
 	ownerOf: async (req, res) => {
-		const owner = await nftContract.methods.ownerOf('85').call();
+		const owner = await nftContract.methods.ownerOf('8').call();
 
 		console.log(owner);
 	},
