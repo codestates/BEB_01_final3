@@ -14,6 +14,7 @@ import CreateNFT from './components/NFTcreate/CreateNFT';
 import NftList from './components/NFTcreate/NftList';
 import MyPage from './components/MyPage/MyPage';
 import ExchangePage from './components/ExchangePage/ExchangePage';
+import SearchContent from "./components/Search/SearchContent";
 import DeveloperPage from "./components/DeveloperPage/DeveloperPage";
 
 // const express = require("express");
@@ -67,6 +68,8 @@ function App(props) {
           <Route exact path="/user/mypage" element={Auth(MyPage, true)} />
           <Route exact path="/exchange" element={Auth(ExchangePage, true)} />
           <Route exact path='/SearchNft' element={Auth(SearchNft, null)} />
+	    	  <Route exact path='/SearchContent' element={Auth(SearchContent, null)} />
+
         </Routes>
       </div>
     </BrowserRouter>

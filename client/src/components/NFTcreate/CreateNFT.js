@@ -173,7 +173,7 @@ const { Title, Text } = Typography
                     </div>
     
                     <div style={{backgroundColor:"black"}}>
-                    <label style={{fontSize:"3rem",fontFamily:"fantasy",color:"red"}}>PRICE</label>
+                    <label style={{fontSize:"3rem",fontFamily:"fantasy",color:"red"}}>PRICE (NWT)</label>
                     </div>
                     <Input  onChange={(e)=>{setPrice(e.target.value)}} style={{color:"white",backgroundColor:"black"}} />
                     <br />

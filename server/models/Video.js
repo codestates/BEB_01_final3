@@ -38,4 +38,4 @@ const videoSchema = mongoose.Schema(
 );
 const Video = mongoose.model("Video", videoSchema); //1st모델의이름,2nd데이터
 
-module.exports = Video; //다른파일에서사용가능
+module.exports = {Video}; //다른파일에서사용가능

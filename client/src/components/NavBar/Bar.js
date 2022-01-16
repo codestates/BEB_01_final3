@@ -8,20 +8,25 @@ import {
 	Offcanvas,
 	Form,
 	FormControl,
+	Dropdown,
+	DropdownButton
 } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { auth, logoutUser, searchNFT } from '../../actions/user_action';
+import { auth, logoutUser, searchNFT, searchContent } from '../../actions/user_action';
 import {BankOutlined, } from "@ant-design/icons";
 import axios from 'axios';
 import watto from '../img/watto.png';
+import DropdownMenu from 'react-bootstrap/esm/DropdownMenu';
 
 
 function Bar({ isLogin }) {
-	// const [show, setShow] = useState(false);
+	const [show, setShow] = useState(false);
 	const [isAuth, setIsAuth] = useState(false);
 	const [isAdmin, setIsAdmin] = useState(false);	
 	const [searchValue, setSearchValue] = useState(false);
+	const [searchOption, setSearchOption] = useState("");
+
 	const navigate = useNavigate();
 
 	const dispatch = useDispatch();
@@ -35,25 +40,54 @@ function Bar({ isLogin }) {
 	});
 
 	const onSubmit = (e) => {
-		// console.log(searchValue); 
+		console.log('value', searchValue);
+		console.log('option', searchOption) ;
 		
 		e.preventDefault();
 		
 		let search = {name: searchValue};
 		
-		dispatch(searchNFT(search))
-		.then(response => {
-		// setMessage(response.payload.message);
-		if(response.payload.success) {
-			if(response.payload.type === "nft"){
-				console.log('bar.nft', response);
-				navigate('/SearchNft');
-			} else if(response.payload.type === "content"){
-				console.log('bar.content', response)
-			}
-		
+		if(searchOption === "NFT"){
+			console.log("NFT 컨텐츠에 들어왔구나");
+
+			dispatch(searchNFT(search))
+				.then(response => {
+				// setMessage(response.payload.message);
+				if(response.payload.success) {
+
+					console.log('bar.nft', response);
+					navigate('/SearchNft');
+									
+				}
+				else{
+					navigate('/')
+					alert("실패");
+				}
+			})
 		}
-		})
+		else if(searchOption === "CONTENT"){
+			console.log("옵션 컨텐츠에 들어왔구나");
+			console.log('c.t', search);
+
+			dispatch(searchContent(search))
+				.then(response => {
+					console.log(response);
+				// setMessage(response.payload.message);
+				if(response.payload.success) {
+						console.log('bar.content', response);
+						navigate('/SearchContent');
+				}
+				else{
+						navigate('/')
+						alert("실패");
+
+				}
+				
+				
+			})
+		}
+
+		
 
 		// navigate('/SearchNft');
 		// window.location.replace('/Search');
@@ -101,6 +135,26 @@ function Bar({ isLogin }) {
 					<Navbar.Toggle aria-controls='navbarScroll' />
 					<Navbar.Collapse id="navbarScroll" >
 						<Form className="d-flex">
+							<DropdownButton>
+									<Dropdown.Item
+									type="option"
+									// value={option}
+									onClick={(e) => {
+										setSearchOption('NFT');
+									}}>
+										NFT
+										</Dropdown.Item>
+									
+									<Dropdown.Item
+									type="option"
+									// value={option}
+									onClick={(e) => {
+										setSearchOption('CONTENT');
+									}}>
+										CONTENT
+										</Dropdown.Item>
+								
+							</DropdownButton>
 						<FormControl
 						type="search"
 						className="me-4"
