@@ -3,6 +3,8 @@ import {  Card } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { searchNFT } from "../../actions/user_action.js";
+import NFTbuy from '../NFTcreate/NFTbuy'
+
 
 const SearchNft = (props) => {
   const dispatch = useDispatch();
@@ -15,6 +17,21 @@ const SearchNft = (props) => {
   //     console.log('product', product)
 
   // })
+//   function BuyNFT(tokenId){
+//     axios.post('http://localhost:5000/contract/buyNFT',{tokenId:tokenId,buyer:"test1@test1"})
+//       .then((res) => {
+              
+        
+//            if(res.data.failed === false){
+//              alert('구매가 되지 않았습니다. 확인해주세요!!!, reason :'+res.data.reason)
+//            }else if(res.data.success){
+//              alert('구매가 완료되었습니다. 구매자의 mypage로 이동하겠습니다.')
+//              navigate('/user/myPage')
+
+//            }
+          
+//         });
+//   }
 
   const onSubmit = (e) => {
     // console.log(searchValue);
