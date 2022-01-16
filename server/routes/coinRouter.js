@@ -15,7 +15,7 @@ const {
 	SearchNft,
 	exchange_NWTToken,
 	serverWT_faucet,
-	myPage
+	myPage,
 } = require('../controller/api');
 
 // server address
@@ -39,10 +39,6 @@ router.post('/token/exchangeWT', auth, exchange_WTToken);
 // user wt exchange nwt
 router.post('/token/exchangeNWT', auth, exchange_NWTToken);
 
-// user won exchange wt
-router.post('/token/exchangeWT', exchange_WTToken);
-// /token/exchangeWT
-
 //import nftList
 router.get('/nft/list', auth, NFTlist);
 
@@ -53,12 +49,12 @@ router.post('/nft/create', auth, createNFT);
 router.post('/buyNFT', auth, buyNFT);
 
 // user gonna set price for nft
-router.post('/nft/sell', auth,setForSell);
+router.post('/nft/sell', auth, setForSell);
 
 //user gonna cancel for selling the nft
-router.post('/nft/cancel', auth,cancel);
+router.post('/nft/cancel', auth, cancel);
 
-router.get('/myPage',auth,myPage);
+router.get('/myPage', auth, myPage);
 
 router.post('/users/SearchNft', SearchNft);
 
