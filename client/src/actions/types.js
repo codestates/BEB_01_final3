@@ -4,6 +4,7 @@ export const REGISTER_USER = 'register_user';
 export const AUTH_USER = 'auth_user';
 export const MYPAGE = 'mypage';
 export const SEARCH_NFT = 'search_nft';
+export const SEARCH_CONTENT = 'search_content';
 
 // coin change
 export const WTTOKEN_CHANGE = 'exchange_wttoken';

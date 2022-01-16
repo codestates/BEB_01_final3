@@ -1,6 +1,8 @@
 require('dotenv').config();
 const { User } = require('../models/User');
 const { Nft } = require('../models/Nft');
+const { Video } = require('../models/Video');
+
 const Web3 = require('web3');
 const web3 = new Web3(
 	new Web3.providers.HttpProvider(
@@ -608,10 +610,26 @@ module.exports = {
 		const nftInfo = await Nft.find().find({
 			nftName: { $regex: name, $options: 'i' },
 		});
+
 		res.status(201).json({ success: true, data: nftInfo, type: 'nft' });
 		// if(err){
 		//     res.status(404).json({failed:false})
 		// }
-		console.log(nftInfo);
+		console.log('nft', nftInfo);
+	},
+
+	SearchContent: async (req, res) => {
+		let name = req.body.name;
+
+		console.log('name?',name);
+
+		const contentInfo = await Video.find().find({
+			title: { $regex: name, $options: 'i' },
+		});
+		res.status(201).json({ success: true, data: contentInfo, type: 'Content' });
+		// if(err){
+		//     res.status(404).json({failed:false})
+		// }
+		console.log('api.content', contentInfo);
 	},
 };
