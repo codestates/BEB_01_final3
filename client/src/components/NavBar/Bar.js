@@ -115,7 +115,7 @@ function Bar({ isLogin }) {
 					<Nav>
 						<div className='mb-2'>
 							
-							{isAdmin ? (
+							{isAuth ? (
 								<Button
 									variant='dark'
 									href='/exchange'

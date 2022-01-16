@@ -108,7 +108,7 @@ function MyPage() {
                 height:"50%",
                 
             }}>
-                <p>보유 유동성 토큰</p>
+                <p>WT Coin [stable]</p>
                 <p><input value={wtToken} readOnly style={{border:"none", backgroundColor:"#eee"}}/></p>
             </div>
             <div style={{
@@ -116,7 +116,7 @@ function MyPage() {
                 height:"50%",
                
             }}>
-               <p>스테이블 토큰</p>
+               <p>NWT Coin [flexible Coin]</p>
                 <p><input value={nwtToken} readOnly style={{border:"none", backgroundColor:"#eee"}}/></p>
                 
             </div>
