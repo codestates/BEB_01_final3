@@ -459,12 +459,14 @@ module.exports = {
 			res.json({ failed: false, reason: 'i do not know' });
 		}
 	},
+
 	myPage: (req, res) => {
+		// console.log('here api')
 		try {
 			const email = req.body.email;
 			console.log(email);
 			User.find({ email: email }, (err, userResult) => {
-				console.log(userResult[0].publicKey);
+				// console.log(userResult[0].publicKey);
 				Nft.find(
 					{ address: userResult[0].publicKey },
 					(req, nftResult) => {

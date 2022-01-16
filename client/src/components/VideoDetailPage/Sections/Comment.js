@@ -45,7 +45,7 @@ function Comment(props) {
     axios.post('/api/comment/saveComment', variables)
       .then(response => {
         if (response.data.success) {
-          console.log(response.data.result)
+          console.log('result', response.data.result)
           setcommentValue(''); //저장후 빈칸으로 만들기 위해
           props.refreshpage(response.data.result)
         } else {

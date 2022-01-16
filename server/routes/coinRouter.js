@@ -15,6 +15,7 @@ const {
 	SearchNft,
 	exchange_NWTToken,
 	serverWT_faucet,
+	myPage
 } = require('../controller/api');
 
 // server address
@@ -57,22 +58,19 @@ router.post('/nft/sell', auth,setForSell);
 //user gonna cancel for selling the nft
 router.post('/nft/cancel', auth,cancel);
 
-<<<<<<< HEAD
-router.post('/myPage', auth, (req, res) => {
-=======
-router.post('/myPage',auth,(req, res) => {
->>>>>>> upstream/main
-	const email = req.body.email;
-	// console.log(email);
-	// console.log('email', email);
-	User.find({ email: email }, (err, userResult) => {
-		//정보에 해당되는 Nft정보를 다시 긁어와서 보내준다.
-		Nft.find({ address: userResult[0].publicKey }, (req, nftResult) => {
-			// console.log(nftResult);
-			res.json({ userInfo: userResult, nftInfo: nftResult });
-		});
-	});
-});
+router.post('/myPage',auth, myPage) ;
+// => {
+// 	const email = req.body.email;
+// 	// console.log(email);
+// 	// console.log('email', email);
+// 	User.find({ email: email }, (err, userResult) => {
+// 		//정보에 해당되는 Nft정보를 다시 긁어와서 보내준다.
+// 		Nft.find({ address: userResult[0].publicKey }, (req, nftResult) => {
+// 			// console.log(nftResult);
+// 			res.json({ userInfo: userResult, nftInfo: nftResult });
+// 		});
+// 	});
+// });
 
 router.post('/users/SearchNft', SearchNft);
 
