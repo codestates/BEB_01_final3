@@ -383,9 +383,10 @@ module.exports = {
 			tokenURI,
 			price,
 		} = req.body.result;
-
+		try {
 		var regexp = /^[0-9]*$/
 		if (!regexp.test(price)) {
+			console.log(1);
 			res.json({ failed: false, reason: '정확한 가격을 작성해주세요!!' });
 		}
 
@@ -396,15 +397,18 @@ module.exports = {
 			serverAddress,
 			'latest'
 		);
+		const gasPrice = await web3.eth.getGasPrice();
+		console.log(gasPrice);
 		const tx = {
 			from: serverAddress,
 			to: process.env.NFTTOKENCA,
 			nonce: nonce,
-			gas: 5000000,
+			gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
+            gasLimit: 210000,   
 			data: data,
 		};
 
-		try {
+	
 			const signedTx = await web3.eth.accounts.signTransaction(
 				tx,
 				serverPrivateKey
@@ -426,13 +430,16 @@ module.exports = {
 
 			nft.save((err, userInfo) => {
 				if (!err) {
+					console.log(2);
 					res.json({ success: true });
 				} else {
+					console.log(3);
 					res.json({ failed: false,reason: '블록체인에는 올라갔지만 DB에 문제가 생겼습니다.' });
 				}
 			});
 		} catch (e) {
 			console.log('err' + e);
+			console.log(4);
 			res.json({ failed: false,reason: '블록체인에 문제가있습니다'  });
 		}
 	},
