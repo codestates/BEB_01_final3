@@ -14,17 +14,23 @@ const { newContract } = require('./index');
 const serverAddress = process.env.SERVERADDRESS;
 const serverPrivateKey = process.env.SERVERPRIVATEKEY;
 
-
 // abi json
 const WTABI = fs.readFileSync('server/abi/WTToken.json', 'utf-8');
+const NWTABI = fs.readFileSync('server/abi/NWTToken.json', 'utf-8');
 const NFTABI = fs.readFileSync('server/abi/NFTWT.json', 'utf8');
+const SWAPABI = fs.readFileSync('server/abi/TokenSwap.json', 'utf-8');
+
+// abi parse
 const nftAbi = JSON.parse(NFTABI);
 const wtAbi = JSON.parse(WTABI);
+const nwtAbi = JSON.parse(NWTABI);
+const swapAbi = JSON.parse(SWAPABI);
 
 //contract
-const nftContract = newContract(web3,nftAbi,process.env.NFTTOKENCA);	
-const wtContract = newContract(web3,wtAbi,process.env.WTTOKENCA);	
-
+const nftContract = newContract(web3, nftAbi, process.env.NFTTOKENCA); // nft
+const wtContract = newContract(web3, wtAbi, process.env.WTTOKENCA); // wt
+const nwtContract = newContract(web3, nwtAbi, process.env.NWTTOKENCA); // nwt
+const swapContract = newContract(web3, swapAbi, process.env.SWAPCA); // swap
 
 module.exports = {
 	userJoin: async (req, res) => {
@@ -139,7 +145,7 @@ module.exports = {
 			image: req.user.image,
 		});
 	},
-	
+
 	userLogout: (req, res) => {
 		// console.log('req.user', req.user)
 		User.findOneAndUpdate(
@@ -177,22 +183,10 @@ module.exports = {
 
 		const userPK = await User.findOne({ _id: req.user._id }).exec(); // user의 정보
 		// user의 개인키 앞에 0x 자름
-		const privateKey = userPK.privateKey.substr(
-			2,
-			userPK.privateKey.length - 1
-		);
-		// infura network
-		
-
-		// web3.eth.accounts.wallet.add(privateKey); // user의 개인키
-		// 963c26c5e6e6b4229961bf77c901e8634ba200cfac91798ecf0a8c9e460437cf
-
-		// contract 불러오기
-		const myContract = await newContract(
-			web3,
-			WTtokenAbi,
-			process.env.WATOKENCA
-		);
+		// const privateKey = userPK.privateKey.substr(
+		// 	2,
+		// 	userPK.privateKey.length - 1
+		// );
 
 		// nonce 값
 		const nonce = await web3.eth.getTransactionCount(
@@ -201,14 +195,14 @@ module.exports = {
 		);
 
 		// 실행할 컨트랙트 함수 데이터
-		const data = await myContract.methods
+		const data = await wtContract.methods
 			.exchange(userPK.publicKey, parseInt(wtAmount))
 			.encodeABI();
 
 		// transaction
 		const tx = {
 			from: serverAddress,
-			to: process.env.WATOKENCA,
+			to: process.env.WTTOKENCA,
 			nonce: nonce,
 			gas: 5000000,
 			data: data,
@@ -268,33 +262,27 @@ module.exports = {
 	exchange_NWTToken: async (req, res) => {
 		console.log('aa');
 		const nwtAmount = req.body.nwtToken; // 가격에 대한 wt token 개수
-		const nwt = nwtAmount / 5;
-		console.log(nwtAmount, nwt);
+		const nwt = parseInt(nwtAmount) / 5;
+		// console.log(nwtAmount, nwt);
+
+		const inputWT = web3.utils.toWei(nwtAmount, 'ether'); // user가 nwt로 바꿀 wt 양
+		const outputNWT = web3.utils.toWei(String(nwt), 'ether'); // server가 wt로 바꿔줄 nwt 양
 
 		const userPK = await User.findOne({ _id: req.user._id }).exec(); // user의 정보
 
-		// user의 개인키 앞에 0x 자름
-		const privateKey = userPK.privateKey.substr(
-			2,
-			userPK.privateKey.length - 1
+		// nonce 값
+		const nonce = await web3.eth.getTransactionCount(
+			serverAddress,
+			'latest'
 		);
 
 		// infura network
-		
 	},
 
 	// 수정중.. (server 계정의 auth 유지.. 방법알기)
 	// 서버계정 wt token 받는 방법 : http://localhost:5000/api/contract/token/faucet - postman get 요청
 	serverWT_faucet: async (req, res) => {
 		// web3.eth.accounts.wallet.add(serverPrivateKey);
-		
-
-		// contract 가져오기
-		const myContract = await newContract(
-			web3,
-			WTtokenAbi,
-			process.env.WATOKENCA
-		);
 
 		// nonce 값
 		const nonce = await web3.eth.getTransactionCount(
@@ -303,16 +291,16 @@ module.exports = {
 		);
 
 		// 실행할 컨트랙트 함수 데이터
-		const data = await myContract.methods
+		const data = await wtContract.methods
 			.mintToken(serverAddress, web3.utils.toWei('1000000', 'ether')) //1e18  100000000
 			.encodeABI();
 
 		// transaction
 		const tx = {
 			from: serverAddress,
-			to: process.env.WATOKENCA,
+			to: process.env.WTTOKENCA,
 			nonce: nonce,
-			gas: 5000000,
+			gas: 500000,
 			data: data,
 		};
 
@@ -322,18 +310,22 @@ module.exports = {
 			serverPrivateKey
 		);
 
-		await web3.eth
-			.sendSignedTransaction(signedTx.rawTransaction)
-			.on('receipt', (txHash) => {
-				User.findOneAndUpdate(
-					{ publicKey: serverAddress },
-					{ $inc: { wtToken: 1000000 } },
-					(err, user) => {
-						console.log(user);
-					}
-				);
-				json.res({ success: true });
-			});
+		try {
+			await web3.eth
+				.sendSignedTransaction(signedTx.rawTransaction)
+				.on('receipt', (txHash) => {
+					User.findOneAndUpdate(
+						{ publicKey: serverAddress },
+						{ $inc: { wtToken: 1000000 } },
+						(err, user) => {
+							console.log(user);
+						}
+					);
+					json.res({ success: true });
+				});
+		} catch (err) {
+			console.log(err);
+		}
 	},
 
 	// server nwt token faucet
@@ -341,6 +333,7 @@ module.exports = {
 		console.log('aa');
 	},
 	NFTlist: (req, res) => {
+		console.log('list');
 		Nft.find({ sale: true }, (err, result) => {
 			res.json({ data: result });
 		});
@@ -356,11 +349,18 @@ module.exports = {
 			price,
 		} = req.body.result;
 
-		
+		const reg = /[0-9]/;
+		if (!reg.test(price)) {
+			res.json({ failed: false, reason: '정확한 가격을 작성해주세요!!' });
+		}
+
 		const data = await nftContract.methods
 			.mintNFT(tokenURI, web3.utils.toWei(price, 'ether'))
 			.encodeABI();
-		const nonce = await web3.eth.getTransactionCount(serverAddress, 'latest');
+		const nonce = await web3.eth.getTransactionCount(
+			serverAddress,
+			'latest'
+		);
 		const tx = {
 			from: serverAddress,
 			to: process.env.NFTTOKENCA,
@@ -374,30 +374,28 @@ module.exports = {
 				tx,
 				serverPrivateKey
 			);
-			await web3.eth
-				.sendSignedTransaction(signedTx.rawTransaction)
-				.on('receipt', (txHash) => {
-					console.log(txHash);
-					let logs = txHash.logs;
-					const tokenId = web3.utils.hexToNumber(logs[0].topics[3]);
-					console.log('🎉 The hash of your transaction is');
-					const nft = new Nft();
-					nft.address = sendAccount;
-					(nft.tokenId = tokenId), (nft.contentTitle = contentTitle);
-					nft.nftName = nftName;
-					nft.description = nftDescription;
-					nft.imgUri = imgURI;
-					nft.tokenUrl = tokenURI;
-					nft.price = price;
+			const hash = await web3.eth.sendSignedTransaction(
+				signedTx.rawTransaction
+			);
+			const tokenId = web3.utils.hexToNumber(hash.logs[0].topics[3]);
+			console.log(tokenId);
+			const nft = new Nft();
+			nft.address = serverAddress;
+			nft.tokenId = tokenId;
+			nft.contentTitle = contentTitle;
+			nft.nftName = nftName;
+			nft.description = nftDescription;
+			nft.imgUri = imgURI;
+			nft.tokenUrl = tokenURI;
+			nft.price = price;
 
-					nft.save((err, userInfo) => {
-						if (!err) {
-							res.json({ success: true });
-						} else {
-							res.json({ failed: false });
-						}
-					});
-				});
+			nft.save((err, userInfo) => {
+				if (!err) {
+					res.json({ success: true });
+				} else {
+					res.json({ failed: false });
+				}
+			});
 		} catch (e) {
 			console.log('err' + e);
 			res.json({ failed: false });
@@ -405,7 +403,7 @@ module.exports = {
 	},
 	buyNFT: async (req, res) => {
 		const tokenId = req.body.tokenId;
-		const email = req.body.buyer;
+		const email = req.user.email;
 
 		const userInfo = await User.findOne({ email: email }).exec();
 		const buyer = userInfo.publicKey;
@@ -418,12 +416,13 @@ module.exports = {
 			return;
 		}
 
-		const sendAccount = process.env.serverAddress;
-		const privateKey = process.env.serverAddress_PK;
 		const data = await nftContract.methods
 			.purchaseToken(tokenId, buyer)
 			.encodeABI();
-		const nonce = await web3.eth.getTransactionCount(sendAccount, 'latest');
+		const nonce = await web3.eth.getTransactionCount(
+			serverAddress,
+			'latest'
+		);
 
 		const tx = {
 			from: serverAddress,
@@ -435,7 +434,7 @@ module.exports = {
 		try {
 			const signedTx = await web3.eth.accounts.signTransaction(
 				tx,
-				privateKey
+				serverPrivateKey
 			);
 			await web3.eth.sendSignedTransaction(
 				signedTx.rawTransaction,
@@ -463,20 +462,30 @@ module.exports = {
 	myPage: (req, res) => {
 		// console.log('here api')
 		try {
-			const email = req.body.email;
-			console.log(email);
-			User.find({ email: email }, (err, userResult) => {
-				// console.log(userResult[0].publicKey);
-				Nft.find(
-					{ address: userResult[0].publicKey },
-					(req, nftResult) => {
-						res.json({ userInfo: userResult, nftInfo: nftResult });
+			// 현재 로그인된 user 정보 찾아서
+			User.findOne({ _id: req.user._id }, (err, user) => {
+				// userInfo 에 필요한 정보 담고
+				const userInfo = {
+					publicKey: user.publicKey,
+					privateKey: user.privateKey,
+					wtToken: user.wtToken,
+					nwtToken: user.nwtToken,
+				};
+				// 그 유저가 가지고 있는 nft 정보를 가져옴
+				Nft.find({ address: user.publicKey }, (err, nft) => {
+					const nftInfo = nft;
+
+					// nft 가 없으면 유저 정보만 넘기고
+					if (nft === null) {
+						res.json({ success: true, userInfo });
+					} else {
+						// 있으면 둘다 넘김
+						res.json({ success: true, userInfo, nftInfo });
 					}
-				);
+				});
 			});
-		} catch (e) {
-			console.log(e);
-			res.json({ faile: false, reason: 'i do not know' });
+		} catch (err) {
+			res.json({ success: false, err });
 		}
 	},
 
@@ -487,7 +496,10 @@ module.exports = {
 		const data = await nftContract.methods
 			.setForSale(tokenId, web3.utils.toWei(sellPrice, 'ether'))
 			.encodeABI();
-		const nonce = await web3.eth.getTransactionCount(serverAddress,'latest');
+		const nonce = await web3.eth.getTransactionCount(
+			serverAddress,
+			'latest'
+		);
 		const tx = {
 			from: serverAddress,
 			to: process.env.NFTTOKENCA,
