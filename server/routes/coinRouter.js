@@ -15,12 +15,10 @@ const {
 	SearchNft,
 	exchange_NWTToken,
 	serverWT_faucet,
+	serverNWT_faucet,
 	myPage,
 } = require('../controller/api');
 
-// server address
-const serverAddress = '';
-const serverPrivateKey = '';
 const Web3 = require('web3');
 const { LogTimings } = require('concurrently');
 const web3 = new Web3(
@@ -29,10 +27,11 @@ const web3 = new Web3(
 	)
 );
 
-// server 계정 토큰 민팅 - (유동성 코인)
-// server 계정 토큰 민팅 - WT (stable coin)
+// server 계정 토큰 민팅 wt, nwt
 // server 계정 mypage 에서 faucet 실행하도록
-router.get('/token/faucet', serverWT_faucet); // 잠시 auth 뺌
+// 버튼 완성되면 관리자 계정 로그인된 상태에서 가능할 수 있도록 수정
+router.get('/token/faucetWT', serverWT_faucet);
+router.get('/token/faucetNWT', serverNWT_faucet);
 
 // user won exchange wt
 router.post('/token/exchangeWT', auth, exchange_WTToken);
@@ -57,5 +56,7 @@ router.post('/nft/cancel', auth, cancel);
 router.get('/myPage', auth, myPage);
 
 router.post('/users/SearchNft', SearchNft);
+
+router.get('/owner', ownerOf);
 
 module.exports = router;
