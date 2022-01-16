@@ -11,6 +11,7 @@ import {
   LaptopOutlined,
   NotificationOutlined,
 } from "@ant-design/icons";
+import { Link } from "react-router-dom";
 
 const { SubMenu } = Menu;
 const { Content, Sider } = Layout;
@@ -101,13 +102,15 @@ function LandingPage() {
             defaultOpenKeys={["sub1"]}
             style={{ height: "100%", borderRight: 0 }}
           >
-            <SubMenu key="sub1" icon={<BankOutlined />} title="Exchange">
-              <Menu.Item key="1">option1</Menu.Item>
-              <Menu.Item key="2">option2</Menu.Item>
+            <SubMenu key="sub1" icon={<LaptopOutlined />} title="NFT">
+              <Menu.Item key="1">
+              <Link to="/nft/list" className="nav-text">NFT LIST</Link>
+                </Menu.Item>
+              <Menu.Item key="2">NFT Ranking</Menu.Item>
               <Menu.Item key="3">option3</Menu.Item>
               <Menu.Item key="4">option4</Menu.Item>
             </SubMenu>
-            <SubMenu key="sub2" icon={<LaptopOutlined />} title="NFT">
+            <SubMenu key="sub2" icon={<LaptopOutlined />} title="비고">
               <Menu.Item key="5">option5</Menu.Item>
               <Menu.Item key="6">option6</Menu.Item>
               <Menu.Item key="7">option7</Menu.Item>
@@ -116,7 +119,7 @@ function LandingPage() {
             <SubMenu
               key="sub3"
               icon={<NotificationOutlined />}
-              title="subnav 3"
+              title="비고"
             >
               <Menu.Item key="9">option9</Menu.Item>
               <Menu.Item key="10">option10</Menu.Item>
