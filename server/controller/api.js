@@ -341,6 +341,7 @@ module.exports = {
 		console.log('aa');
 	},
 	NFTlist: (req, res) => {
+		console.log("list");
 		Nft.find({ sale: true }, (err, result) => {
 			res.json({ data: result });
 		});
@@ -355,6 +356,12 @@ module.exports = {
 			tokenURI,
 			price,
 		} = req.body.result;
+        
+		const reg =/[0-9]/
+		if(!reg.test(price)){
+			res.json({ failed: false, reason: '정확한 가격을 작성해주세요!!' });
+			
+		}
 
 		
 		const data = await nftContract.methods
@@ -374,16 +381,13 @@ module.exports = {
 				tx,
 				serverPrivateKey
 			);
-			await web3.eth
-				.sendSignedTransaction(signedTx.rawTransaction)
-				.on('receipt', (txHash) => {
-					console.log(txHash);
-					let logs = txHash.logs;
-					const tokenId = web3.utils.hexToNumber(logs[0].topics[3]);
-					console.log('🎉 The hash of your transaction is');
+			const hash = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+					const tokenId = web3.utils.hexToNumber(hash.logs[0].topics[3]);
+					console.log(tokenId);
 					const nft = new Nft();
-					nft.address = sendAccount;
-					(nft.tokenId = tokenId), (nft.contentTitle = contentTitle);
+					nft.address = serverAddress;
+					nft.tokenId = tokenId
+					nft.contentTitle = contentTitle;
 					nft.nftName = nftName;
 					nft.description = nftDescription;
 					nft.imgUri = imgURI;
@@ -397,7 +401,7 @@ module.exports = {
 							res.json({ failed: false });
 						}
 					});
-				});
+				
 		} catch (e) {
 			console.log('err' + e);
 			res.json({ failed: false });
@@ -405,7 +409,7 @@ module.exports = {
 	},
 	buyNFT: async (req, res) => {
 		const tokenId = req.body.tokenId;
-		const email = req.body.buyer;
+		const email = req.user.email;
 
 		const userInfo = await User.findOne({ email: email }).exec();
 		const buyer = userInfo.publicKey;
@@ -418,12 +422,11 @@ module.exports = {
 			return;
 		}
 
-		const sendAccount = process.env.serverAddress;
-		const privateKey = process.env.serverAddress_PK;
+	
 		const data = await nftContract.methods
 			.purchaseToken(tokenId, buyer)
 			.encodeABI();
-		const nonce = await web3.eth.getTransactionCount(sendAccount, 'latest');
+		const nonce = await web3.eth.getTransactionCount(serverAddress, 'latest');
 
 		const tx = {
 			from: serverAddress,
@@ -435,7 +438,7 @@ module.exports = {
 		try {
 			const signedTx = await web3.eth.accounts.signTransaction(
 				tx,
-				privateKey
+				serverPrivateKey
 			);
 			await web3.eth.sendSignedTransaction(
 				signedTx.rawTransaction,
@@ -448,7 +451,7 @@ module.exports = {
 
 							res.json({
 								success: true,
-								detail: 'db store success and block update success',
+								detail: 'db store success and block update success',	
 							});
 						}
 					);
@@ -459,23 +462,35 @@ module.exports = {
 			res.json({ failed: false, reason: 'i do not know' });
 		}
 	},
+
+	
 	myPage: (req, res) => {
 		try {
-			const email = req.body.email;
-			console.log(email);
-			User.find({ email: email }, (err, userResult) => {
-				console.log(userResult[0].publicKey);
-				Nft.find(
-					{ address: userResult[0].publicKey },
-					(req, nftResult) => {
-						res.json({ userInfo: userResult, nftInfo: nftResult });
-					}
-				);
-			});
-		} catch (e) {
-			console.log(e);
-			res.json({ faile: false, reason: 'i do not know' });
-		}
+            // 현재 로그인된 user 정보 찾아서
+            User.findOne({ _id: req.user._id }, (err, user) => {
+                // userInfo 에 필요한 정보 담고
+                const userInfo = {
+                    publicKey: user.publicKey,
+                    privateKey: user.privateKey,
+                    wtToken: user.wtToken,
+                    nwtToken: user.nwtToken,
+                };
+                // 그 유저가 가지고 있는 nft 정보를 가져옴
+                Nft.find({ address: user.publicKey }, (err, nft) => {
+                    const nftInfo = nft;
+                    
+                    // nft 가 없으면 유저 정보만 넘기고		
+                    if (nft === null) {
+                        res.json({ success: true, userInfo });
+                    } else {
+                        // 있으면 둘다 넘김
+                        res.json({ success: true, userInfo, nftInfo });
+                    }
+                });
+            });
+        } catch (err) {
+            res.json({ success: false, err });
+        }
 	},
 
 	setForSell: async (req, res) => {

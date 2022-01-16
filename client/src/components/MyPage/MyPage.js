@@ -23,13 +23,8 @@ function MyPage() {
     const [nwtToken, setNwtToken] = useState('');
     const [isCheck, setIsCheck] = useState(false)
     const [sellPrice, setSellPrice] = useState('');
-<<<<<<< HEAD
-   
-    const user = useSelector(state => state.user)
-=======
-    const user = useSelector(state => state.user)
+
     
->>>>>>> upstream/main
     
 
      
@@ -38,48 +33,27 @@ function MyPage() {
       
 
    useEffect(()=>{
-   
-
-   function page (){
-
-<<<<<<< HEAD
-        let body = { 
-            email : Email ,
-        }
-        dispatch(myPageCheck(body)) //reducer
-=======
-        // const email = user.userData.email;
-        // console.log(email);
-
-   
-     
-        dispatch(myPageCheck('test@test')) //reducer
->>>>>>> upstream/main
-        .then(response => {
-            console.log(response.payload.userInfo[0]);
-     if(response.payload.userInfo[0] !== undefined){
-    //   console.log(res.data.userInfo[0]);
-      if(response.payload.nftInfo[0] !== undefined){
-          console.log('nft exist');
-        setNftInfo(response.payload.nftInfo)
+        axios.get('/api/contract/myPage')
+        .then(res => {
+        const nftInfo = res.data.nftInfo
+        const userInfo = res.data.userInfo
+       if(nftInfo !== undefined){
+        
+        setNftInfo(nftInfo)
         setIsCheck(true) 
-      }
+        }
     
-      setPrivKey(response.payload.userInfo[0].privateKey);
-      setPbKey(response.payload.userInfo[0].publicKey);
-      setUserInfo(response.payload.userInfo[0]);
-      setWtToken(response.payload.userInfo[0].wtToken)
-      setNwtToken(response.payload.userInfo[0].nwtToken)
+      setPrivKey(userInfo.privateKey);
+      setPbKey(userInfo.publicKey);
+      setUserInfo(userInfo);
+      setWtToken(userInfo.wtToken)
+      setNwtToken(userInfo.nwtToken)
     
-     }
+     
       })
-           
-    }
-    page();
-   
    },[])
 
-   console.log(user);
+
 
    
   function sellNFT(tokenId){
@@ -215,7 +189,7 @@ function MyPage() {
                  
                 </Card.Body>
               </Card>
-               )
+               )        
              })
              :<div style={{height:'300px'}}> NFT를 소유하고 있지않습니다.</div>
            }
