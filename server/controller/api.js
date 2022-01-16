@@ -297,7 +297,7 @@ module.exports = {
 			from: serverAddress,
 			to: process.env.WTTOKENCA,
 			nonce: nonce,
-			gas: 5000000,
+			gas: 500000,
 			data: data,
 		};
 
@@ -307,18 +307,22 @@ module.exports = {
 			serverPrivateKey
 		);
 
-		await web3.eth
-			.sendSignedTransaction(signedTx.rawTransaction)
-			.on('receipt', (txHash) => {
-				User.findOneAndUpdate(
-					{ publicKey: serverAddress },
-					{ $inc: { wtToken: 1000000 } },
-					(err, user) => {
-						console.log(user);
-					}
-				);
-				json.res({ success: true });
-			});
+		try {
+			await web3.eth
+				.sendSignedTransaction(signedTx.rawTransaction)
+				.on('receipt', (txHash) => {
+					User.findOneAndUpdate(
+						{ publicKey: serverAddress },
+						{ $inc: { wtToken: 1000000 } },
+						(err, user) => {
+							console.log(user);
+						}
+					);
+					json.res({ success: true });
+				});
+		} catch (err) {
+			console.log(err);
+		}
 	},
 
 	// server nwt token faucet
