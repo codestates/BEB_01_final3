@@ -28,7 +28,6 @@ const web3 = new Web3(
 );
 
 // server 계정 토큰 민팅 wt, nwt
-// server 계정 mypage 에서 faucet 실행하도록
 // 버튼 완성되면 관리자 계정 로그인된 상태에서 가능할 수 있도록 수정
 router.get('/token/faucetWT', serverWT_faucet);
 router.get('/token/faucetNWT', serverNWT_faucet);
