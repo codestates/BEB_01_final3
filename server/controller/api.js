@@ -331,23 +331,23 @@ module.exports = {
 		// 	.call();
 		// console.log(allow);
 
-		try {
-			await web3.eth
-				.sendSignedTransaction(signedTx.rawTransaction)
-				.on('receipt', async (txHash) => {
-					try {
-						console.log(txHash);
-						const allow = await wtContract.methods
-							.allowance(userPK.publicKey, process.env.SWAPCA)
-							.call();
-						console.log(allow);
-					} catch (err) {
-						console.log(err);
-					}
-				});
-		} catch (err) {
-			console.log(err);
-		}
+		// try {
+		// 	await web3.eth
+		// 		.sendSignedTransaction(signedTx.rawTransaction)
+		// 		.on('receipt', async (txHash) => {
+		// 			try {
+		// 				console.log(txHash);
+		// 				const allow = await wtContract.methods
+		// 					.allowance(userPK.publicKey, process.env.SWAPCA)
+		// 					.call();
+		// 				console.log(allow);
+		// 			} catch (err) {
+		// 				console.log(err);
+		// 			}
+		// 		});
+		// } catch (err) {
+		// 	console.log(err);
+		// }
 	},
 
 	// 수정중.. (server 계정의 auth 유지.. 방법알기)
