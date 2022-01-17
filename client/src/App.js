@@ -16,7 +16,7 @@ import MyPage from './components/MyPage/MyPage';
 import ExchangePage from './components/ExchangePage/ExchangePage';
 import SearchContent from "./components/Search/SearchContent";
 import DeveloperPage from "./components/DeveloperPage/DeveloperPage";
-
+import CounterPage from "./components/VideoDetailPage/CounterPage/CounterPage";
 // const express = require("express");
 // const app = express();
 // const cors = require("cors");
@@ -69,12 +69,13 @@ function App(props) {
           <Route exact path="/exchange" element={Auth(ExchangePage, true)} />
           <Route exact path='/SearchNft' element={Auth(SearchNft, null)} />
 	    	  <Route exact path='/SearchContent' element={Auth(SearchContent, null)} />
-
+          <Route exact path="/video/:videoId/counterpage" element={Auth(CounterPage, true)} />
         </Routes>
       </div>
     </BrowserRouter>
   );
 }
+// true, true => 관리자 페이지
 //  null    =>  아무나 출입이 가능한 페이지
 //     true    =>  로그인한 유저만 출입이 가능한 페이지
 //     false   =>  로그인한 유저는 출입 불가능한 페이지

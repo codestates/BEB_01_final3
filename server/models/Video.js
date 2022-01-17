@@ -33,6 +33,9 @@ const videoSchema = mongoose.Schema(
     thumbnail: {
       type: String,
     },
+    opendate: {
+      type: String
+    }
   },
   { timestamps: true } //만든 날짜와 update시 날짜가 표시가 된다.
 );

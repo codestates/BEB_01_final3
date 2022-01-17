@@ -46,7 +46,7 @@ function LandingPage() {
         {/*lg:가장클때 6그리드를쓰겠다. md:중간크기일때 8그리드를 쓰겠다. 
             xs:가장작은 크기일때는 24그리드를 쓰겠다. 총24그리드 */}
         <div style={{ position: "relative" }}>
-          <a href={`/video/${video._id}`}>
+          <a href={`/video/${video._id}/counterpage`}>
             <img
               style={{ width: "100%" }}
               alt="thumbnail"

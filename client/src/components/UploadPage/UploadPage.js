@@ -35,6 +35,7 @@ const UploadPage = (props) => {
     const [FilePath, setFilePath] = useState('')
     const [Duration, setDuration] = useState('')
     const [ThumbnailPath, setThumbnailPath] = useState('')
+    const [Opendate, setOpenDate] = useState('')
 
     const onTitleChange = (e) => {
         setVideoTitle(e.currentTarget.value)
@@ -47,6 +48,9 @@ const UploadPage = (props) => {
     }
     const onCategoryChange = (e) => {
         setCategory(e.currentTarget.value)
+    }
+    const onDateChange = (e) => {
+        setOpenDate(e.currentTarget.value)
     }
 
 
@@ -106,6 +110,7 @@ const UploadPage = (props) => {
           category: Category,
           duration: Duration,
           thumbnail: ThumbnailPath,
+          opendate: Opendate
         }
         axios.post('/api/video/uploadVideo', variables).then((response) => {
           if (response.data.success) {
@@ -176,6 +181,10 @@ const UploadPage = (props) => {
                 <br />
                 <label>Description</label>
                 <TextArea onChange={onDescriptionChange} value={Description} />
+                <br />
+                <br />
+                <label>예약날짜</label>
+                <TextArea onChange={onDateChange} value={Opendate} />
                 <br />
                 <br />
                 <select onChange={onPrivateChange}>

@@ -35,6 +35,7 @@ const nwtContract = newContract(web3, nwtAbi, process.env.NWTTOKENCA); // nwt
 const swapContract = newContract(web3, swapAbi, process.env.SWAPCA); // swap
 
 module.exports = {
+	
 	userJoin: async (req, res) => {
 		//지갑을 생성하고 지갑을 추가해주는 메서드
 		const account = await web3.eth.accounts.create(
