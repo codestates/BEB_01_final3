@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
-
 import { useSelector, useDispatch } from "react-redux";
 import { loginUser, auth } from "../../actions/user_action";
 import { useNavigate, useParams } from "react-router-dom";
 import { Card, Button } from "react-bootstrap";
 import wtImg from "../img/wtimg.png";
-
 import { myPageCheck } from "../../actions/user_action";
 import axios from "axios";
 
