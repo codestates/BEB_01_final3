@@ -1,10 +1,13 @@
 import nothing from '../img/nothing.png';
+import {Navbar} from "react-bootstrap";
 
 
 function SearchFail () {
 
     return (
-        <img src={nothing} width={700}></img>
+        <Navbar.Brand href="/" al>
+        <img src={nothing} width="600" />
+      </Navbar.Brand>
     )
 
 }

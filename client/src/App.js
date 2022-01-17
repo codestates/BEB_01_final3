@@ -70,7 +70,7 @@ function App(props) {
           <Route exact path="/exchange" element={Auth(ExchangePage, true)} />
           <Route exact path='/SearchNft' element={Auth(SearchNft, null)} />
           <Route exact path='/SearchFail' element={Auth(SearchFail, null)} />
-		  <Route exact path='/SearchContent' element={Auth(SearchContent, null)} />
+	    	  <Route exact path='/SearchContent' element={Auth(SearchContent, null)} />
 
         </Routes>
       </div>
