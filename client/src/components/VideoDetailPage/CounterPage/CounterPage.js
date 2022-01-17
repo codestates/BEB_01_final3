@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-// import Timer from './Timer'
 import moment from 'moment'
 import { useCallback } from 'react';
 import { useParams } from "react-router-dom";
@@ -24,7 +23,11 @@ function CounterPage() {
     }, []);
 
     console.log('date', VideoDetail.opendate)
-
+  
+    const people = VideoDetail.survival[0]
+    const arr1 = people.split(", ")
+    console.log('arr', arr1)
+    console.log('arr1', arr1[0])
     // const timestamps = VideoDetail.opendate
     // const opendate = new Date(timestamps)
     // console.log(opendate)
@@ -69,8 +72,10 @@ function CounterPage() {
         <div>
             <span id="timer">
                 개시 일
-            {countDownTimer(VideoDetail.opendate)}</span>
+            {countDownTimer(VideoDetail.opendate)}
+            </span>
             {/* <Timer hoursMinSecs={hoursMinSecs}/> */}
+            
         </div>
     )
 }

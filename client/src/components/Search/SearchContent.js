@@ -26,8 +26,15 @@ const SearchContent = (props) => {
     const content = useSelector(state=> state.user)
     console.log('content',content.searchContent);
 
+    let flag = false;
+
+    if(user.searchContent.success === true) {
+      flag = user.searchContent.success
+    }
+
     return (
-        content.searchContent.data.map((el)=>{
+      <div>
+        {flag ? content.searchContent.data.map((el)=>{
             return (
                 <Card style={{ width: '18rem', margin:"1%", cursor:"pointer"}}>
                   <Card.Link href = {`/video/${el._id}`}>
@@ -44,7 +51,9 @@ const SearchContent = (props) => {
               </Card>
 
             )
-        })
+        }) : <div>nothing</div> }
+      </div>
+        
         
     )
 }

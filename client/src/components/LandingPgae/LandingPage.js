@@ -13,9 +13,9 @@ import {
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 
+
 const { SubMenu } = Menu;
 const { Content, Sider } = Layout;
-
 const { Title } = Typography;
 const { Meta } = Card;
 
@@ -25,12 +25,14 @@ function LandingPage() {
   useEffect(() => {
     axios.get("/api/video/getVideos").then((response) => {
       if (response.data.success) {
+        console.log('랜딩페이지', response.data)
         setVideo(response.data.videos);
       } else {
         alert("비디오 가져오기를 실패했습니다.");
       }
     });
   }, []);
+
 
   // useEffect(() => {
   //     axios.get('/api/hello')

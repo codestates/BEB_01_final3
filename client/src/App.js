@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-
 import LandingPage from './components/LandingPgae/LandingPage';
 import LoginPage from './components/LoginPage/LoginPage';
 import RegisterPage from './components/RegisterPage/RegisterPage';
@@ -17,6 +16,9 @@ import ExchangePage from './components/ExchangePage/ExchangePage';
 import SearchContent from "./components/Search/SearchContent";
 import DeveloperPage from "./components/DeveloperPage/DeveloperPage";
 import CounterPage from "./components/VideoDetailPage/CounterPage/CounterPage";
+import SearchFail from "./components/Search/SearchFail";
+
+
 // const express = require("express");
 // const app = express();
 // const cors = require("cors");
@@ -68,6 +70,7 @@ function App(props) {
           <Route exact path="/user/mypage" element={Auth(MyPage, true)} />
           <Route exact path="/exchange" element={Auth(ExchangePage, true)} />
           <Route exact path='/SearchNft' element={Auth(SearchNft, null)} />
+          <Route exact path='/SearchFail' element={Auth(SearchFail, null)} />
 	    	  <Route exact path='/SearchContent' element={Auth(SearchContent, null)} />
           <Route exact path="/video/:videoId/counterpage" element={Auth(CounterPage, true)} />
         </Routes>
