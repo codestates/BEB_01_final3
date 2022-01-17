@@ -26,7 +26,7 @@ function CounterPage() {
   
     const people = VideoDetail.survival[0]
     const arr1 = people.split(", ")
-    console.log('arr', arr1)
+    console.log('arr', arr1) 
     console.log('arr1', arr1[0])
     // const timestamps = VideoDetail.opendate
     // const opendate = new Date(timestamps)
