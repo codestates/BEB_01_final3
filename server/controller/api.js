@@ -611,11 +611,18 @@ module.exports = {
 			nftName: { $regex: name, $options: 'i' },
 		});
 
-		res.status(201).json({ success: true, data: nftInfo, type: 'nft' });
-		// if(err){
-		//     res.status(404).json({failed:false})
-		// }
-		console.log('nft', nftInfo);
+		console.log('nft', nftInfo[0]);
+
+		if(nftInfo[0]){
+			res.status(201).json({ success: true, data: nftInfo, type: 'nft' });
+		}
+		else{
+			console.log(1);
+			res.json({ success: false })
+
+		}
+
+		
 	},
 
 	SearchContent: async (req, res) => {
@@ -626,10 +633,14 @@ module.exports = {
 		const contentInfo = await Video.find().find({
 			title: { $regex: name, $options: 'i' },
 		});
-		res.status(201).json({ success: true, data: contentInfo, type: 'Content' });
-		// if(err){
-		//     res.status(404).json({failed:false})
-		// }
+
+		if(contentInfo[0]){
+			res.status(201).json({ success: true, data: contentInfo, type: 'Content' });
+		}
+		else{
+			res.json({ success: false })
+
+		}
 		console.log('api.content', contentInfo);
 	},
 };

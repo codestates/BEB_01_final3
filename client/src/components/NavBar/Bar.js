@@ -51,35 +51,45 @@ function Bar({ isLogin }) {
 
     let search = { name: searchValue };
 
-    if (searchOption === "NFT") {
-      console.log("NFT 컨텐츠에 들어왔구나");
+    if(searchOption === "NFT"){
+			console.log("NFT 컨텐츠에 들어왔구나");
 
-      dispatch(searchNFT(search)).then((response) => {
-        // setMessage(response.payload.message);
-        if (response.payload.success) {
-          console.log("bar.nft", response);
-          navigate("/SearchNft");
-        } else {
-          navigate("/");
-          alert("실패");
-        }
-      });
-    } else if (searchOption === "CONTENT") {
-      console.log("옵션 컨텐츠에 들어왔구나");
-      console.log("c.t", search);
+			dispatch(searchNFT(search))
+				.then(response => {
+				// setMessage(response.payload.message);
+				if(response.payload.success === true) {
 
-      dispatch(searchContent(search)).then((response) => {
-        console.log(response);
-        // setMessage(response.payload.message);
-        if (response.payload.success) {
-          console.log("bar.content", response);
-          navigate("/SearchContent");
-        } else {
-          navigate("/");
-          alert("실패");
-        }
-      });
-    }
+					console.log('bar.nft', response);
+					navigate('/SearchNft');
+									
+				}
+				else if(response.payload.success === false) {
+					navigate('/SearchFail')
+					alert("실패");
+				}
+			})
+		}
+		else if(searchOption === "CONTENT"){
+			console.log("옵션 컨텐츠에 들어왔구나");
+			console.log('c.t', search);
+
+			dispatch(searchContent(search))
+				.then(response => {
+					console.log(response);
+				// setMessage(response.payload.message);
+				if(response.payload.success === true) {
+						console.log('bar.content', response);
+						navigate('/SearchContent');
+				}
+				else if(response.payload.success === false) {
+						navigate('/SearchFail')
+						alert("실패");
+
+				}
+				
+				
+			})
+		}
 
     // navigate('/SearchNft');
     // window.location.replace('/Search');
