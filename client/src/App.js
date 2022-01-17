@@ -16,6 +16,7 @@ import MyPage from './components/MyPage/MyPage';
 import ExchangePage from './components/ExchangePage/ExchangePage';
 import SearchContent from "./components/Search/SearchContent";
 import DeveloperPage from "./components/DeveloperPage/DeveloperPage";
+import SearchFail from "./components/Search/SearchFail";
 
 // const express = require("express");
 // const app = express();
@@ -68,6 +69,7 @@ function App(props) {
           <Route exact path="/user/mypage" element={Auth(MyPage, true)} />
           <Route exact path="/exchange" element={Auth(ExchangePage, true)} />
           <Route exact path='/SearchNft' element={Auth(SearchNft, null)} />
+          <Route exact path='/SearchFail' element={Auth(SearchFail, null)} />
 		  <Route exact path='/SearchContent' element={Auth(SearchContent, null)} />
 
         </Routes>

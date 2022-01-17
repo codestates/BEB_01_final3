@@ -53,14 +53,14 @@ function Bar({ isLogin }) {
 			dispatch(searchNFT(search))
 				.then(response => {
 				// setMessage(response.payload.message);
-				if(response.payload.success) {
+				if(response.payload.success === true) {
 
 					console.log('bar.nft', response);
 					navigate('/SearchNft');
 									
 				}
-				else{
-					navigate('/')
+				else if(response.payload.success === false) {
+					navigate('/SearchFail')
 					alert("실패");
 				}
 			})
@@ -73,12 +73,12 @@ function Bar({ isLogin }) {
 				.then(response => {
 					console.log(response);
 				// setMessage(response.payload.message);
-				if(response.payload.success) {
+				if(response.payload.success === true) {
 						console.log('bar.content', response);
 						navigate('/SearchContent');
 				}
-				else{
-						navigate('/')
+				else if(response.payload.success === false) {
+						navigate('/SearchFail')
 						alert("실패");
 
 				}
