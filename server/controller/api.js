@@ -295,23 +295,23 @@ module.exports = {
 			// userPK.privateKey
 		);
 
-		try {
-			await web3.eth
-				.sendSignedTransaction(signedTx.rawTransaction)
-				.on('receipt', async (txHash) => {
-					try {
-						const allow = await wtContract.methods.allowance(
-							userPK.publicKey,
-							process.env.SWAPCA
-						);
-						console.log(allow);
-					} catch (err) {
-						console.log(err);
-					}
-				});
-		} catch (err) {
-			console.log(err);
-		}
+		// try {
+		// 	await web3.eth
+		// 		.sendSignedTransaction(signedTx.rawTransaction)
+		// 		.on('receipt', async (txHash) => {
+		// 			try {
+		// 				const allow = await wtContract.methods.allowance(
+		// 					userPK.publicKey,
+		// 					process.env.SWAPCA
+		// 				);
+		// 				console.log(allow);
+		// 			} catch (err) {
+		// 				console.log(err);
+		// 			}
+		// 		});
+		// } catch (err) {
+		// 	console.log(err);
+		// }
 	},
 
 	// 수정중.. (server 계정의 auth 유지.. 방법알기)
@@ -394,6 +394,14 @@ module.exports = {
 
 		const gasPrice = await web3.eth.getGasPrice();
 
+		// const balanceOf = await nwtContract.methods
+		// 	.balanceOf(serverAddress)
+		// 	.call();
+		// const test1 = web3.utils.fromWei('100000', 'ether');
+		// const test2 = web3.utils.toWei('100000', 'ether');
+		// console.log('test1 : ', test1);
+		// console.log('test2 : ', test2);
+
 		// transaction
 		const tx = {
 			from: serverAddress,
@@ -410,30 +418,38 @@ module.exports = {
 			serverPrivateKey
 		);
 
-		// try {
-		// 	await web3.eth
-		// 		.sendSignedTransaction(signedTx.rawTransaction)
-		// 		.on('receipt', (txHash) => {
-		// 			try {
-		// 				const balanceOf = nwtContract.methods
-		// 					.balanceOf(serverAddress)
-		// 					.call();
-		// 				User.findOneAndUpdate(
-		// 					{ publicKey: serverAddress },
-		// 					{ $inc: { wtToken: parseInt(balanceOf) } },
-		// 					(err, user) => {
-		// 						console.log(user);
-		// 					}
-		// 				);
-		// 				json.res({ success: true });
-		// 			} catch (err) {
-		// 				console.log(err);
-		// 			}
-		// 			// server 계정의 nwt 갯수
-		// 		});
-		// } catch (err) {
-		// 	console.log(err);
-		// }
+		try {
+			await web3.eth
+				.sendSignedTransaction(signedTx.rawTransaction)
+				.on('receipt', async (txHash) => {
+					try {
+						const balanceOf = await nwtContract.methods
+							.balanceOf(serverAddress)
+							.call();
+						const balance = web3.utils.fromWei(balanceOf, 'ether');
+
+						User.findOneAndUpdate(
+							{ publicKey: serverAddress },
+							{ nwtToken: Number(balance) },
+							(err, user) => {
+								if (err) {
+									console.log(err);
+									// json.res({ success: false, err });
+								} else {
+									console.log(user);
+									// json.res({ success: true });
+								}
+							}
+						);
+					} catch (err) {
+						console.log('디비에 안들어감..');
+						console.log(err);
+					}
+				});
+		} catch (err) {
+			console.log('블록체인에 안올라감..');
+			console.log(err);
+		}
 	},
 	NFTlist: (req, res) => {
 		console.log('list');
@@ -692,12 +708,16 @@ module.exports = {
 	SearchContent: async (req, res) => {
 		let name = req.body.name;
 
-		console.log('name?',name);
+		console.log('name?', name);
 
 		const contentInfo = await Video.find().find({
 			title: { $regex: name, $options: 'i' },
 		});
-		res.status(201).json({ success: true, data: contentInfo, type: 'Content' });
+		res.status(201).json({
+			success: true,
+			data: contentInfo,
+			type: 'Content',
+		});
 		// if(err){
 		//     res.status(404).json({failed:false})
 		// }
