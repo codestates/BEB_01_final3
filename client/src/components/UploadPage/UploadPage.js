@@ -35,6 +35,8 @@ const UploadPage = (props) => {
     const [FilePath, setFilePath] = useState('')
     const [Duration, setDuration] = useState('')
     const [ThumbnailPath, setThumbnailPath] = useState('')
+    const [Opendate, setOpenDate] = useState('')
+    const [Survival, setSurvival] = useState('')
 
     const onTitleChange = (e) => {
         setVideoTitle(e.currentTarget.value)
@@ -47,6 +49,12 @@ const UploadPage = (props) => {
     }
     const onCategoryChange = (e) => {
         setCategory(e.currentTarget.value)
+    }
+    const onDateChange = (e) => {
+        setOpenDate(e.currentTarget.value)
+    }
+    const onSurvivalList = (e) => {
+        setSurvival(e.currentTarget.value)
     }
 
 
@@ -62,15 +70,11 @@ const UploadPage = (props) => {
 
         axios.post('/api/video/uploads', formData, config).then((response) => {
             if (response.data.success) {
-
                 console.log('Video', response.data)
 
                 let variable = {
-
                     url: response.data.url,
-
                     fileName: response.data.fileName,
-
                 };
                 console.log('url', response.data.url)
                 console.log('fileName', response.data.fileName)
@@ -78,11 +82,8 @@ const UploadPage = (props) => {
 
 
                 axios.post('/api/video/thumbnail', variable).then((response) => {
-
                     if (response.data.success) {
-
                         console.log('thumb', response.data)
-
                         setDuration(response.data.fileDuration) //동영상길이
                         setThumbnailPath(response.data.url) //썸네일주소
                     } else {
@@ -106,6 +107,8 @@ const UploadPage = (props) => {
           category: Category,
           duration: Duration,
           thumbnail: ThumbnailPath,
+          opendate: Opendate,
+          survival: Survival
         }
         axios.post('/api/video/uploadVideo', variables).then((response) => {
           if (response.data.success) {
@@ -176,6 +179,15 @@ const UploadPage = (props) => {
                 <br />
                 <label>Description</label>
                 <TextArea onChange={onDescriptionChange} value={Description} />
+                <br />
+                <br />
+                <label>예약날짜</label>
+                <TextArea onChange={onDateChange} value={Opendate} />
+                <br />
+                <br />
+                <div></div>
+                <label>후보자</label>
+                <Input  onChange={onSurvivalList} value={Survival}/>
                 <br />
                 <br />
                 <select onChange={onPrivateChange}>

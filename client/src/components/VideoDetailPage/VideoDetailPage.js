@@ -6,6 +6,7 @@ import SideVideo from './Sections/SideVideo';
 import Subscribe from './Sections/Subscribe';
 import Comment from './Sections/Comment';
 import LikeDisLike from './Sections/LikeDisLike';
+import CounterPage from './CounterPage/CounterPage';
 
 function VideoDetailPage(props) {
 
@@ -24,6 +25,8 @@ function VideoDetailPage(props) {
                 alert('비디오 정보를 가져오길 실패했습니다.');
             }
         });
+        
+        
 
         axios.post('/api/comment/getComments', variable)
             .then(response => {
@@ -97,6 +100,7 @@ function VideoDetailPage(props) {
 
                         <Comment refreshpage={refreshpage} commentLists={Comments}/>
                         {/*Comment.js파일 컴포넌트에서 받음 */}
+                        <CounterPage setVideoDetail />
                     </div>
                     
                 </Col>
