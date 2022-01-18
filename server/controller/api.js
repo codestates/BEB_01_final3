@@ -4,14 +4,14 @@ const { Nft } = require('../models/Nft');
 const { Video } = require('../models/Video');
 
 const Web3 = require('web3');
-// const web3 = new Web3(
-// 	new Web3.providers.HttpProvider(
-// 		'https://ropsten.infura.io/v3/c2cc008afe67457fb9a4ee32408bcac6'
-// 	)
-// );
-const web3 = new Web3(new Web3.providers.HttpProvider('HTTP://127.0.0.1:7545'));
+const web3 = new Web3(
+	new Web3.providers.HttpProvider(
+		'https://ropsten.infura.io/v3/c2cc008afe67457fb9a4ee32408bcac6'
+	)
+);
+// const web3 = new Web3(new Web3.providers.HttpProvider('HTTP://127.0.0.1:7545'));
 const fs = require('fs');
-const { newContract, approve } = require('./index');
+const { newContract } = require('./index');
 
 //계정부분
 const serverAddress = process.env.SERVERADDRESS;
