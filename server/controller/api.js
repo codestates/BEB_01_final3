@@ -4,13 +4,14 @@ const { Nft } = require('../models/Nft');
 const { Video } = require('../models/Video');
 
 const Web3 = require('web3');
-const web3 = new Web3(
-	new Web3.providers.HttpProvider(
-		'https://ropsten.infura.io/v3/c2cc008afe67457fb9a4ee32408bcac6'
-	)
-);
+// const web3 = new Web3(
+// 	new Web3.providers.HttpProvider(
+// 		'https://ropsten.infura.io/v3/c2cc008afe67457fb9a4ee32408bcac6'
+// 	)
+// );
+const web3 = new Web3(new Web3.providers.HttpProvider('HTTP://127.0.0.1:7545'));
 const fs = require('fs');
-const { newContract } = require('./index');
+const { newContract, approve } = require('./index');
 
 //계정부분
 const serverAddress = process.env.SERVERADDRESS;
@@ -35,7 +36,6 @@ const nwtContract = newContract(web3, nwtAbi, process.env.NWTTOKENCA); // nwt
 const swapContract = newContract(web3, swapAbi, process.env.SWAPCA); // swap
 
 module.exports = {
-	
 	userJoin: async (req, res) => {
 		//지갑을 생성하고 지갑을 추가해주는 메서드
 		const account = await web3.eth.accounts.create(
@@ -293,10 +293,12 @@ module.exports = {
 		const nwt = parseInt(nwtAmount) / 5;
 		// console.log(nwtAmount, nwt);
 
-		const inputWT = web3.utils.toWei(nwtAmount, 'ether'); // user가 nwt로 바꿀 wt 양
-		const outputNWT = web3.utils.toWei(String(nwt), 'ether'); // server가 wt로 바꿔줄 nwt 양
+		// const inputWT = web3.utils.toWei(nwtAmount, 'ether'); // user가 nwt로 바꿀 wt 양
+		// const outputNWT = web3.utils.toWei(String(nwt), 'ether'); // server가 wt로 바꿔줄 nwt 양
 
 		const userPK = await User.findOne({ _id: req.user._id }).exec(); // user의 정보
+
+		console.log(nwtAmount);
 
 		// nonce 값
 		const nonce = await web3.eth.getTransactionCount(
@@ -304,51 +306,86 @@ module.exports = {
 			'latest'
 		);
 		// 실행할 컨트랙트 함수 데이터
-		const data = await wtContract.methods
-			.approve(process.env.SWAPCA, inputWT)
+		const data = await swapContract.methods
+			.swap(
+				nwtAmount,
+				userPK.publicKey,
+				process.env.SWAPCA,
+				process.env.WTTOKENCA,
+				process.env.NWTTOKENCA
+			)
 			.encodeABI();
 
 		const gasPrice = await web3.eth.getGasPrice();
 
 		// transaction
 		const tx = {
-			from: userPK.publicKey,
-			to: process.env.WTTOKENCA,
+			from: serverAddress,
+			to: process.env.SWAPCA,
 			nonce: nonce,
 			gasPrice: gasPrice,
 			gas: 5000000,
 			data: data,
 		};
 
-		// 서명 트랜잭션
 		const signedTx = await web3.eth.accounts.signTransaction(
 			tx,
 			serverPrivateKey
-			// userPK.privateKey
 		);
-
-		// const allow = await wtContract.methods
-		// 	.allowance(userPK.publicKey, process.env.SWAPCA)
-		// 	.call();
-		// console.log(allow);
-
-		// try {
-		// 	await web3.eth
-		// 		.sendSignedTransaction(signedTx.rawTransaction)
-		// 		.on('receipt', async (txHash) => {
-		// 			try {
-		// 				console.log(txHash);
-		// 				const allow = await wtContract.methods
-		// 					.allowance(userPK.publicKey, process.env.SWAPCA)
-		// 					.call();
-		// 				console.log(allow);
-		// 			} catch (err) {
-		// 				console.log(err);
-		// 			}
-		// 		});
-		// } catch (err) {
-		// 	console.log(err);
-		// }
+		try {
+			web3.eth
+				.sendSignedTransaction(signedTx.rawTransaction)
+				.on('receipt', (txHash) => {
+					try {
+						User.findOneAndUpdate(
+							{ publicKey: serverAddress },
+							{
+								$inc: {
+									wtToken: parseInt(nwtAmount),
+									nwtToken: -nwt,
+								},
+							}, // 현재 가라로 넣어놓음 , DB를 각자 사용하기 때문에 나중에 수정
+							(err, user) => {
+								if (err) {
+									// console.log(err);
+									console.log('server 계정 토큰 가감 실패');
+								} else {
+									// console.log(user);
+									console.log('server 계정 토큰 가감 성공');
+								}
+							}
+						);
+						User.findOneAndUpdate(
+							{ _id: req.user._id },
+							{
+								$inc: {
+									wtToken: -parseInt(nwtAmount),
+									nwtToken: nwt,
+								},
+							}, // 현재 가라로 넣어놓음 , DB를 각자 사용하기 때문에 나중에 수정
+							(err, user) => {
+								if (err) {
+									// console.log(err);
+									console.log('user 계정 토큰 가감 실패');
+								} else {
+									// console.log(user);
+									console.log('user 계정 토큰 가감 성공');
+								}
+							}
+						);
+					} catch (err) {
+						// console.log(err);
+						res.json({ success: false, message: 'DB 오류', err });
+					}
+				});
+		} catch (err) {
+			// console.log(err);
+			res.json({
+				success: false,
+				message: '블록체인에 오류가 생김',
+				err,
+			});
+		}
 	},
 
 	// 수정중.. (server 계정의 auth 유지.. 방법알기)
@@ -398,7 +435,7 @@ module.exports = {
 									console.log(err);
 								} else {
 									console.log(user);
-									json.res({
+									res.json({
 										success: true,
 										message: '서버 계정 wt token 민팅 성공',
 									});
@@ -438,8 +475,8 @@ module.exports = {
 			.mintToken(
 				serverAddress,
 				web3.utils.toWei('100000', 'ether'),
-				process.env.NFTTOKENCA
-			) //1e18  100000000
+				process.env.NFTTOKENCA //1e18  100000000
+			)
 			.encodeABI();
 
 		const gasPrice = await web3.eth.getGasPrice();
@@ -480,10 +517,10 @@ module.exports = {
 								// 서버의 토큰양이 다 떨어지면 각자 서버계정으로 민팅
 								if (err) {
 									console.log(err);
-									// json.res({ success: false, err });
+									// res.json({ success: false, err });
 								} else {
 									console.log(user);
-									json.res({
+									res.json({
 										success: true,
 										message:
 											'서버 계정 nwt token 민팅 성공',
