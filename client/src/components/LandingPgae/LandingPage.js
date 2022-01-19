@@ -34,7 +34,7 @@ function LandingPage() {
     });
   }, []);
 
-
+console.log(Video)
   // useEffect(() => {
   //     axios.get('/api/hello')
   //         .then(response => { console.log(response) })
