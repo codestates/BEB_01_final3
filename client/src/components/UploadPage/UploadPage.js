@@ -179,20 +179,20 @@ const UploadPage = (props) => {
                     )}
                 </div>
                 <label>Title</label>
-                <Input onChange={onTitleChange} value={VideoTitle} />
+                <Input onChange={onTitleChange} value={VideoTitle} placeholder='콘텐츠 제목' />
                 <br />
                 <br />
                 <label>Description</label>
-                <TextArea onChange={onDescriptionChange} value={Description} />
+                <TextArea onChange={onDescriptionChange} value={Description} placeholder='콘텐츠 설명' />
                 <br />
                 <br />
                 <label>예약날짜</label>
-                <TextArea onChange={onDateChange} value={Opendate} />
+                <TextArea onChange={onDateChange} value={Opendate} placeholder='yyyy-mm-dd' />
                 <br />
                 <br />
                 <div></div>
                 <label>후보자</label>
-                <Input  onChange={onSurvivalList} value={Survival}/>
+                <Input  onChange={onSurvivalList} value={Survival} placeholder='이름, 이름, 이름, ...'/>
                 <br />
                 <br />
                 <label>후보자 이미지</label>
