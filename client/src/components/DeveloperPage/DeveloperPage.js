@@ -7,6 +7,7 @@ import Avatar from "antd/lib/avatar/avatar";
 import wtImg from "../img/wtimg.png";
 
 function DeveloperPage() {
+  
   return (
     <Layout>
       <Layout width={300} className="ant-layout-has-sider">
