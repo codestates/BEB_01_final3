@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { loginUser, auth } from "../../actions/user_action";
 import { useNavigate, useParams } from "react-router-dom";
-import { Card, Button } from "react-bootstrap";
-import wtImg from "../img/wtimg.png";
+import { Modal,Card, Button } from "react-bootstrap";
+import wtImg from "./basic.png";
 import { myPageCheck } from "../../actions/user_action";
 import axios from "axios";
-import  Modal  from './Modal';
+import  Modals  from './Modals';
 
 function MyPage() {
   const navigate = useNavigate();
@@ -21,13 +21,14 @@ function MyPage() {
   const [nwtToken, setNwtToken] = useState("");
   const [isCheck, setIsCheck] = useState(false);
   const [sellPrice, setSellPrice] = useState("");
-  const [modal, setModal] = useState(false);
+  const [modalShow, setModalShow] = useState(false);
+  const [profile, setProfile] = useState(wtImg)
 
   useEffect(() => {
     axios.get("/api/contract/myPage").then((res) => {
       const nftInfo = res.data.nftInfo;
       const userInfo = res.data.userInfo;
-      if (nftInfo !== undefined) {
+      if (nftInfo[0] !== undefined) {
         setNftInfo(nftInfo);
         setIsCheck(true);
       }
@@ -39,7 +40,8 @@ function MyPage() {
       setNwtToken(userInfo.nwtToken);
     });
   }, []);
-
+  
+ 
   function sellNFT(tokenId) {
     console.log(tokenId);
     console.log(sellPrice);
@@ -67,32 +69,23 @@ function MyPage() {
       });
   }
   
-
-  // modal을 ON / OFF하는 함수 true/false
-  function pfp() {
-
-    if (modal === true) {
-      console.log(2);
-      setModal(false);
-    } else {
-      console.log(1);
-      setModal(true);
-    }
-   
- 
+  function pfp(a) {
+    setProfile(a);
   }
+  // modal을 ON / OFF하는 함수 true/false
+  
   return (
     <div
       style={{
         margin: "2% auto",
         width: "90%",
         display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between",
+        justifyContent: "center",
         flexWrap: "wrap",
       }}
     >
-     
+      {modalShow === true ? <Modals show={modalShow} pfp={pfp}off={() => { setModalShow(false)}} img={nftInfo}></Modals> : null}
+        
       
       <div
         style={{
@@ -102,6 +95,7 @@ function MyPage() {
           display: "flex",
           flexDirection: "column",
           backgroundColor: "#eee",
+          
         }}
       >
         <div
@@ -176,21 +170,29 @@ function MyPage() {
           }}
         >
           <div style={{ padding: "1%", borderBottom: "1px dashed" }}>
-            <span onClick={pfp}>
-              <img src={wtImg}></img>
+          <p style={{ fontWeight: "bold", fontSize: "4rem" }}>NFT PROFILE</p>
+            <span onClick={() => { setModalShow(true) }}>
+              <img src={profile} style={{ height: "30vh", width: "15vw" }} ></img>
             </span>
-            <p style={{ fontWeight: "bold", fontSize: "10rem" }}>MY NFT</p>
+          
           </div>
-        </div>
-        {modal ? <Modal onClick={pfp} OnOff={modal} img={nftInfo}></Modal> : null }
-        {isCheck ? (
+        </div>  
+       
+        <div style={{
+           margin: "2% auto",
+           width: "100%",
+           display: "flex",
+           justifyContent: "center",
+           flexWrap: "wrap",
+        }}>
+        {isCheck === true ? (
           nftInfo.map((el) => {
             return (
               <Card style={{ width: "20rem", margin: "1%", cursor: "pointer" }}>
                 <Card.Img
                   variant="top"
                   src={el.imgUri}
-                  style={{ height: "220px" }}
+                  style={{ height: "80%" }}
                 />
                 <Card.Body style={{ marginRight: "1%" }}>
                   <Card.Title>Content : {el.contentTitle}</Card.Title>
@@ -243,8 +245,9 @@ function MyPage() {
             );
           })
         ) : (
-          <div style={{ height: "300px" }}> NFT를 소유하고 있지않습니다.</div>
-        )}
+              <div style={{ height: "40vh" }}><p style={{fontSize:"4rem"}}> NFT를 소유하고 있지않습니다.</p></div>
+          )}
+          </div>
       </div>
     </div>
   );
