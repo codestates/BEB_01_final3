@@ -5,8 +5,10 @@ import "../node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 import "./Price.sol";
 
-contract WTToken is ERC20, Ownable, Price {
+contract WTToken is ERC20, Ownable {
     uint256 _amountToken;
+    // uint256 _price;
+    // event showPrice(uint256 price);
     // mapping(address => uint256) private _balances;
     // uint256 private _totalSupply;
     // Price _price;
@@ -15,45 +17,30 @@ contract WTToken is ERC20, Ownable, Price {
     constructor() ERC20("WToken", "WT") {
     }
 
-    function mintToken(address to, uint256 amount) public onlyOwner returns (bool) {
+    function mintToken(address to, uint256 amount, address contractAddress) public onlyOwner returns (bool) {
         require(to != address(0x0));
         require(amount > 0);
         _mint(to, amount);
         // _approve(to, msg.sender, allowance(to, msg.sender)+amount);  // approve 추가
-        // _approve(to, contractAddress, allowance(to, contractAddress) + amount);  // approve 추가
+        // _approve(to, contractAddress, allowance(to, contractAddress) + amount);  // approve 추가  => 베팅 컨트렉트 연결
 
         return true;
-    }   
-
-    function getPrice() public view returns (uint256) {
-        return _price;
     }
 
-    function exchange(address _to) public onlyOwner returns (bool) {
+    function approveToken(address owner,address spender) public {
+         uint256 amount = balanceOf(owner);
+        _approve(owner,spender,amount);
+    }
+
+    function exchange(address _to, uint256 price) public onlyOwner returns (bool) {
         require(_to != address(0x0));
         require(balanceOf(msg.sender) > 0);
-        _amountToken = (_price * 1e18) / 1000;  // 가라로 고정으로 설정 (원화)
+        _amountToken = (price * 1e18) / 1000;  // 가라로 고정으로 설정 (원화)
         require(balanceOf(msg.sender) >= _amountToken);
         _transfer(msg.sender, _to, _amountToken);
         return true;
-    }    
-
-    function test () public view returns (uint256) {
-        return _amountToken;
     }
 
-//  function withdraw(uint amountInCents) returns (uint amountInWei){
-//     assert(amountInCents <= balanceOf(msg.sender));
-//     amountInWei = (amountInCents * 1 ether) / priceOracle.price();
-
-//     if(this.balance <= amountInWei) {
-//       amountInWei = (amountInWei * this.balance * priceOracle.price()) / (1 ether * _totalSupply);
-//     }
-
-//     balances[msg.sender] -= amountInCents;
-//     _totalSupply -= amountInCents;
-//     msg.sender.transfer(amountInWei);
-//   }
 
     function multiMintToken(address[] calldata toArr, uint256[] calldata amountArr) public onlyOwner returns (bool) {
         require(toArr.length == amountArr.length);

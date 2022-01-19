@@ -2,16 +2,9 @@
 pragma solidity ^0.8.10;
 
 import "../node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol";
-// import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-
-// stable Coin 1 : 1200(원)
-// stable Coin 5 : 1 (유동성 코인) - nft 구매 가능
-// 서버 계정은 stable coin, 유동성 coin 둘다 가지고 있음.
-// user1 => server : token1 전송
-// server => user1 : token2 전송
+import "../node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract TokenSwap{
-
     IERC20 public token1;  // stable coin
     address public owner1;  // user. (token1의 소유자 계정 주소)
     IERC20 public token2;  // 유동성 코임
@@ -23,23 +16,27 @@ contract TokenSwap{
         owner2 = serverAddress; 
     }
 
-    // function checkAllowance(address token, address owner) public view returns(uint256){
-    //     return token.allowance()
-    // }
-
-    function swap(uint256 _amount, address user) public {
+    function swap(uint256 _amount, address user, address spender, address _contract1, address _contract2) public {
         uint256 tokenAmount = _amount * 1e18;
+
+        _exchangeToken(user, spender, _contract1);
+        _exchangeToken(owner2, spender, _contract2);
+
         require(msg.sender == owner2, "Not authorized");
+
         require(token1.allowance(user, address(this)) >= tokenAmount, "Token 1 allowance too low");
         require(token2.allowance(owner2, address(this)) >= tokenAmount/5, "Token 2 allowance too low");
 
-        // transfer tokens
-        // token1, owner1, amount1 -> owner2
         _safeTransferFrom(token1, user, owner2, tokenAmount);
-
-        // token2, owner2, amount2 -> owner1
         _safeTransferFrom(token2, owner2, user, tokenAmount/5);
 
+    }
+
+    function _exchangeToken(address owner,address spender, address _contract)public returns(uint){
+        (bool data, ) = _contract.call(abi.encodeWithSignature("approveToken(address,address)",owner,spender));
+        if(data == true){
+            return 1;
+        }
     }
 
     function _safeTransferFrom(IERC20 token, address sender, address recipient, uint256 amount) private {

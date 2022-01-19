@@ -115,3 +115,27 @@
         
 
     }
+
+
+    setApprovalForAll("sdfsdfsdfsdf",true); 
+
+
+   판매 중 
+   
+   //////
+   cookie / session 
+   
+
+
+    
+   const solContract = new contract(abi,df);
+    const erc721Contract = new contract (abi,df)
+   tx(
+       to : '보내는사람',
+       from : 'CA'
+   )
+
+   // 순서 
+   erc721Contract.setApprove('서버계정',true); 
+   solContract.판매함수사용
+  
