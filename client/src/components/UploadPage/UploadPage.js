@@ -5,6 +5,7 @@ import { PlusOutlined } from '@ant-design/icons/lib/icons';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import UserImg from './UserImg';
 
 const { TextArea } = Input
 const { Title, Text } = Typography
@@ -37,6 +38,7 @@ const UploadPage = (props) => {
     const [ThumbnailPath, setThumbnailPath] = useState('')
     const [Opendate, setOpenDate] = useState('')
     const [Survival, setSurvival] = useState('')
+    const [Image, setImage] = useState([])
 
     const onTitleChange = (e) => {
         setVideoTitle(e.currentTarget.value)
@@ -56,7 +58,9 @@ const UploadPage = (props) => {
     const onSurvivalList = (e) => {
         setSurvival(e.currentTarget.value)
     }
-
+    const updateImages = (newImages) => {
+        setImage(newImages)
+    }
 
     const onDrop = (files) => {
         //올린파일에대한 정보가 files에대입
@@ -108,7 +112,8 @@ const UploadPage = (props) => {
           duration: Duration,
           thumbnail: ThumbnailPath,
           opendate: Opendate,
-          survival: Survival
+          survival: Survival,
+          image: Image,
         }
         axios.post('/api/video/uploadVideo', variables).then((response) => {
           if (response.data.success) {
@@ -174,20 +179,24 @@ const UploadPage = (props) => {
                     )}
                 </div>
                 <label>Title</label>
-                <Input onChange={onTitleChange} value={VideoTitle} />
+                <Input onChange={onTitleChange} value={VideoTitle} placeholder='콘텐츠 제목' />
                 <br />
                 <br />
                 <label>Description</label>
-                <TextArea onChange={onDescriptionChange} value={Description} />
+                <TextArea onChange={onDescriptionChange} value={Description} placeholder='콘텐츠 설명' />
                 <br />
                 <br />
                 <label>예약날짜</label>
-                <TextArea onChange={onDateChange} value={Opendate} />
+                <TextArea onChange={onDateChange} value={Opendate} placeholder='yyyy-mm-dd' />
                 <br />
                 <br />
                 <div></div>
                 <label>후보자</label>
-                <Input  onChange={onSurvivalList} value={Survival}/>
+                <Input  onChange={onSurvivalList} value={Survival} placeholder='이름, 이름, 이름, ...'/>
+                <br />
+                <br />
+                <label>후보자 이미지</label>
+                <UserImg refreshFunction={updateImages} />
                 <br />
                 <br />
                 <select onChange={onPrivateChange}>

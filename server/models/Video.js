@@ -38,6 +38,10 @@ const videoSchema = mongoose.Schema(
     },
     survival: {
       type: [String]
+    },
+    image: {
+      type: Array,
+        default: []
     }
   },
   { timestamps: true } //만든 날짜와 update시 날짜가 표시가 된다.
