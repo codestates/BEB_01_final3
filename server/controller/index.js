@@ -21,7 +21,8 @@ const approve = (
 	token,
 	spender_address,
 	wallet_address,
-	user_private_key
+	user_private_key,
+	amount
 ) => {
 	const spender = spender_address;
 	const nonce = web3.eth.getTransactionCount(wallet_address);
@@ -53,4 +54,4 @@ const mintWTToken = () => {
 	// infura ropsten 에서로 바꾸기
 };
 
-module.exports = { infuraWeb3Provider, newContract };
+module.exports = { infuraWeb3Provider, newContract, approve };

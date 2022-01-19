@@ -4,11 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import { Typography, Button, Form, Input, Row, Col } from 'antd';
 import axios from 'axios';
 import { SwapOutlined } from '@ant-design/icons';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { wtTokenExchange, nwtTokenExchange } from '../../actions/token_action';
 import { default as Spinner } from './Spinner';
 
-const { TextArea } = Input;
+// const { TextArea } = Input;
 const { Title, Text } = Typography;
 
 function ExchangePage() {
@@ -65,7 +65,6 @@ function ExchangePage() {
 
 		if (!isNumber(Price)) {
 			alert('숫자를 입력해라');
-			window.location.reload();
 		} else {
 			setIsLoading(true);
 			dispatch(wtTokenExchange(Price)).then((response) => {
@@ -88,14 +87,24 @@ function ExchangePage() {
 	// wt -> nwt
 	const onSubmit2 = (e) => {
 		e.preventDefault(); //새로고침방지
-		console.log('WTBal : ', WTBalance);
+		// console.log('WTBal : ', WTBalance);
 		if (!isNumber(WTBalance)) {
-			console.log('숫자가 아님');
+			alert('숫자를 입력해라');
+			// console.log('숫자가 아님');
+			window.location.reload();
 		} else {
-			console.log('숫자 임');
+			setIsLoading(true);
 			dispatch(nwtTokenExchange(WTBalance)).then((response) => {
+				// console.log(response);
 				if (response.payload.success) {
-					console.log('payload 잘 들어옴');
+					setIsLoading(false);
+					alert('NWT 교환 완료');
+					setPrice('0');
+					window.location.reload();
+				} else {
+					setIsLoading(false);
+					alert('NWT 교환 실패');
+					setPrice('0');
 				}
 			});
 		}

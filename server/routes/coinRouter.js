@@ -52,6 +52,8 @@ router.post('/nft/sell', auth, setForSell);
 //user gonna cancel for selling the nft
 router.post('/nft/cancel', auth, cancel);
 
+router.get('/owner',ownerOf)
+
 router.get('/myPage', auth, myPage);
 
 router.post('/users/SearchNft', SearchNft);
