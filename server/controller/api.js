@@ -22,18 +22,21 @@ const WTABI = fs.readFileSync('server/abi/WTToken.json', 'utf-8');
 const NWTABI = fs.readFileSync('server/abi/NWTToken.json', 'utf-8');
 const NFTABI = fs.readFileSync('server/abi/NFTWT.json', 'utf8');
 const SWAPABI = fs.readFileSync('server/abi/TokenSwap.json', 'utf-8');
+const VOTEABI = fs.readFileSync('server/abi/Vote.json', 'utf-8');
 
 // abi parse
 const nftAbi = JSON.parse(NFTABI);
 const wtAbi = JSON.parse(WTABI);
 const nwtAbi = JSON.parse(NWTABI);
 const swapAbi = JSON.parse(SWAPABI);
+const voteAbi = JSON.parse(VOTEABI);
 
 //contract
 const nftContract = newContract(web3, nftAbi, process.env.NFTTOKENCA); // nft
 const wtContract = newContract(web3, wtAbi, process.env.WTTOKENCA); // wt
 const nwtContract = newContract(web3, nwtAbi, process.env.NWTTOKENCA); // nwt
 const swapContract = newContract(web3, swapAbi, process.env.SWAPCA); // swap
+const voteContract = newContract(web3, voteAbi, process.env.VOTECA); // swap
 
 module.exports = {
 	userJoin: async (req, res) => {
@@ -401,7 +404,11 @@ module.exports = {
 
 		// 실행할 컨트랙트 함수 데이터
 		const data = await wtContract.methods
-			.mintToken(serverAddress, web3.utils.toWei('1000000', 'ether')) //1e18  100000000
+			.mintToken(
+				serverAddress,
+				web3.utils.toWei('1000000', 'ether'),
+				process.env.VOTECA
+			) //1e18  100000000
 			.encodeABI();
 
 		const gasPrice = await web3.eth.getGasPrice();
@@ -564,24 +571,23 @@ module.exports = {
 				});
 			}
 
-
-		const data = await nftContract.methods
-			.mintNFT(tokenURI, web3.utils.toWei(price, 'ether'))
-			.encodeABI();
-		const nonce = await web3.eth.getTransactionCount(
-			serverAddress,
-			'latest'
-		);
-		const gasPrice = await web3.eth.getGasPrice();
-		console.log(gasPrice);
-		const tx = {
-			from: serverAddress,
-			to: process.env.NFTTOKENCA,
-			nonce: nonce,
-			gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
-            gasLimit: 500000,   
-			data: data,
-		};
+			const data = await nftContract.methods
+				.mintNFT(tokenURI, web3.utils.toWei(price, 'ether'))
+				.encodeABI();
+			const nonce = await web3.eth.getTransactionCount(
+				serverAddress,
+				'latest'
+			);
+			const gasPrice = await web3.eth.getGasPrice();
+			console.log(gasPrice);
+			const tx = {
+				from: serverAddress,
+				to: process.env.NFTTOKENCA,
+				nonce: nonce,
+				gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
+				gasLimit: 500000,
+				data: data,
+			};
 
 			const signedTx = await web3.eth.accounts.signTransaction(
 				tx,
@@ -816,5 +822,40 @@ module.exports = {
 		}
 		console.log('api.content', contentInfo);
 	},
-};
+	// server developer page total wt tokens, server developer page total nwt tokens
+	TotalTokens: async (req, res) => {
+		const server = await User.findOne({ _id: req.user._id }).exec();
+		// const server = await User.findOne({ publicKey: serverAddress }).exec();
+		if (server.role === 1) {
+			try {
+				let dataWT = await wtContract.methods.totalSupply().call();
+				let totalWt = web3.utils.fromWei(dataWT, 'ether'); // 총 발행된 wt tokens
 
+				let dataNWT = await nwtContract.methods.totalSupply().call();
+				let totalNwt = web3.utils.fromWei(dataNWT, 'ether'); // 총 발행된 nwt tokens
+
+				let data_server_WT = await wtContract.methods
+					.balanceOf(serverAddress)
+					.call();
+				let server_WT = web3.utils.fromWei(data_server_WT, 'ether'); // server wt tokens
+
+				let data_server_NWT = await nwtContract.methods
+					.balanceOf(serverAddress)
+					.call();
+				let server_NWT = web3.utils.fromWei(data_server_NWT, 'ether'); // server nwt tokens
+
+				let data = {
+					totalWT: totalWt,
+					totalNWT: totalNwt,
+					serverWT: server_WT,
+					serverNWT: server_NWT,
+				};
+				res.json({ success: true, data });
+			} catch (err) {
+				res.json({ success: false, message: err });
+			}
+		} else {
+			res.json({ success: false, message: '관리자 계정이 아닙니다.' });
+		}
+	},
+};

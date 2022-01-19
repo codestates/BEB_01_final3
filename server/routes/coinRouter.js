@@ -17,6 +17,7 @@ const {
 	serverWT_faucet,
 	serverNWT_faucet,
 	myPage,
+	TotalTokens,
 } = require('../controller/api');
 
 const Web3 = require('web3');
@@ -52,12 +53,18 @@ router.post('/nft/sell', auth, setForSell);
 //user gonna cancel for selling the nft
 router.post('/nft/cancel', auth, cancel);
 
-router.get('/owner',ownerOf)
+router.get('/owner', ownerOf);
 
 router.get('/myPage', auth, myPage);
 
 router.post('/users/SearchNft', SearchNft);
 
 router.get('/owner', ownerOf);
+
+// wt token totalAmount
+// server wt token amount
+// nwt token totalAmount
+// server nwt token amount
+router.get('/totalTokens', auth, TotalTokens);
 
 module.exports = router;
