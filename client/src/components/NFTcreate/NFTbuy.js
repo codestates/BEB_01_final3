@@ -50,23 +50,24 @@ function NFTbuy ({nftlist}) {
     {
              nftlist.map((el)=>{
                return(
-                <Card style={{ width: '18rem', margin:"1%", cursor:"pointer"}}>
-                <Card.Img variant="top" src={el.imgUri} style={{height:'100%'}} />
-                <Card.Body>
-                  <Card.Title>Content : {el.contentTitle}</Card.Title>
-                  <Card.Title>Name : {el.nftName}</Card.Title>
-                  <Card.Title>Name : {el.nftName}</Card.Title>
-                  <Card.Text>
+                <Card style={{ width: '19rem', margin:"1.5%", cursor:"pointer"}} bg='black' text='white'>
+                <Card.Img variant="top" src={el.imgUri} style={{height:'100%', width:'100%', }} />
+                <Card.Body style={{marginBottom: '0px', borderBottom: '1px solid #DCDCDC'}}>
+                  <Card.Title style={{textAlign:'left', marginTop: '3%', marginLeft:'-5%'}}>Content : {el.contentTitle}</Card.Title>
+                  <Card.Title style={{textAlign:'left', marginTop: '5%', marginLeft:'-5%'}}>Name : {el.nftName}</Card.Title>
+                  <Card.Title style={{textAlign:'left', marginTop: '5%', marginLeft:'-5%'}}>Price : {el.price}</Card.Title>
+                </Card.Body>
+                <Card.Body style={{marginBottom: '0px', borderBottom: '1px solid #DCDCDC'}}>
+                  <Card.Text style={{textAlign:'left', marginLeft:'-5%', fontSize:'20px'}}>
                     desription : {el.description}
                   </Card.Text>
-                  <Card.Title>Price : {el.price}</Card.Title>
-                  <Button variant="warning" style={{fontWeight:"bold"}}  onClick={()=>{BuyNFT(el.tokenId)}}>판매중</Button>
                 </Card.Body>
-
-                {/* {check ? <HeartFilled style={{color:'red', fontSize:'30px'}} onClick={onClick} />
-                  : <HeartOutlined style={{fontSize:'30px'}} onClick={onClick}/>} */}
-
-                {[<LikeDisLike userId={localStorage.getItem('userId')} nftId={ el._id }/>]}
+                <Card.Body>
+                  <Button variant="warning" style={{fontWeight:"bold"}}  onClick={()=>{BuyNFT(el.tokenId)}} >판매중</Button>
+                  <LikeDisLike userId={localStorage.getItem('userId')} nftId={ el._id }/>
+                </Card.Body>
+                  
+                
               </Card>
               
                )
