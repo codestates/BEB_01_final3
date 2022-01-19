@@ -191,8 +191,8 @@ function MyPage() {
               <Card style={{ width: "20rem", margin: "1%", cursor: "pointer" }}>
                 <Card.Img
                   variant="top"
-                  src={el.imgUri}
-                  style={{ height: "180px" }}
+                  src={"/assets/basic.png"}
+                  style={{ height: "80%" }}
                 />
                 <Card.Body style={{ marginRight: "1%" }}>
                   <Card.Title>Content : {el.contentTitle}</Card.Title>
