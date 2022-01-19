@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { loginUser, auth } from "../../actions/user_action";
 import { useNavigate, useParams } from "react-router-dom";
-import { Card, Button } from "react-bootstrap";
+import { Modal,Card, Button } from "react-bootstrap";
 import wtImg from "../img/wtimg.png";
 import { myPageCheck } from "../../actions/user_action";
 import axios from "axios";
-import  Modal  from './Modal';
+import  Modals  from './Modals';
 
 function MyPage() {
   const navigate = useNavigate();
@@ -21,7 +21,8 @@ function MyPage() {
   const [nwtToken, setNwtToken] = useState("");
   const [isCheck, setIsCheck] = useState(false);
   const [sellPrice, setSellPrice] = useState("");
-  const [modal, setModal] = useState(false);
+  const [modalShow, setModalShow] = useState(false);
+  const [profile, setProfile] = useState(wtImg)
 
   useEffect(() => {
     axios.get("/api/contract/myPage").then((res) => {
@@ -67,20 +68,11 @@ function MyPage() {
       });
   }
   
-
-  // modal을 ON / OFF하는 함수 true/false
-  function pfp() {
-
-    if (modal === true) {
-      console.log(2);
-      setModal(false);
-    } else {
-      console.log(1);
-      setModal(true);
-    }
-   
- 
+  function pfp(a) {
+    setProfile(a);
   }
+  // modal을 ON / OFF하는 함수 true/false
+  
   return (
     <div
       style={{
@@ -92,7 +84,8 @@ function MyPage() {
         flexWrap: "wrap",
       }}
     >
-     
+      {modalShow === true ? <Modals show={modalShow} pfp={pfp}off={() => { setModalShow(false)}} img={nftInfo}></Modals> : null}
+        
       
       <div
         style={{
@@ -176,13 +169,14 @@ function MyPage() {
           }}
         >
           <div style={{ padding: "1%", borderBottom: "1px dashed" }}>
-            <span onClick={pfp}>
-              <img src={wtImg}></img>
+            <span onClick={() => { setModalShow(true) }}>
+              <img src={profile} style={{ height: "30vh", width: "15vw" }} ></img>
             </span>
             <p style={{ fontWeight: "bold", fontSize: "10rem" }}>MY NFT</p>
           </div>
         </div>
-        {modal ? <Modal onClick={pfp} OnOff={modal} img={nftInfo}></Modal> : null }
+       
+        
         {isCheck ? (
           nftInfo.map((el) => {
             return (
