@@ -6,6 +6,7 @@ import { Card, Button } from "react-bootstrap";
 import wtImg from "../img/wtimg.png";
 import { myPageCheck } from "../../actions/user_action";
 import axios from "axios";
+import  Modal  from './Modal';
 
 function MyPage() {
   const navigate = useNavigate();
@@ -20,6 +21,7 @@ function MyPage() {
   const [nwtToken, setNwtToken] = useState("");
   const [isCheck, setIsCheck] = useState(false);
   const [sellPrice, setSellPrice] = useState("");
+  const [modal, setModal] = useState(false);
 
   useEffect(() => {
     axios.get("/api/contract/myPage").then((res) => {
@@ -43,7 +45,7 @@ function MyPage() {
     console.log(sellPrice);
 
     axios
-      .post("http://localhost:5000/api/contract/nft/sell", {
+      .post("/api/contract/nft/sell", {
         tokenId,
         sellPrice,
       })
@@ -57,15 +59,28 @@ function MyPage() {
     console.log(tokenId);
 
     axios
-      .post("http://localhost:5000/contract/nft/cancel", { tokenId })
+      .post("/api/contract/nft/cancel", { tokenId })
       .then((res) => {
         if (res.data.success) {
           window.location.reload();
         }
       });
   }
+  
 
-  console.log(pbKey);
+  // modal을 ON / OFF하는 함수 true/false
+  function pfp() {
+
+    if (modal === true) {
+      console.log(2);
+      setModal(false);
+    } else {
+      console.log(1);
+      setModal(true);
+    }
+   
+ 
+  }
   return (
     <div
       style={{
@@ -77,6 +92,8 @@ function MyPage() {
         flexWrap: "wrap",
       }}
     >
+     
+      
       <div
         style={{
           width: "50%",
@@ -159,13 +176,13 @@ function MyPage() {
           }}
         >
           <div style={{ padding: "1%", borderBottom: "1px dashed" }}>
-            <span>
+            <span onClick={pfp}>
               <img src={wtImg}></img>
             </span>
             <p style={{ fontWeight: "bold", fontSize: "10rem" }}>MY NFT</p>
           </div>
         </div>
-
+        {modal ? <Modal onClick={pfp} OnOff={modal} img={nftInfo}></Modal> : null }
         {isCheck ? (
           nftInfo.map((el) => {
             return (
@@ -215,9 +232,9 @@ function MyPage() {
                       ></input>
                       <span>
                         <img
-                          src={wtImg}
-                          style={{ height: "3vh", width: "1.5vw" }}
-                        ></img>
+                            src={wtImg}
+                            style={{ height: "3vh", width: "1.5vw" }}
+                            ></img>
                       </span>
                     </>
                   )}

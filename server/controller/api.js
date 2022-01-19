@@ -564,23 +564,24 @@ module.exports = {
 				});
 			}
 
-			const data = await nftContract.methods
-				.mintNFT(tokenURI, web3.utils.toWei(price, 'ether'))
-				.encodeABI();
-			const nonce = await web3.eth.getTransactionCount(
-				serverAddress,
-				'latest'
-			);
-			const gasPrice = await web3.eth.getGasPrice();
-			console.log(gasPrice);
-			const tx = {
-				from: serverAddress,
-				to: process.env.NFTTOKENCA,
-				nonce: nonce,
-				gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
-				gasLimit: 210000,
-				data: data,
-			};
+
+		const data = await nftContract.methods
+			.mintNFT(tokenURI, web3.utils.toWei(price, 'ether'))
+			.encodeABI();
+		const nonce = await web3.eth.getTransactionCount(
+			serverAddress,
+			'latest'
+		);
+		const gasPrice = await web3.eth.getGasPrice();
+		console.log(gasPrice);
+		const tx = {
+			from: serverAddress,
+			to: process.env.NFTTOKENCA,
+			nonce: nonce,
+			gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
+            gasLimit: 500000,   
+			data: data,
+		};
 
 			const signedTx = await web3.eth.accounts.signTransaction(
 				tx,
@@ -816,3 +817,4 @@ module.exports = {
 		console.log('api.content', contentInfo);
 	},
 };
+
