@@ -235,11 +235,6 @@
 				"internalType": "address",
 				"name": "contractAddress1",
 				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "contractAddress2",
-				"type": "address"
 			}
 		],
 		"name": "mintToken",
