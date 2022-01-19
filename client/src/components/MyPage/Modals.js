@@ -50,7 +50,7 @@ const Modals = ({show,img, off,pfp}) => {
                                         variant="top"
                                         src={el.imgUri}
                                         style={{
-                                            height: "220px"
+                                            height:"100%"
                                         }}/>
     
                                     </Card>
@@ -69,3 +69,6 @@ const Modals = ({show,img, off,pfp}) => {
 }
 
 export default Modals;
+
+
+

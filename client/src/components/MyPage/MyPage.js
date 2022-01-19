@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { loginUser, auth } from "../../actions/user_action";
 import { useNavigate, useParams } from "react-router-dom";
 import { Modal,Card, Button } from "react-bootstrap";
-import wtImg from "../img/wtimg.png";
+import wtImg from "./basic.png";
 import { myPageCheck } from "../../actions/user_action";
 import axios from "axios";
 import  Modals  from './Modals';
@@ -28,7 +28,7 @@ function MyPage() {
     axios.get("/api/contract/myPage").then((res) => {
       const nftInfo = res.data.nftInfo;
       const userInfo = res.data.userInfo;
-      if (nftInfo !== undefined) {
+      if (nftInfo[0] !== undefined) {
         setNftInfo(nftInfo);
         setIsCheck(true);
       }
@@ -40,7 +40,8 @@ function MyPage() {
       setNwtToken(userInfo.nwtToken);
     });
   }, []);
-
+  
+ 
   function sellNFT(tokenId) {
     console.log(tokenId);
     console.log(sellPrice);
@@ -79,8 +80,7 @@ function MyPage() {
         margin: "2% auto",
         width: "90%",
         display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between",
+        justifyContent: "center",
         flexWrap: "wrap",
       }}
     >
@@ -95,6 +95,7 @@ function MyPage() {
           display: "flex",
           flexDirection: "column",
           backgroundColor: "#eee",
+          
         }}
       >
         <div
@@ -169,22 +170,29 @@ function MyPage() {
           }}
         >
           <div style={{ padding: "1%", borderBottom: "1px dashed" }}>
+          <p style={{ fontWeight: "bold", fontSize: "4rem" }}>NFT PROFILE</p>
             <span onClick={() => { setModalShow(true) }}>
               <img src={profile} style={{ height: "30vh", width: "15vw" }} ></img>
             </span>
-            <p style={{ fontWeight: "bold", fontSize: "10rem" }}>MY NFT</p>
+          
           </div>
-        </div>
+        </div>  
        
-        
-        {isCheck ? (
+        <div style={{
+           margin: "2% auto",
+           width: "100%",
+           display: "flex",
+           justifyContent: "center",
+           flexWrap: "wrap",
+        }}>
+        {isCheck === true ? (
           nftInfo.map((el) => {
             return (
               <Card style={{ width: "20rem", margin: "1%", cursor: "pointer" }}>
                 <Card.Img
                   variant="top"
                   src={el.imgUri}
-                  style={{ height: "220px" }}
+                  style={{ height: "180px" }}
                 />
                 <Card.Body style={{ marginRight: "1%" }}>
                   <Card.Title>Content : {el.contentTitle}</Card.Title>
@@ -237,8 +245,9 @@ function MyPage() {
             );
           })
         ) : (
-          <div style={{ height: "300px" }}> NFT를 소유하고 있지않습니다.</div>
-        )}
+              <div style={{ height: "40vh" }}><p style={{fontSize:"4rem"}}> NFT를 소유하고 있지않습니다.</p></div>
+          )}
+          </div>
       </div>
     </div>
   );
