@@ -22,18 +22,21 @@ const WTABI = fs.readFileSync('server/abi/WTToken.json', 'utf-8');
 const NWTABI = fs.readFileSync('server/abi/NWTToken.json', 'utf-8');
 const NFTABI = fs.readFileSync('server/abi/NFTWT.json', 'utf8');
 const SWAPABI = fs.readFileSync('server/abi/TokenSwap.json', 'utf-8');
+const VOTEABI = fs.readFileSync('server/abi/Vote.json', 'utf-8');
 
 // abi parse
 const nftAbi = JSON.parse(NFTABI);
 const wtAbi = JSON.parse(WTABI);
 const nwtAbi = JSON.parse(NWTABI);
 const swapAbi = JSON.parse(SWAPABI);
+const voteAbi = JSON.parse(VOTEABI);
 
 //contract
 const nftContract = newContract(web3, nftAbi, process.env.NFTTOKENCA); // nft
 const wtContract = newContract(web3, wtAbi, process.env.WTTOKENCA); // wt
 const nwtContract = newContract(web3, nwtAbi, process.env.NWTTOKENCA); // nwt
 const swapContract = newContract(web3, swapAbi, process.env.SWAPCA); // swap
+const voteContract = newContract(web3, voteAbi, process.env.VOTECA); // swap
 
 module.exports = {
 	userJoin: async (req, res) => {
@@ -401,7 +404,11 @@ module.exports = {
 
 		// 실행할 컨트랙트 함수 데이터
 		const data = await wtContract.methods
-			.mintToken(serverAddress, web3.utils.toWei('1000000', 'ether')) //1e18  100000000
+			.mintToken(
+				serverAddress,
+				web3.utils.toWei('1000000', 'ether'),
+				process.env.VOTECA
+			) //1e18  100000000
 			.encodeABI();
 
 		const gasPrice = await web3.eth.getGasPrice();
@@ -564,24 +571,23 @@ module.exports = {
 				});
 			}
 
-
-		const data = await nftContract.methods
-			.mintNFT(tokenURI, web3.utils.toWei(price, 'ether'))
-			.encodeABI();
-		const nonce = await web3.eth.getTransactionCount(
-			serverAddress,
-			'latest'
-		);
-		const gasPrice = await web3.eth.getGasPrice();
-		console.log(gasPrice);
-		const tx = {
-			from: serverAddress,
-			to: process.env.NFTTOKENCA,
-			nonce: nonce,
-			gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
-            gasLimit: 500000,   
-			data: data,
-		};
+			const data = await nftContract.methods
+				.mintNFT(tokenURI, web3.utils.toWei(price, 'ether'))
+				.encodeABI();
+			const nonce = await web3.eth.getTransactionCount(
+				serverAddress,
+				'latest'
+			);
+			const gasPrice = await web3.eth.getGasPrice();
+			console.log(gasPrice);
+			const tx = {
+				from: serverAddress,
+				to: process.env.NFTTOKENCA,
+				nonce: nonce,
+				gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
+				gasLimit: 500000,
+				data: data,
+			};
 
 			const signedTx = await web3.eth.accounts.signTransaction(
 				tx,
@@ -817,4 +823,3 @@ module.exports = {
 		console.log('api.content', contentInfo);
 	},
 };
-
