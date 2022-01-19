@@ -79,7 +79,7 @@ function CounterPage() {
       <fieldset>
         <Form.Group as={Row} className="mb-3">
           <Form.Label as="legend" column sm={2}>
-            Radios
+            투표
           </Form.Label>
           <Col sm={10}>
             <Form.Check
