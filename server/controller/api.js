@@ -822,4 +822,40 @@ module.exports = {
 		}
 		console.log('api.content', contentInfo);
 	},
+	// server developer page total wt tokens, server developer page total nwt tokens
+	TotalTokens: async (req, res) => {
+		const server = await User.findOne({ _id: req.user._id }).exec();
+		// const server = await User.findOne({ publicKey: serverAddress }).exec();
+		if (server.role === 1) {
+			try {
+				let dataWT = await wtContract.methods.totalSupply().call();
+				let totalWt = web3.utils.fromWei(dataWT, 'ether'); // 총 발행된 wt tokens
+
+				let dataNWT = await nwtContract.methods.totalSupply().call();
+				let totalNwt = web3.utils.fromWei(dataNWT, 'ether'); // 총 발행된 nwt tokens
+
+				let data_server_WT = await wtContract.methods
+					.balanceOf(serverAddress)
+					.call();
+				let server_WT = web3.utils.fromWei(data_server_WT, 'ether'); // server wt tokens
+
+				let data_server_NWT = await nwtContract.methods
+					.balanceOf(serverAddress)
+					.call();
+				let server_NWT = web3.utils.fromWei(data_server_NWT, 'ether'); // server nwt tokens
+
+				let data = {
+					totalWT: totalWt,
+					totalNWT: totalNwt,
+					serverWT: server_WT,
+					serverNWT: server_NWT,
+				};
+				res.json({ success: true, data });
+			} catch (err) {
+				res.json({ success: false, message: err });
+			}
+		} else {
+			res.json({ success: false, message: '관리자 계정이 아닙니다.' });
+		}
+	},
 };
