@@ -1,8 +1,8 @@
 
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-
+import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
+import "../node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 // 1. 서버계정이 투표할 수 있는 방을 만든다. -> createContent 
 // 2. 컨텐츠 투표방이 개설이 되면 user들이 투표를 한다.  -> 
@@ -39,7 +39,7 @@ IERC20 public tokenCA;
 
 
      //
-     function createContent () public returns (uint roomNum){
+     function createContent () public onlyOwner returns (uint roomNum){
      rooms[roomLen];
      rooms[roomLen].status = true;
      roomNum = roomLen;

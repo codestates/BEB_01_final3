@@ -22,12 +22,24 @@ function MyPage() {
   const [isCheck, setIsCheck] = useState(false);
   const [sellPrice, setSellPrice] = useState("");
   const [modalShow, setModalShow] = useState(false);
-  const [profile, setProfile] = useState(wtImg)
+  const [profile, setProfile] = useState('')
+  const [changeSell, setChangeSell] = useState(true);
 
   useEffect(() => {
+
+    
+
     axios.get("/api/contract/myPage").then((res) => {
       const nftInfo = res.data.nftInfo;
       const userInfo = res.data.userInfo;
+       
+    
+      if (userInfo.image !== "cryptoWT") {
+        setProfile(userInfo.image);
+      } else if (userInfo.image === "cryptoWT") {
+        setProfile(wtImg);
+      }
+
       if (nftInfo[0] !== undefined) {
         setNftInfo(nftInfo);
         setIsCheck(true);
@@ -40,23 +52,40 @@ function MyPage() {
       setNwtToken(userInfo.nwtToken);
     });
   }, []);
-  
- 
-  function sellNFT(tokenId) {
-    console.log(tokenId);
-    console.log(sellPrice);
 
-    axios
-      .post("/api/contract/nft/sell", {
-        tokenId,
-        sellPrice,
-      })
-      .then((res) => {
-        if (res.data.success) {
-          window.location.reload();
-        }
-      });
+ 
+  function sellNFT(tokenId, imgUri) {
+    // console.log(userInfo.privateKey);
+    // console.log(userInfo.image === imgUri);
+    if (userInfo.image === imgUri) {
+      setProfile(wtImg);
+      axios 
+        .post("/api/contract/nft/sell", {
+          tokenId,
+          sellPrice,
+          privateKey:userInfo.privateKey
+        })
+        .then((res) => {
+          if (res.data.success) {
+            window.location.reload();
+          }
+        });
+    } else {
+      axios
+        .post("/api/contract/nft/sell", {
+          tokenId,
+          sellPrice,
+        })
+        .then((res) => {
+          if (res.data.success) {
+            window.location.reload();
+          }
+        });
+    }
+    
+   
   }
+
   function cancel(tokenId) {
     console.log(tokenId);
 
@@ -70,7 +99,16 @@ function MyPage() {
   }
   
   function pfp(a) {
-    setProfile(a);
+    
+    axios
+      .post("/api/users/setImg", {
+        img :a
+      }) 
+      .then((res) => {
+        if (res.data.success) {
+          setProfile(a);
+        }
+      });
   }
   // modal을 ON / OFF하는 함수 true/false
   
@@ -219,7 +257,7 @@ function MyPage() {
                         variant="primary"
                         style={{ marginRight: "2%" }}
                         onClick={() => {
-                          sellNFT(el.tokenId);
+                          sellNFT(el.tokenId,el.imgUri);
                         }}
                       >
                         판매
