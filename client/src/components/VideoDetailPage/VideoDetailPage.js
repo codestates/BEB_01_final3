@@ -9,12 +9,14 @@ import LikeDisLike from './Sections/LikeDisLike';
 import CounterPage from './CounterPage/CounterPage';
 
 function VideoDetailPage(props) {
-
+    
     const videoId = useParams().videoId;
     //랜딩페이지에서 주소창뒤에 videoId를 보내주고있기때문에가능
     const variable = { videoId: videoId };
     const [VideoDetail, setVideoDetail] = useState([]);
     const [Comments, setComments] = useState([])
+
+    console.log(props.videoId);
     
     useEffect(() => {
         axios.post('/api/video/getVideoDetail', variable).then((response) => {
@@ -86,7 +88,7 @@ function VideoDetailPage(props) {
                         <hr />
                         
                         <List.Item actions={[<LikeDisLike video  userId={localStorage.getItem('userId')}
-                        VideoId={videoId}
+                        videoId={videoId}
                         /> , subscribeButton]}>
                             <div style={{ width: '30%', padding: '3rem 4rem' }}>
                                 <List.Item.Meta
