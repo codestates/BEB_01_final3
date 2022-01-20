@@ -107,7 +107,7 @@ function VideoDetailPage(props) {
 							commentLists={Comments}
 						/>
 						{/*Comment.js파일 컴포넌트에서 받음 */}
-						<CounterPage setVideoDetail />
+						{/* <CounterPage setVideoDetail /> */}
 					</div>
 				</Col>
 
@@ -122,6 +122,7 @@ function VideoDetailPage(props) {
 }
 
 export default VideoDetailPage;
+
 //LoginPage.js 에서
 //로그인할때 로컬스토리지에
 //window.localStorage.setItem('userId', response.payload.userId);
