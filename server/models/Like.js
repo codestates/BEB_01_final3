@@ -15,6 +15,10 @@ const likeSchema = mongoose.Schema(
       type: Schema.Types.ObjectId,
       ref: "Video",
     },
+    nftId: {
+      type: Schema.Types.ObjectId,
+      ref: "Nft",
+    },
   },
   { timestamps: true }
 );

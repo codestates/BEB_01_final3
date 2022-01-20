@@ -695,6 +695,7 @@ module.exports = {
 					privateKey: user.privateKey,
 					wtToken: user.wtToken,
 					nwtToken: user.nwtToken,
+					image: user.image
 				};
 				// 그 유저가 가지고 있는 nft 정보를 가져옴
 				Nft.find({ address: user.publicKey }, (err, nft) => {
@@ -716,8 +717,9 @@ module.exports = {
 
 	setForSell: async (req, res) => {
 		const tokenId = req.body.tokenId;
-		console.log(tokenId);
+		const privateKey = req.body.privateKey;
 		const sellPrice = req.body.sellPrice;
+		console.log(tokenId,privateKey,sellPrice);
 		const data = await nftContract.methods
 			.setForSale(tokenId, web3.utils.toWei(sellPrice, 'ether'))
 			.encodeABI();
@@ -745,18 +747,43 @@ module.exports = {
 				.on('receipt', (txHash) => {
 					console.log(txHash);
 
-					Nft.findOneAndUpdate(
-						{ tokenId: tokenId },
-						{ sale: true },
-						(err, result) => {
-							console.log('DB success');
-							res.json({
-								success: true,
-								detail: 'db store success and block update success',
-							});
-							if (err) console.log(err);
-						}
-					);
+                    //프로필이랑 팔려고하는 사진이랑 다른 경우 
+					if (privateKey === undefined) {
+						Nft.findOneAndUpdate(
+							{ tokenId: tokenId },
+							{ sale: true },
+							(err, result) => {
+							
+									console.log('DB success');
+									res.json({
+										success: true,
+										detail: 'success set sell and change basic image',
+									});
+									if (err) console.log(err);
+							}
+						);
+					} else {
+    Nft.findOneAndUpdate({
+        tokenId: tokenId
+    }, {
+        sale: true
+	}, (err, result) => {
+		console.log(privateKey);
+        User.findOneAndUpdate({
+            privateKey : privateKey
+        }, {
+            image: "cryptoWT"
+        }, (err, result) => {
+            console.log('DB success');
+            res.json({success: true, detail: 'success set sell and change basic image'});
+            if (err) 
+                console.log(err);
+            }
+        )
+    });
+}
+
+					
 				});
 		} catch (e) {
 			console.log(e);
@@ -858,4 +885,30 @@ module.exports = {
 			res.json({ success: false, message: '관리자 계정이 아닙니다.' });
 		}
 	},
+	setProfilImg: (req, res) => {
+		const img = req.body.img;
+		const userId = req.user._id;
+		
+		console.log(img,userId);
+
+
+		User.findOneAndUpdate(
+			// 현재 로그인 되어있는 유저의 wtToken 양 증가
+			{ _id: userId },
+			{ image : img },
+			(err, user) => {
+				if (err) {
+					console.log(err);
+					console.log(
+						'user DB에 이미지 업데이트 실패'
+					);
+					res.json({fail:false})
+				} else {
+					console.log(user);
+					console.log('이미지 저장 성공!');
+					res.json({success:true})
+				}
+			}
+		);
+	}
 };
