@@ -82,12 +82,12 @@ function CounterPage() {
     }
     timer = setInterval(showRemaining, 1000);
   }, []);
-
+  
   const renderCard = Survival.map((survival, index) => {
     return (
       <Card style={{ width: "20rem", margin: "1%", cursor: "pointer"}}>
         <div>
-          <Card.Img size={150} src={`http://localhost:5000/${survival.img}`} alt style={{ margin: "10px" }} />
+          <Card.Img size={100} src={`http://localhost:5000/${survival.img}`} alt style={{ margin: "10px" }} />
         </div>
         <Card.Body style={{ marginRight: "1%" }}>
           <Card.Title>생존자 후보</Card.Title>
@@ -100,6 +100,8 @@ function CounterPage() {
       </Card>
     );
   });
+
+  // setTimeout(`location.href='/video/${videoId}/'`,1000);  
 
   return (
     <div>

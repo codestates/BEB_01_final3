@@ -7,16 +7,29 @@ import Subscribe from './Sections/Subscribe';
 import Comment from './Sections/Comment';
 import LikeDisLike from './Sections/LikeDisLike';
 import CounterPage from './CounterPage/CounterPage';
+import { useNavigate } from 'react-router-dom';
+
 
 function VideoDetailPage(props) {
 
+    const navigate = useNavigate();
     const videoId = useParams().videoId;
     //랜딩페이지에서 주소창뒤에 videoId를 보내주고있기때문에가능
     const variable = { videoId: videoId };
     const [VideoDetail, setVideoDetail] = useState([]);
     const [Comments, setComments] = useState([])
+    const [isCheck, setisCheck] = useState(false)
+
     
+    // setTimeout(() => {
+    //     setisCheck(true);
+    // }, 1000)
+
     useEffect(() => {
+        // if (isCheck === false){
+        //     navigate('/')
+        // } 
+
         axios.post('/api/video/getVideoDetail', variable).then((response) => {
             if (response.data.success) {
                 console.log('getvideodata', response.data);
@@ -71,7 +84,8 @@ function VideoDetailPage(props) {
                         <video
                             style={{ width: '100%' }}
                             src={`http://localhost:5000/${VideoDetail.filePath}`}
-                            controls
+                            controlsList="nodownload"
+                            
                         />
 
                         <div style={{
