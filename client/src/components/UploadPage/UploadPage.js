@@ -32,7 +32,6 @@ const UploadPage = (props) => {
     const [Description, setDescription] = useState('')
     const [Private, setPrivate] = useState(0)
     const [Category, setCategory] = useState('Film & Animation')
-
     const [FilePath, setFilePath] = useState('')
     const [Duration, setDuration] = useState('')
     const [ThumbnailPath, setThumbnailPath] = useState('')
@@ -152,7 +151,7 @@ const UploadPage = (props) => {
                     <Dropzone
                         onDrop={onDrop}
                         multiple={false} //한번에 파일을 2개이상올릴껀지
-                        maxSize={10000000} //최대사이즈 조절
+                        maxSize={90000000000000000000} //최대사이즈 조절
                     >
                         {({ getRootProps, getInputProps }) => (
                             <div

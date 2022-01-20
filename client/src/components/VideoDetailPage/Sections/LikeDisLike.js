@@ -26,7 +26,7 @@ function LikeDisLike(props) {
 
     if (props.video) {
         variable = { videoId: props.videoId, userId: props.userId };
-        // console.log('var',variable)
+        console.log('var',variable)
         //비디오 콘텐츠에 대한 정보(videoDetailPage)
     } else {
         variable = { commentId: props.commentId, userId: props.userId }

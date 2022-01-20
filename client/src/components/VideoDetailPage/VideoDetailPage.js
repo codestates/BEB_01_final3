@@ -11,25 +11,21 @@ import { useNavigate } from 'react-router-dom';
 
 
 function VideoDetailPage(props) {
-
-    const navigate = useNavigate();
+    
     const videoId = useParams().videoId;
     //랜딩페이지에서 주소창뒤에 videoId를 보내주고있기때문에가능
     const variable = { videoId: videoId };
     const [VideoDetail, setVideoDetail] = useState([]);
     const [Comments, setComments] = useState([])
-    const [isCheck, setisCheck] = useState(false)
 
+    console.log(props.videoId);
     
     // setTimeout(() => {
     //     setisCheck(true);
     // }, 1000)
 
     useEffect(() => {
-        // if (isCheck === false){
-        //     navigate('/')
-        // } 
-
+   
         axios.post('/api/video/getVideoDetail', variable).then((response) => {
             if (response.data.success) {
                 console.log('getvideodata', response.data);
@@ -100,7 +96,7 @@ function VideoDetailPage(props) {
                         <hr />
                         
                         <List.Item actions={[<LikeDisLike video  userId={localStorage.getItem('userId')}
-                        VideoId={videoId}
+                        videoId={videoId}
                         /> , subscribeButton]}>
                             <div style={{ width: '30%', padding: '3rem 4rem' }}>
                                 <List.Item.Meta
@@ -114,7 +110,7 @@ function VideoDetailPage(props) {
 
                         <Comment refreshpage={refreshpage} commentLists={Comments}/>
                         {/*Comment.js파일 컴포넌트에서 받음 */}
-                        <CounterPage setVideoDetail />
+                        {/* <CounterPage setVideoDetail /> */}
                     </div>
                     
                 </Col>
