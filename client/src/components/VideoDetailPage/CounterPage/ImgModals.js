@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Modal, Card, Button } from 'react-bootstrap';
 import React, { useState, useEffect } from 'react';
 
-const Modals = ({ show, cards, off }) => {
+const Modals = ({ show, img, off }) => {
 	const Img = styled.div`
 		padding: 1%;
 	`;
@@ -14,12 +14,12 @@ const Modals = ({ show, cards, off }) => {
 	};
 	//  console.log("a",this.img);
 
-	console.log(cards);
+	console.log(img);
 
 	return (
 		<Modal
 			show
-			size='xl'
+			size='md'
 			aria-labelledby='contained-modal-title-vcenter'
 			centered>
 			<Modal.Header closeButton onClick={off}>
@@ -32,8 +32,22 @@ const Modals = ({ show, cards, off }) => {
 					display: 'flex',
 					flexWrap: 'wrap',
 					justifyContent: 'center',
+					backgroundColor: 'black',
 				}}>
-				{cards}
+				<Card style={{ width: '25rem', height: '30rem' }}>
+					<Img>
+						<Card.Img
+							src={img}
+							style={{
+								// margin: '10px',
+								width: '24.5rem',
+								height: '29.5rem',
+								justifyContent: 'center',
+								// cursor: 'pointer',
+							}}
+						/>
+					</Img>
+				</Card>
 				{/* {cards.map((el) => {
 					return (
 						<Card style={{ width: '5rem' }}></Card>
