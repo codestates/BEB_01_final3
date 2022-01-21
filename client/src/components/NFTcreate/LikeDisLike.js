@@ -21,7 +21,7 @@ function LikeDisLike({nftId, userId}) {
     // console.log('commentId', props.commentId)
 
         variable = { nftId: nftId, userId: userId };
-        console.log('var',variable)
+        // console.log('var',variable)
         //비디오 콘텐츠에 대한 정보(videoDetailPage)
 
     // console.log('props', props)
