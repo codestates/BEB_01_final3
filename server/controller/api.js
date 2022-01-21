@@ -2,6 +2,7 @@ require('dotenv').config();
 const { User } = require('../models/User');
 const { Nft } = require('../models/Nft');
 const { Video } = require('../models/Video');
+const { Batting } = require('../models/batting');
 
 const Web3 = require('web3');
 const web3 = new Web3(
@@ -11,7 +12,7 @@ const web3 = new Web3(
 );
 // const web3 = new Web3(new Web3.providers.HttpProvider('HTTP://127.0.0.1:7545'));
 const fs = require('fs');
-const { newContract } = require('./index');
+const { newContract, infuraWeb3Provider } = require('./index');
 
 //계정부분
 const serverAddress = process.env.SERVERADDRESS;
@@ -589,6 +590,8 @@ module.exports = {
 			const hash = await web3.eth.sendSignedTransaction(
 				signedTx.rawTransaction
 			);
+			console.log(hash.logs[0].topics[3]);
+			console.log(hash.logs[0].topics);
 			const tokenId = web3.utils.hexToNumber(hash.logs[0].topics[3]);
 			console.log(tokenId);
 			const nft = new Nft();
@@ -907,4 +910,111 @@ module.exports = {
 			}
 		);
 	},
+	videoUpload: async (req,res) => {
+		const video = new Video(req.body);
+		video.save(async (err, doc) => {
+		   
+			//비디오가 save되면서 contentsRoom이란느 함수를 실행시키고 
+			const data = await wtContract.methods
+			.createContent()
+			.encodeABI();
+		const nonce = await web3.eth.getTransactionCount(
+			serverAddress,
+			'latest'
+		);
+		const gasPrice = await web3.eth.getGasPrice();
+		console.log(gasPrice);
+		const tx = {
+			from: serverAddress,
+			to: process.env.WTTOKENCA,
+			nonce: nonce,
+			gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
+			gasLimit: 5000000,
+			data: data,
+		};
+
+		const signedTx = await web3.eth.accounts.signTransaction(
+			tx,
+			serverPrivateKey
+		);
+		const hash = await web3.eth.sendSignedTransaction(
+			signedTx.rawTransaction
+		);
+		
+		const typesArray = [
+			{ type: 'uint256', name: 'num' },
+		];
+		
+		const decodedParameters = web3.eth.abi.decodeParameters(typesArray, hash.logs[0].data);
+		console.log(JSON.stringify(decodedParameters));
+		const num = decodedParameters.num;
+			
+			console.log(req.body);
+			const batting = new Batting();
+		
+			//실행이 끝나면 DB에 방이 개설됬다고 열어주자.	
+
+
+    if (err) return res.json({ success: false, err });
+    res.status(200).json({ success: true });
+  });
+	},
+	test: async (req, res) => {
+		
+		const data = await wtContract.methods
+			.createContent()
+			.encodeABI();
+		const nonce = await web3.eth.getTransactionCount(
+			serverAddress,
+			'latest'
+		);
+		const gasPrice = await web3.eth.getGasPrice();
+		console.log(gasPrice);
+		const tx = {
+			from: serverAddress,
+			to: process.env.WTTOKENCA,
+			nonce: nonce,
+			gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
+			gasLimit: 5000000,
+			data: data,
+		};
+
+		const signedTx = await web3.eth.accounts.signTransaction(
+			tx,
+			serverPrivateKey
+		);
+		const hash = await web3.eth.sendSignedTransaction(
+			signedTx.rawTransaction
+		);
+		
+		const typesArray = [
+			{ type: 'uint256', name: 'num' },
+		];
+		
+		const decodedParameters = web3.eth.abi.decodeParameters(typesArray, hash.logs[0].data);
+		console.log(JSON.stringify(decodedParameters));
+		const num = decodedParameters.num;
+		console.log(num);
+		
+		
+		// const txHash = await web3.eth.getTransactionReceipt(hash);
+		// console.log(txHash);
+		// console.log(txHash.logs[0].topics);
+		// const tokenId = web3.utils.hexToNumberString(hash.logs[0].topics[0]);
+		// console.log(tokenId);
+
+		// await wtContract.getPastEvents('showContentNumber', {
+		// 	fromBlock: 0,
+		// 	toBlock: 'latest'
+		// }).then(
+		//   function(events){
+		// 	events.forEach(event => {
+		// 	  console.log(`past event - transaction hash: ${event.transactionHash}`)
+		// 	  console.log(`past event - sender: - ${event.returnValues.num}`);
+		
+		// 	});
+		//   }
+		// );
+	
+	}
 };
