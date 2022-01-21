@@ -10,6 +10,7 @@ import Moment from 'react-moment';
 import 'moment-timezone';
 import '../style.css';
 import Modals from './Modals';
+import ImgModals from './ImgModals';
 
 function CounterPage() {
 	const videoId = useParams().videoId;
@@ -18,23 +19,16 @@ function CounterPage() {
 	const [Survival, setSurvival] = useState([]);
 	const [complete, setComplete] = useState(false);
 	const [modalShow, setModalShow] = useState(false);
+	const [imgModalShow, setImgModalShow] = useState(false);
+	const [survivalImgShow, setSurvivalImgShow] = useState('');
 
-	// const exchangeModal = (e) => {
-	// 	setModalShow(true);
-	// };
-
-	// function pfp(a) {
-	// 	axios
-	// 		.post('/api/users/setImg', {
-	// 			img: a,
-	// 		})
-	// 		.then((res) => {
-	// 			if (res.data.success) {
-	// 				setProfile(a);
-	// 			}
-	// 		});
-	// }
-	// modal을 ON / OFF하는 함수 true/false
+	const showImg = (e) => {
+		setSurvivalImgShow(e.target.src);
+		console.log(e.target.src);
+		setTimeout(() => {
+			setImgModalShow(true);
+		}, 1000);
+	};
 
 	useEffect(() => {
 		async function getVideo() {
@@ -127,18 +121,27 @@ function CounterPage() {
 			<Card
 				style={{
 					width: '15rem',
-					margin: '1.5%',
-					cursor: 'pointer',
-					height: '20rem',
+					margin: '1%',
+					// cursor: 'pointer',
+					height: '21rem',
 				}}>
-				<div>
+				{/* <div onClick={(e) => showImg}> */}
+				<a style={{ cursor: 'pointer' }} onClick={showImg}>
 					<Card.Img
+						// height: {'20vh'},
+						// width: {"20vw"},
 						size={150}
 						src={`http://localhost:5000/${survival.img}`}
 						alt
-						style={{ margin: '10px' }}
+						style={{
+							margin: '10px',
+							width: '15vw',
+							height: '15.5vh',
+							justifyContent: 'center',
+							// cursor: 'pointer',
+						}}
 					/>
-				</div>
+				</a>
 				<Card.Body style={{ marginRight: '1%' }}>
 					<Card.Title>생존자 후보</Card.Title>
 					<hr />
@@ -171,11 +174,6 @@ function CounterPage() {
 					투표하기
 				</Button>
 			</span>
-			{/* {modalShow === true ? <Modals show={modalShow} /> : '그냥 화면'} */}
-
-			{/* <span onClick={() => { setModalShow(true) }}>
-              <img src={profile} style={{ height: "30vh", width: "15vw" }} ></img>
-            </span> */}
 
 			{modalShow === true ? (
 				<Modals
@@ -186,12 +184,15 @@ function CounterPage() {
 					}}></Modals>
 			) : null}
 
-			{/* 잠시 모달로 바꾸기 전에 주석*/}
-			{/* <Row
-				gutter={16}
-				style={{ display: 'flex', justifyContent: 'center' }}>
-				{renderCard}
-			</Row> */}
+			{imgModalShow === true ? (
+				<ImgModals
+					show={imgModalShow}
+					img={survivalImgShow}
+					off={() => {
+						setImgModalShow(false);
+					}}
+				/>
+			) : null}
 		</div>
 	);
 }
