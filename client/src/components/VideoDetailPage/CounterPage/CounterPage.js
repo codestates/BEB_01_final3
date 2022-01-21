@@ -6,15 +6,35 @@ import { useParams } from "react-router-dom";
 import { Form, Row, Col } from "react-bootstrap";
 import { Button, Card } from "react-bootstrap";
 // const { Meta } = Card;
-// import Moment from 'react-moment';
-// import 'moment-timezone';
+import Moment from 'react-moment';
+import 'moment-timezone';
+import '../style.css';
+import Modals from './Modals';
 
 function CounterPage() {
-  const videoId = useParams().videoId;
-  const variable = { videoId: videoId };
-  const [VideoDetail, setVideoDetail] = useState([]);
-  const [Survival, setSurvival] = useState([]);
-  // const [complete, setComplete] = useState(false);
+	const videoId = useParams().videoId;
+	const variable = { videoId: videoId };
+	const [VideoDetail, setVideoDetail] = useState([]);
+	const [Survival, setSurvival] = useState([]);
+	const [complete, setComplete] = useState(false);
+	const [modalShow, setModalShow] = useState(false);
+
+	// const exchangeModal = (e) => {
+	// 	setModalShow(true);
+	// };
+
+	// function pfp(a) {
+	// 	axios
+	// 		.post('/api/users/setImg', {
+	// 			img: a,
+	// 		})
+	// 		.then((res) => {
+	// 			if (res.data.success) {
+	// 				setProfile(a);
+	// 			}
+	// 		});
+	// }
+	// modal을 ON / OFF하는 함수 true/false
 
   useEffect(() => {
     async function getVideo() {
@@ -50,54 +70,57 @@ function CounterPage() {
   //함수를 useState로 감싸서 들고 나온다.
 
   const countDownTimer = useCallback((date) => {
-    // data : 영화 시작 날짜, 시간
-    // 현재시각(서버) 이랑 비디오 정보의 시작시간 비교 코드
+	// data : 영화 시작 날짜, 시간
+	// 현재시각(서버) 이랑 비디오 정보의 시작시간 비교 코드
 
-    let timer;
-    let _vDate = moment(date);
-    // let _vDate = new Date(date).getTime();
-    let _second = 1000;
-    let _minute = _second * 60;
-    let _hour = _minute * 60;
-    let _day = _hour * 24;
+	let timer;
+	let _vDate = moment(date);
+	// let _vDate = new Date(date).getTime();
+	let _second = 1000;
+	let _minute = _second * 60;
+	let _hour = _minute * 60;
+	let _day = _hour * 24;
 
-    function showRemaining() {
-      try {
-        if (date !== undefined) {
-          let now = moment();
-          // let now = new Date().getTime();
-          let distDt = _vDate - now;
-          if (distDt < 0) {
-            clearInterval(timer);
-            let HapDate =
-              "0" + "일 " + "0" + "시간 " + "0" + "분 " + "0" + "초 가 남음";
-            document.getElementById("timer").innerHTML = HapDate;
-            window.location.replace(`/video/${videoId}`); //video/${videoId}
-            return;
-          } else {
-            // setComplete(true);
-            let days = Math.floor(distDt / _day);
-            let hours = Math.floor((distDt % _day) / _hour);
-            let minutes = Math.floor((distDt % _hour) / _minute);
-            let seconds = Math.floor((distDt % _minute) / _second);
-            let HapDate =
-              parseInt(days) +
-              "일 " +
-              parseInt(hours) +
-              "시간 " +
-              parseInt(minutes) +
-              "분 " +
-              parseInt(seconds) +
-              "초 가 남음";
-            document.getElementById("timer").innerHTML = HapDate;
-          }
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    }
-    timer = setInterval(showRemaining, 1000);
-  }, []);
+	function showRemaining() {
+		try {
+			if (date !== undefined) {
+				let now = moment();
+				// let now = new Date().getTime();
+				let distDt = _vDate - now;
+				if (distDt < 0) {
+					clearInterval(timer);
+					let HapDate =
+						// '0' + 'd ' +
+						'0' + 'h ' + '0' + 'm ' + '0' + 's ';
+					document.getElementById('timer').innerHTML = HapDate;
+					window.location.replace(`/video/${videoId}`); //video/${videoId}
+					return;
+				} else {
+					setComplete(true);
+					let days = Math.floor(distDt / _day);
+					let hours = Math.floor((distDt % _day) / _hour);
+					let minutes = Math.floor((distDt % _hour) / _minute);
+					let seconds = Math.floor((distDt % _minute) / _second);
+					let HapDate =
+						// parseInt(days) +
+						// 'd ' +
+						parseInt(hours) +
+						' : ' +
+						parseInt(minutes) +
+						' : ' +
+						parseInt(seconds) +
+						' ';
+					document.getElementById('timer').innerHTML = HapDate;
+				}
+			}
+		} catch (e) {
+			console.log(e);
+		}
+	}
+
+	timer = setInterval(showRemaining, 1000);
+}, []);
+  	
 
   const renderCard = Survival.map((survival, index) => {
     return (
@@ -134,18 +157,44 @@ function CounterPage() {
     );
   });
 
-  return (
-    <div>
-      <div>
-        <span id="timer" style={{ fontSize: "20px" }}>
-          {countDownTimer(VideoDetail.opendate)}
-        </span>
-      </div>
-      <Row gutter={16} style={{ display: "flex", justifyContent: "center" }}>
-        {renderCard}
-      </Row>
-    </div>
-  );
+	return (
+		<div className='CounterPageBody'>
+			<br />
+			<br />
+			<br />
+			<br />
+			<div>
+				<div className='timerTitle'>Count Down</div>
+				<span id='timer' className='timer'>
+					{countDownTimer(VideoDetail.opendate)}
+				</span>
+			</div>
+			<span
+				onClick={() => {
+					setModalShow(true);
+				}}>
+				<Button variant='danger' size='lg' className='mb-2'>
+					투표하기
+				</Button>
+			</span>
+
+			{modalShow === true ? (
+				<Modals
+					show={modalShow}
+					cards={renderCard}
+					off={() => {
+						setModalShow(false);
+					}}></Modals>
+			) : null}
+
+			{/* 잠시 모달로 바꾸기 전에 주석*/}
+			{/* <Row
+				gutter={16}
+				style={{ display: 'flex', justifyContent: 'center' }}>
+				{renderCard}
+			</Row> */}
+		</div>
+	);
 }
 
 export default CounterPage;

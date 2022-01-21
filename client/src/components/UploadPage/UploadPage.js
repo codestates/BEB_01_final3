@@ -186,7 +186,7 @@ const UploadPage = (props) => {
                 <br />
                 <br />
                 <label>예약날짜</label>
-                <TextArea onChange={onDateChange} value={Opendate} placeholder='yyyy-mm-dd' />
+                <TextArea onChange={onDateChange} value={Opendate} placeholder='yyyy-mm-dd 00:00:00' />
                 <br />
                 <br />
                 <div></div>
