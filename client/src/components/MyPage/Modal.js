@@ -97,7 +97,6 @@ padding: 40px 20px;
                                 </Img>
                         )
                     })
-
                 }
             </ModalInner>
         </ModalWrapper>

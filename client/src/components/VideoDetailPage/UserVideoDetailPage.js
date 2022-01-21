@@ -6,10 +6,10 @@ import SideVideo from './Sections/SideVideo';
 import Subscribe from './Sections/Subscribe';
 import Comment from './Sections/Comment';
 import LikeDisLike from './Sections/LikeDisLike';
-
+// import CounterPage from './CounterPage/CounterPage';
 import './style.css';
 
-function VideoDetailPage(props) {
+function UserVideoDetailPage(props) {
 	const videoId = useParams().videoId;
 	//랜딩페이지에서 주소창뒤에 videoId를 보내주고있기때문에가능
 	const variable = { videoId: videoId };
@@ -19,7 +19,7 @@ function VideoDetailPage(props) {
 	console.log(variable);
 
 	useEffect(() => {
-		axios.post('/api/video/getVideoDetail', variable).then((response) => {
+		axios.post('/api/user/video/getVideoDetail', variable).then((response) => {
 			if (response.data.success) {
 				console.log('getvideodata', response.data);
 				setVideoDetail(response.data.videoDetail);
@@ -121,7 +121,7 @@ function VideoDetailPage(props) {
 	}
 }
 
-export default VideoDetailPage;
+export default UserVideoDetailPage;
 
 //LoginPage.js 에서
 //로그인할때 로컬스토리지에
