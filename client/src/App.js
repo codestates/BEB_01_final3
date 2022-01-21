@@ -17,8 +17,10 @@ import SearchContent from "./components/Search/SearchContent";
 import DeveloperPage from "./components/DeveloperPage/DeveloperPage";
 import CounterPage from "./components/VideoDetailPage/CounterPage/CounterPage";
 import SearchFail from "./components/Search/SearchFail";
-
-
+import LikeNft from "./components/MyPage/Like/LikeNft";
+import LikeConTent from "./components/MyPage/Like/LikeConTent";
+import UserUpload from './components/UploadPage/UserUpload'
+import UserVideoDetailPage from './components/VideoDetailPage/UserVideoDetailPage'
 // const express = require("express");
 // const app = express();
 // const cors = require("cors");
@@ -62,8 +64,13 @@ function App(props) {
           <Route exact path="/" element={Auth(LandingPage, null)} />
           <Route exact path="/login" element={Auth(LoginPage, false)} />
           <Route exact path="/register" element={Auth(RegisterPage, false)} />
-          <Route exact path="/video/upload" element={Auth(UploadPage, true)} />
+
+          <Route exact path="/video/upload" element={Auth(UploadPage, true, true)} />
+          <Route exact path="/video/userupload" element={Auth(UserUpload, true)} />
+
           <Route exact path="/video/:videoId" element={Auth(VideoDetailPage, null)} />
+          <Route exact path="/videos/:videoId" element={Auth(UserVideoDetailPage, null)} />
+
           <Route exact path="/nft/create" element={Auth(CreateNFT, true, true)} />
           <Route exact path="/Developer" element={Auth(DeveloperPage, true, true)} />
           <Route exact path="/nft/list" element={Auth(NftList, null)} />
@@ -73,6 +80,8 @@ function App(props) {
           <Route exact path='/SearchFail' element={Auth(SearchFail, null)} />
 	    	  <Route exact path='/SearchContent' element={Auth(SearchContent, null)} />
           <Route exact path="/video/:videoId/counterpage" element={Auth(CounterPage, true)} />
+          <Route exact path="/user/mypage/Like/LikeNft" element={Auth(LikeNft, true)} />
+          <Route exact path="/user/mypage/Like/LikeConTent" element={Auth(LikeConTent, true)} />
         </Routes>
       </div>
     </BrowserRouter>

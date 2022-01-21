@@ -29,6 +29,7 @@ app.use(cookieParser());
 app.use('/api', apiRouter);
 app.use('/uploads', express.static('uploads'));
 app.use('/api/video', require('./routes/video'));
+app.use('/api/user/video', require('./routes/uservideo'));
 app.use('/api/comment/', require('./routes/comment'))
 app.use('/api/contract', coinRouter);
 app.use('/api/like/', require('./routes/like'))
