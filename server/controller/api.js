@@ -22,21 +22,18 @@ const WTABI = fs.readFileSync('server/abi/WTToken.json', 'utf-8');
 const NWTABI = fs.readFileSync('server/abi/NWTToken.json', 'utf-8');
 const NFTABI = fs.readFileSync('server/abi/NFTWT.json', 'utf8');
 const SWAPABI = fs.readFileSync('server/abi/TokenSwap.json', 'utf-8');
-const VOTEABI = fs.readFileSync('server/abi/Vote.json', 'utf-8');
 
 // abi parse
 const nftAbi = JSON.parse(NFTABI);
-const wtAbi = JSON.parse(WTABI);
+const wtAbi = JSON.parse(WTABI); // wt token, exchange, vote
 const nwtAbi = JSON.parse(NWTABI);
 const swapAbi = JSON.parse(SWAPABI);
-const voteAbi = JSON.parse(VOTEABI);
 
 //contract
 const nftContract = newContract(web3, nftAbi, process.env.NFTTOKENCA); // nft
 const wtContract = newContract(web3, wtAbi, process.env.WTTOKENCA); // wt
 const nwtContract = newContract(web3, nwtAbi, process.env.NWTTOKENCA); // nwt
 const swapContract = newContract(web3, swapAbi, process.env.SWAPCA); // swap
-const voteContract = newContract(web3, voteAbi, process.env.VOTECA); // swap
 
 module.exports = {
 	userJoin: async (req, res) => {
@@ -404,11 +401,7 @@ module.exports = {
 
 		// 실행할 컨트랙트 함수 데이터
 		const data = await wtContract.methods
-			.mintToken(
-				serverAddress,
-				web3.utils.toWei('1000000', 'ether'),
-				process.env.VOTECA
-			) //1e18  100000000
+			.mintToken(serverAddress, web3.utils.toWei('1000000', 'ether')) //1e18  100000000
 			.encodeABI();
 
 		const gasPrice = await web3.eth.getGasPrice();
@@ -695,7 +688,7 @@ module.exports = {
 					privateKey: user.privateKey,
 					wtToken: user.wtToken,
 					nwtToken: user.nwtToken,
-					image: user.image
+					image: user.image,
 				};
 				// 그 유저가 가지고 있는 nft 정보를 가져옴
 				Nft.find({ address: user.publicKey }, (err, nft) => {
@@ -719,7 +712,7 @@ module.exports = {
 		const tokenId = req.body.tokenId;
 		const privateKey = req.body.privateKey;
 		const sellPrice = req.body.sellPrice;
-		console.log(tokenId,privateKey,sellPrice);
+		console.log(tokenId, privateKey, sellPrice);
 		const data = await nftContract.methods
 			.setForSale(tokenId, web3.utils.toWei(sellPrice, 'ether'))
 			.encodeABI();
@@ -747,43 +740,49 @@ module.exports = {
 				.on('receipt', (txHash) => {
 					console.log(txHash);
 
-                    //프로필이랑 팔려고하는 사진이랑 다른 경우 
+					//프로필이랑 팔려고하는 사진이랑 다른 경우
 					if (privateKey === undefined) {
 						Nft.findOneAndUpdate(
 							{ tokenId: tokenId },
 							{ sale: true },
 							(err, result) => {
-							
-									console.log('DB success');
-									res.json({
-										success: true,
-										detail: 'success set sell and change basic image',
-									});
-									if (err) console.log(err);
+								console.log('DB success');
+								res.json({
+									success: true,
+									detail: 'success set sell and change basic image',
+								});
+								if (err) console.log(err);
 							}
 						);
 					} else {
-    Nft.findOneAndUpdate({
-        tokenId: tokenId
-    }, {
-        sale: true
-	}, (err, result) => {
-		console.log(privateKey);
-        User.findOneAndUpdate({
-            privateKey : privateKey
-        }, {
-            image: "cryptoWT"
-        }, (err, result) => {
-            console.log('DB success');
-            res.json({success: true, detail: 'success set sell and change basic image'});
-            if (err) 
-                console.log(err);
-            }
-        )
-    });
-}
-
-					
+						Nft.findOneAndUpdate(
+							{
+								tokenId: tokenId,
+							},
+							{
+								sale: true,
+							},
+							(err, result) => {
+								console.log(privateKey);
+								User.findOneAndUpdate(
+									{
+										privateKey: privateKey,
+									},
+									{
+										image: 'cryptoWT',
+									},
+									(err, result) => {
+										console.log('DB success');
+										res.json({
+											success: true,
+											detail: 'success set sell and change basic image',
+										});
+										if (err) console.log(err);
+									}
+								);
+							}
+						);
+					}
 				});
 		} catch (e) {
 			console.log(e);
@@ -888,27 +887,24 @@ module.exports = {
 	setProfilImg: (req, res) => {
 		const img = req.body.img;
 		const userId = req.user._id;
-		
-		console.log(img,userId);
 
+		console.log(img, userId);
 
 		User.findOneAndUpdate(
 			// 현재 로그인 되어있는 유저의 wtToken 양 증가
 			{ _id: userId },
-			{ image : img },
+			{ image: img },
 			(err, user) => {
 				if (err) {
 					console.log(err);
-					console.log(
-						'user DB에 이미지 업데이트 실패'
-					);
-					res.json({fail:false})
+					console.log('user DB에 이미지 업데이트 실패');
+					res.json({ fail: false });
 				} else {
 					console.log(user);
 					console.log('이미지 저장 성공!');
-					res.json({success:true})
+					res.json({ success: true });
 				}
 			}
 		);
-	}
+	},
 };
