@@ -6,7 +6,8 @@ import { Modal,Card, Button } from "react-bootstrap";
 import wtImg from "./basic.png";
 import { myPageCheck } from "../../actions/user_action";
 import axios from "axios";
-import  Modals  from './Modals';
+import Modals  from './Modals';
+import { LikeNft } from './Like/LikeNft';
 
 function MyPage() {
   const navigate = useNavigate();
@@ -25,6 +26,26 @@ function MyPage() {
   const [profile, setProfile] = useState('')
   const [changeSell, setChangeSell] = useState(true);
 
+  const [likeOption, setlikeOption] = useState("");
+
+  const user = useSelector(state=> state.user.userData)
+    // console.log('user', user)
+
+
+  function likeResult(userId, like) {
+    // console.log("like", userId, like)
+    if(like==="NFT") {
+      console.log("NFT");
+      navigate('./Like/LikeNft')
+    }
+    else {
+      console.log(("CONTENT"));
+      navigate('./Like/LikeConTent')
+
+    }
+  }
+
+
   useEffect(() => {
 
     
@@ -32,6 +53,9 @@ function MyPage() {
     axios.get("/api/contract/myPage").then((res) => {
       const nftInfo = res.data.nftInfo;
       const userInfo = res.data.userInfo;
+
+      console.log(nftInfo);
+      // console.log((user._id, nftInfo._id));
        
     
       if (userInfo.image !== "cryptoWT") {
@@ -115,106 +139,119 @@ function MyPage() {
   return (
     <div
       style={{
-        margin: "2% auto",
-        width: "90%",
-        display: "flex",
-        justifyContent: "center",
+        // margin: "2% auto",
+        width: "100%",
+        // display: "flex",
+        // justifyContent: "center",
         flexWrap: "wrap",
       }}
     >
       {modalShow === true ? <Modals show={modalShow} pfp={pfp}off={() => { setModalShow(false)}} img={nftInfo}></Modals> : null}
         
       
-      <div
-        style={{
-          width: "50%",
-          height: "18rem",
-          backgroundColor: "red",
-          display: "flex",
-          flexDirection: "column",
-          backgroundColor: "#eee",
-          
-        }}
-      >
-        <div
-          style={{
-            width: "100%",
-            height: "50%",
-          }}
-        >
-          <p>WT Coin [stable]</p>
-          <p>
-            <input
-              value={wtToken}
-              readOnly
-              style={{ border: "none", backgroundColor: "#eee" }}
-            />
-          </p>
-        </div>
-        <div
-          style={{
-            width: "100%",
-            height: "50%",
-          }}
-        >
-          <p>NWT Coin [flexible Coin]</p>
-          <p>
-            <input
-              value={nwtToken}
-              readOnly
-              style={{ border: "none", backgroundColor: "#eee" }}
-            />
-          </p>
-        </div>
-      </div>
-      <div
-        style={{
-          width: "50%",
-          height: "18rem",
-          backgroundColor: "#eee",
-        }}
-      >
-        <div
-          style={{
-            width: "100%",
-            height: "50%",
-          }}
-        >
-          <p>내 주소</p>
-          <p>{pbKey}</p>
-        </div>
-        <div
-          style={{
-            width: "100%",
-            height: "50%",
-          }}
-        >
-          <p>비공개키</p>
-          <p>{privKey}</p>
-        </div>
-      </div>
+      
       <div
         style={{
           width: "100%",
           height: "100%",
           display: "flex",
           flexWrap: "wrap",
-          backgroundColor: "gray",
+          // backgroundColor: "gray",
         }}
       >
         <div
           style={{
-            width: "100%",
+            width: "50%",
+            paddingLeft: "15%"
           }}
         >
-          <div style={{ padding: "1%", borderBottom: "1px dashed" }}>
+          <div style={{ padding: "1%"}}>
           <p style={{ fontWeight: "bold", fontSize: "4rem" }}>NFT PROFILE</p>
             <span onClick={() => { setModalShow(true) }}>
               <img src={profile} style={{ height: "30vh", width: "15vw" }} ></img>
             </span>
           
           </div>
-        </div>  
+        </div>
+
+        <div
+        style={{
+          width: "50%",
+          height: "auto",
+          // backgroundColor: "red",
+          display: "flex",
+          flexDirection: "column",
+          textAlign:"left",
+          paddingTop: "5%"
+          // justifyContent: "right",
+          // float: "left",
+          // backgroundColor: "#eee",
+          
+        }}
+      >
+        <div
+          // style={{
+          //   width: "100%",
+          //   height: "50%",
+          //   marginTop: "7%",
+          // }}
+        >
+          <p>
+            <input value={wtToken} readOnly style={{ border: "none", textAlign:"left", width:"8%"} } ></input>WT (stable)
+          </p>
+        </div>
+        <div
+          // style={{
+          //   width: "100%",
+          //   height: "50%",
+          // }}
+        >
+          <p>
+          <input
+              value={nwtToken}
+              readOnly
+              style={{ border: "none", textAlign:"left", width:"2%" }}
+            />NWT (Flexible Coin)
+          </p>
+        </div>
+        <div
+          // style={{
+          //   width: "100%",
+          //   height: "50%",
+          // }}
+        >
+          <p>내 주소 : {pbKey}</p>
+
+        </div>
+        <div
+          // style={{
+          //   width: "100%",
+          //   height: "50%",
+          // }}
+        >
+          <p>비공개키 : {privKey}</p>
+
+        </div>
+      </div>
+
+        <div style={{ padding: "1%", borderBottom: "1px solid", width:"100%" }}>
+          <Button className="me-3" onClick={()=>{likeResult(user._id, "NFT")}}>Favorite NFT</Button>
+          <Button className="" onClick={()=>{likeResult(user._id, "CONTENT")}} >Favorite ConTent</Button>
+
+        </div>
+
+        <div style={{
+                fontSize: "50px",
+                marginTop: "1%",
+                // marginBottom: "2%",
+                textAlign: "center",
+                width: "100%"
+                // borderTop:"solid",
+                // color: "white",
+                // background:'black'
+                }}>
+                    My NFT!!
+                </div>
        
         <div style={{
            margin: "2% auto",
