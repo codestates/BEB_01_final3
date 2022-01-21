@@ -8,6 +8,8 @@ import { Button, Card } from 'react-bootstrap';
 // const { Meta } = Card;
 import Moment from 'react-moment';
 import 'moment-timezone';
+import '../style.css';
+import Modals from './Modals';
 
 function CounterPage() {
 	const videoId = useParams().videoId;
@@ -15,6 +17,24 @@ function CounterPage() {
 	const [VideoDetail, setVideoDetail] = useState([]);
 	const [Survival, setSurvival] = useState([]);
 	const [complete, setComplete] = useState(false);
+	const [modalShow, setModalShow] = useState(false);
+
+	// const exchangeModal = (e) => {
+	// 	setModalShow(true);
+	// };
+
+	// function pfp(a) {
+	// 	axios
+	// 		.post('/api/users/setImg', {
+	// 			img: a,
+	// 		})
+	// 		.then((res) => {
+	// 			if (res.data.success) {
+	// 				setProfile(a);
+	// 			}
+	// 		});
+	// }
+	// modal을 ON / OFF하는 함수 true/false
 
 	useEffect(() => {
 		async function getVideo() {
@@ -71,14 +91,8 @@ function CounterPage() {
 					if (distDt < 0) {
 						clearInterval(timer);
 						let HapDate =
-							'0' +
-							'일 ' +
-							'0' +
-							'시간 ' +
-							'0' +
-							'분 ' +
-							'0' +
-							'초 가 남음';
+							// '0' + 'd ' +
+							'0' + 'h ' + '0' + 'm ' + '0' + 's ';
 						document.getElementById('timer').innerHTML = HapDate;
 						window.location.replace(`/video/${videoId}`); //video/${videoId}
 						return;
@@ -89,14 +103,14 @@ function CounterPage() {
 						let minutes = Math.floor((distDt % _hour) / _minute);
 						let seconds = Math.floor((distDt % _minute) / _second);
 						let HapDate =
-							parseInt(days) +
-							'일 ' +
+							// parseInt(days) +
+							// 'd ' +
 							parseInt(hours) +
-							'시간 ' +
+							' : ' +
 							parseInt(minutes) +
-							'분 ' +
+							' : ' +
 							parseInt(seconds) +
-							'초 가 남음';
+							' ';
 						document.getElementById('timer').innerHTML = HapDate;
 					}
 				}
@@ -132,17 +146,46 @@ function CounterPage() {
 	});
 
 	return (
-		<div>
+		<div className='CounterPageBody'>
+			<br />
+			<br />
+			<br />
+			<br />
 			<div>
-				<span id='timer' style={{ fontSize: '20px' }}>
+				<div className='timerTitle'>Count Down</div>
+				<span id='timer' className='timer'>
 					{countDownTimer(VideoDetail.opendate)}
 				</span>
 			</div>
-			<Row
+			<span
+				onClick={() => {
+					setModalShow(true);
+				}}>
+				<Button variant='danger' size='lg' className='mb-2'>
+					투표하기
+				</Button>
+			</span>
+			{/* {modalShow === true ? <Modals show={modalShow} /> : '그냥 화면'} */}
+
+			{/* <span onClick={() => { setModalShow(true) }}>
+              <img src={profile} style={{ height: "30vh", width: "15vw" }} ></img>
+            </span> */}
+
+			{modalShow === true ? (
+				<Modals
+					show={modalShow}
+					cards={renderCard}
+					off={() => {
+						setModalShow(false);
+					}}></Modals>
+			) : null}
+
+			{/* 잠시 모달로 바꾸기 전에 주석*/}
+			{/* <Row
 				gutter={16}
 				style={{ display: 'flex', justifyContent: 'center' }}>
 				{renderCard}
-			</Row>
+			</Row> */}
 		</div>
 	);
 }
