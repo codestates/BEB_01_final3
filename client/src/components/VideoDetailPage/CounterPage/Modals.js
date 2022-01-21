@@ -14,10 +14,12 @@ const Modals = ({ show, cards, off }) => {
 	};
 	//  console.log("a",this.img);
 
+	console.log(cards);
+
 	return (
 		<Modal
 			show
-			size='lg'
+			size='xl'
 			aria-labelledby='contained-modal-title-vcenter'
 			centered>
 			<Modal.Header closeButton onClick={off}>

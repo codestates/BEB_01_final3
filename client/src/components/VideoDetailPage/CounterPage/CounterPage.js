@@ -124,7 +124,13 @@ function CounterPage() {
 
 	const renderCard = Survival.map((survival, index) => {
 		return (
-			<Card style={{ width: '20rem', margin: '1%', cursor: 'pointer' }}>
+			<Card
+				style={{
+					width: '15rem',
+					margin: '1.5%',
+					cursor: 'pointer',
+					height: '20rem',
+				}}>
 				<div>
 					<Card.Img
 						size={150}
