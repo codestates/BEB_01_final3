@@ -8,6 +8,10 @@ import { myPageCheck } from "../../actions/user_action";
 import axios from "axios";
 import  Modals  from './Modals';
 
+
+
+
+
 function MyPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -24,9 +28,13 @@ function MyPage() {
   const [modalShow, setModalShow] = useState(false);
   const [profile, setProfile] = useState('')
   const [changeSell, setChangeSell] = useState(true);
+  
+  //타이머가 끝나는 조건 
 
+
+ 
   useEffect(() => {
-
+    
     
 
     axios.get("/api/contract/myPage").then((res) => {
@@ -53,10 +61,13 @@ function MyPage() {
     });
   }, []);
 
+  
+
  
   function sellNFT(tokenId, imgUri) {
     // console.log(userInfo.privateKey);
     // console.log(userInfo.image === imgUri);
+    
     if (userInfo.image === imgUri) {
       setProfile(wtImg);
       axios 
@@ -118,7 +129,7 @@ function MyPage() {
         margin: "2% auto",
         width: "90%",
         display: "flex",
-        justifyContent: "center",
+        
         flexWrap: "wrap",
       }}
     >
