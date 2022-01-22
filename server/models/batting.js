@@ -3,10 +3,22 @@ const Schema = mongoose.Schema;
 
 const battingSchema = mongoose.Schema(
   {
-   
     contentsName: {
       type: String,
-      unique: 1,
+    },
+    contentsNum: {
+      type: Number,
+    },
+    subTitle: {
+      type: String,
+    },
+    serial: {
+      type: Number,
+      default: 0
+    },
+    status: {
+      type: Boolean,
+      default: true
     },
       
   },

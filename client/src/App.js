@@ -19,6 +19,7 @@ import CounterPage from "./components/VideoDetailPage/CounterPage/CounterPage";
 import SearchFail from "./components/Search/SearchFail";
 import LikeNft from "./components/MyPage/Like/LikeNft";
 import LikeConTent from "./components/MyPage/Like/LikeConTent";
+import Batting from "./components/batting/Batting"
 
 
 // const express = require("express");
@@ -77,6 +78,7 @@ function App(props) {
           <Route exact path="/video/:videoId/counterpage" element={Auth(CounterPage, true)} />
           <Route exact path="/user/mypage/Like/LikeNft" element={Auth(LikeNft, true)} />
           <Route exact path="/user/mypage/Like/LikeConTent" element={Auth(LikeConTent, true)} />
+          <Route exact path="/batting" element={Auth(Batting, true)} />
         </Routes>
       </div>
     </BrowserRouter>

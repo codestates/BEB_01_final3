@@ -36,6 +36,11 @@ function Sidebar() {
             Home
           </Link>
         </Menu.Item>
+        <Menu.Item key="4" icon={<UserOutlined />}>
+          <Link to="/Batting" className="nav-text">
+            Battinig
+          </Link>
+        </Menu.Item>
       </Menu>
     </Sider>
   );
