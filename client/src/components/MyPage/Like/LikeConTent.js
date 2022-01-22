@@ -57,14 +57,13 @@ function LikeNft () {
                 }
             })
     }, [])
-
     const res = [];
     let k = 0;
     for(let i = 0; i < Likes.length; i++){
             // console.log(nft[i]._id);
             // console.log(Likes[i]);
             
-            if(Likes[i].videoId) {
+            if(Likes[i].videoId && Likes[i].userId === user._id) {
                 // console.log("Nft임 !", Likes[i]);
                 res[k] = Likes[i].videoId;
                 k = k + 1;
@@ -167,17 +166,15 @@ function LikeNft () {
       });
 
     return(
-        <div>
+        <div style={{}}>
             <div style={{
                 fontSize: "50px",
-                marginTop: "2%",
-                marginBottom: "2%",
-                // borderTop:"solid",
                 // color: "white",
-                // background:'black'
-                }}>
-                    My Favorite ConTent
-                </div>
+                // background:'black',
+                // marginBottom:"2%"
+            }}>
+                My Favorite ConTent ! !
+            </div>
             
             <div style={{
                 width: "100%",

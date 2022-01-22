@@ -7,7 +7,11 @@ import wtImg from "./basic.png";
 import { myPageCheck } from "../../actions/user_action";
 import axios from "axios";
 import Modals  from './Modals';
-import { LikeNft } from './Like/LikeNft';
+import LikeNft from './Like/LikeNft';
+import LikeConTent from './Like/LikeConTent';
+import MyNft from "./MyNft";
+import MyConTent from "./MyConTent";
+
 
 function MyPage() {
   const navigate = useNavigate();
@@ -25,26 +29,59 @@ function MyPage() {
   const [modalShow, setModalShow] = useState(false);
   const [profile, setProfile] = useState('')
   const [changeSell, setChangeSell] = useState(true);
-
+  const [SubscribeNumber, setSubscribeNumber] = useState(0);
+  const [userid, setUserid] = useState('');
   const [likeOption, setlikeOption] = useState("");
-
+  
   const user = useSelector(state=> state.user.userData)
-    // console.log('user', user)
+  const variable = {userTo: userid}
 
 
-  function likeResult(userId, like) {
-    // console.log("like", userId, like)
-    if(like==="NFT") {
-      console.log("NFT");
-      navigate('./Like/LikeNft')
+  useEffect(() => {
+    if(user) {
+      setUserid(user._id)
     }
-    else {
-      console.log(("CONTENT"));
-      navigate('./Like/LikeConTent')
+  })
+  // console.log(userid);
 
+  // useEffect(() => {
+    axios.post('/api/subscribe/subscribeNumber', variable).then((response) => {
+      if (response.data.success) {
+        // console.log(response.data.subscribeNumber);
+        setSubscribeNumber(response.data.subscribeNumber);
+      } else {
+        alert('구독자 수 정보를 받아오지 못했습니다.');
+      }
+    });
+
+  // }, []);
+
+  // console.log(SubscribeNumber);
+  
+  const obj = {
+    0: <LikeNft />,
+    1: <LikeConTent />,
+    2: <MyNft />,
+    3: <MyConTent />
+  }
+
+
+  function likeResult(userId, click) {
+    if(click === "LIKENFT") {
+      setlikeOption(0)
+    }
+    else if(click === "LIKECONTENT"){
+      setlikeOption(1)
+    }
+    else if (click === "MYNFT"){
+      setlikeOption(2)
+    }
+    else if (click === "MYCONTENT"){
+      setlikeOption(3)
     }
   }
 
+  
 
   useEffect(() => {
 
@@ -54,7 +91,7 @@ function MyPage() {
       const nftInfo = res.data.nftInfo;
       const userInfo = res.data.userInfo;
 
-      console.log(nftInfo);
+      // console.log(nftInfo);
       // console.log((user._id, nftInfo._id));
        
     
@@ -135,6 +172,9 @@ function MyPage() {
       });
   }
   // modal을 ON / OFF하는 함수 true/false
+
+
+  
   
   return (
     <div
@@ -157,18 +197,26 @@ function MyPage() {
           display: "flex",
           flexWrap: "wrap",
           // backgroundColor: "gray",
+          
         }}
       >
         <div
           style={{
             width: "50%",
-            paddingLeft: "15%"
+            paddingLeft: "15%",
+            
           }}
         >
-          <div style={{ padding: "1%"}}>
+          <div style={{
+            marginTop: "1%",
+            padding: "1%",
+            // border: "solid",
+            // borderRight: "0px",
+            // borderRadius:"10px 0 0 10px"
+          }}>
           <p style={{ fontWeight: "bold", fontSize: "4rem" }}>NFT PROFILE</p>
             <span onClick={() => { setModalShow(true) }}>
-              <img src={profile} style={{ height: "30vh", width: "15vw" }} ></img>
+              <img src={profile} style={{ height: "35vh", width: "15vw" }} ></img>
             </span>
           
           </div>
@@ -182,7 +230,7 @@ function MyPage() {
           display: "flex",
           flexDirection: "column",
           textAlign:"left",
-          paddingTop: "5%"
+          paddingTop: "5%",
           // justifyContent: "right",
           // float: "left",
           // backgroundColor: "#eee",
@@ -232,97 +280,17 @@ function MyPage() {
           <p>비공개키 : {privKey}</p>
 
         </div>
+        <div><p>구독자 수 : {SubscribeNumber}</p></div>
       </div>
 
         <div style={{ padding: "1%", borderBottom: "1px solid", width:"100%" }}>
-          <Button className="me-3" onClick={()=>{likeResult(user._id, "NFT")}}>Favorite NFT</Button>
-          <Button className="" onClick={()=>{likeResult(user._id, "CONTENT")}} >Favorite ConTent</Button>
+          <Button className="me-3" onClick={()=>{likeResult(user._id, "LIKENFT")}}>Favorite NFT</Button>
+          <Button className="me-3" onClick={()=>{likeResult(user._id, "LIKECONTENT")}} >Favorite ConTent</Button>
+          <Button className="me-3" onClick={()=>{likeResult(user._id, "MYNFT")}} >My NFT</Button>
+          <Button className="" onClick={()=>{likeResult(user._id, "MYCONTENT")}} >My ConTent</Button>
 
         </div>
-
-        <div style={{
-                fontSize: "50px",
-                marginTop: "1%",
-                // marginBottom: "2%",
-                textAlign: "center",
-                width: "100%"
-                // borderTop:"solid",
-                // color: "white",
-                // background:'black'
-                }}>
-                    My NFT!!
-                </div>
-       
-        <div style={{
-           margin: "2% auto",
-           width: "100%",
-           display: "flex",
-           justifyContent: "center",
-           flexWrap: "wrap",
-        }}>
-        {isCheck === true ? (
-          nftInfo.map((el) => {
-            return (
-              <Card style={{ width: "20rem", margin: "1%", cursor: "pointer" }}>
-                <Card.Img
-                  variant="top"
-                  src={el.imgUri}
-                  style={{ height: "80%" }}
-                />
-                <Card.Body style={{ marginRight: "1%" }}>
-                  <Card.Title>Content : {el.contentTitle}</Card.Title>
-                  <Card.Title>Name : {el.nftName}</Card.Title>
-                  <Card.Text>desription : {el.description}</Card.Text>
-                  <Card.Title>Name : {el.nftName}</Card.Title>
-                  {el.sale ? (
-                    <>
-                      <Button variant="primary" style={{ marginRight: "2%" }}>
-                        판매중
-                      </Button>
-                      <Button
-                        variant="danger"
-                        onClick={() => {
-                          cancel(el.tokenId);
-                        }}
-                      >
-                        판매취소
-                      </Button>
-                    </>
-                  ) : (
-                    <>
-                      <Button
-                        variant="primary"
-                        style={{ marginRight: "2%" }}
-                        onClick={() => {
-                          sellNFT(el.tokenId,el.imgUri);
-                        }}
-                      >
-                        판매
-                      </Button>
-                      <input
-                        type="text"
-                        size="10"
-                        style={{ border: "none", borderBottom: "1px solid" }}
-                        onChange={(e) => {
-                          setSellPrice(e.target.value);
-                        }}
-                      ></input>
-                      <span>
-                        <img
-                            src={wtImg}
-                            style={{ height: "3vh", width: "1.5vw" }}
-                            ></img>
-                      </span>
-                    </>
-                  )}
-                </Card.Body>
-              </Card>
-            );
-          })
-        ) : (
-              <div style={{ height: "40vh" }}><p style={{fontSize:"4rem"}}> NFT를 소유하고 있지않습니다.</p></div>
-          )}
-          </div>
+        <div style={{width: "100%"}}>{obj[likeOption]}</div>
       </div>
     </div>
   );
