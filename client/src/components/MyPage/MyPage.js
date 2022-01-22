@@ -197,15 +197,23 @@ function MyPage() {
           display: "flex",
           flexWrap: "wrap",
           // backgroundColor: "gray",
+          
         }}
       >
         <div
           style={{
             width: "50%",
-            paddingLeft: "15%"
+            paddingLeft: "15%",
+            
           }}
         >
-          <div style={{ padding: "1%"}}>
+          <div style={{
+            marginTop: "1%",
+            padding: "1%",
+            // border: "solid",
+            // borderRight: "0px",
+            // borderRadius:"10px 0 0 10px"
+          }}>
           <p style={{ fontWeight: "bold", fontSize: "4rem" }}>NFT PROFILE</p>
             <span onClick={() => { setModalShow(true) }}>
               <img src={profile} style={{ height: "35vh", width: "15vw" }} ></img>
@@ -222,7 +230,7 @@ function MyPage() {
           display: "flex",
           flexDirection: "column",
           textAlign:"left",
-          paddingTop: "5%"
+          paddingTop: "5%",
           // justifyContent: "right",
           // float: "left",
           // backgroundColor: "#eee",
