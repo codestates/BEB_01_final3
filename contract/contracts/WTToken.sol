@@ -67,9 +67,11 @@ contract WTToken is ERC20, Ownable {
          uint256 amount = balanceOf(owner);
         _approve(owner,spender,amount);
     }
-
+    //남아있는양을 업데이트 해준다. 
+    
 
     // 교환해주는 함수
+
     function exchange(address _to, uint256 price) public onlyOwner returns (bool) {
         require(_to != address(0x0));
         require(balanceOf(msg.sender) > 0);

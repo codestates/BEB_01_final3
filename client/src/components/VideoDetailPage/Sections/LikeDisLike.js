@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Tooltip } from 'antd';
 import { LikeOutlined, DislikeOutlined, LikeFilled, DislikeFilled } from '@ant-design/icons';
 import axios from 'axios';
-// import { useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 // import { useSelector } from 'react-redux';
 
 
 
 function LikeDisLike(props) {
-    console.log(props);
-    // const videoId = useParams().videoId;
+
+    const videoId = useParams().videoId;
     // const user = useSelector(state => state.user)
     const [Likes, setLikes] = useState(0);
     const [LikeAction, setLikeAction] = useState('');
@@ -25,11 +25,12 @@ function LikeDisLike(props) {
     // console.log('commentId', props.commentId)
 
     if (props.video) {
-        variable = { videoId: props.VideoId, userId: props.userId };
-        console.log('var',variable)
+        variable = { videoId: videoId, userId: props.userId };
+        // console.log('var',variable)
         //비디오 콘텐츠에 대한 정보(videoDetailPage)
     } else {
         variable = { commentId: props.commentId, userId: props.userId }
+        // console.log('Cvar',variable)
         //댓글에 대한 정보(CommentList)
     }
 

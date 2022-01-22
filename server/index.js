@@ -7,7 +7,7 @@ const config = require('./config/prod');
 const apiRouter = require('./routes/apiRouter');
 const cors = require('cors');
 const coinRouter = require('./routes/coinRouter');
-const { auth } = require('./middleware/auth');
+// const { auth } = require('./middleware/auth');
 const { myPage } = require('./controller/api');
 
 
@@ -19,7 +19,7 @@ mongoose
 	.then(() => console.log('MongoDB Connected success !!'))
 	.catch((err) => console.log(err));
 
-app.get('/api/hello', (req, res) => res.send('Hello World!~~ '));
+// app.get('/api/hello', (req, res) => res.send('Hello World!~~ '));
 
 //application/x-www-form-urlencoded //application/json // use 사용 부분
 app.use(cors());
@@ -29,10 +29,11 @@ app.use(cookieParser());
 app.use('/api', apiRouter);
 app.use('/uploads', express.static('uploads'));
 app.use('/api/video', require('./routes/video'));
+app.use('/api/user/video', require('./routes/uservideo'));
 app.use('/api/comment/', require('./routes/comment'))
 app.use('/api/contract', coinRouter);
 app.use('/api/like/', require('./routes/like'))
-app.use('/api/subscribe/', require('./routes/subscribe'))
+app.use('/api/subscribe', require('./routes/subscribe'))
 //current api/contract/mypage path is error
 app.post('/', myPage);
 

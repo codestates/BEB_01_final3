@@ -5,10 +5,10 @@ import "../node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 
 contract NWTToken is ERC20, Ownable {
-    IERC20 public token1;  // stable coin
-    address public owner1;  // user. (token1의 소유자 계정 주소)
-    IERC20 public token2;  // 유동성 코임
-    address public owner2; // server address
+    // IERC20 public token1;  // stable coin
+    // address public owner1;  // user. (token1의 소유자 계정 주소)
+    // IERC20 public token2;  // 유동성 코임
+    // address public owner2; // server address
 
     constructor() ERC20("NWToken", "NWT") {
         // token1 = IERC20(_token1);

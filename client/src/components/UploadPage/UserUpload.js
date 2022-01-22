@@ -5,7 +5,7 @@ import { PlusOutlined } from '@ant-design/icons/lib/icons';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import UserImg from './UserImg';
+// import UserImg from './UserImg';
 
 const { TextArea } = Input
 const { Title, Text } = Typography
@@ -16,7 +16,7 @@ const PrivateOptions = [
 ]
 
 const CategoryOptions = [
-    { value: 0, label: 'SurvivalCotents' }
+    { value: 1, label: 'GeneralContents' },
 ]
 const UploadPage = (props) => {
 
@@ -28,7 +28,7 @@ const UploadPage = (props) => {
     const [VideoTitle, setVideoTitle] = useState('')
     const [Description, setDescription] = useState('')
     const [Private, setPrivate] = useState(0)
-    const [Category, setCategory] = useState('SurvivalCotents')
+    const [Category, setCategory] = useState('GeneralContents')
     const [FilePath, setFilePath] = useState('')
     const [Duration, setDuration] = useState('')
     const [ThumbnailPath, setThumbnailPath] = useState('')
@@ -68,7 +68,7 @@ const UploadPage = (props) => {
 
         formData.append('file', files[0])
 
-        axios.post('/api/video/uploads', formData, config).then((response) => {
+        axios.post('/api/user/video/uploads', formData, config).then((response) => {
             if (response.data.success) {
                 console.log('Video', response.data)
 
@@ -81,7 +81,7 @@ const UploadPage = (props) => {
                 setFilePath(response.data.url) //동영상주소
 
 
-                axios.post('/api/video/thumbnail', variable).then((response) => {
+                axios.post('/api/user/video/thumbnail', variable).then((response) => {
                     if (response.data.success) {
                         console.log('thumb', response.data)
                         setDuration(response.data.fileDuration) //동영상길이
@@ -111,7 +111,7 @@ const UploadPage = (props) => {
           survival: Survival,
           image: Image,
         }
-        axios.post('/api/video/uploadVideo', variables).then((response) => {
+        axios.post('/api/user/video/uploadVideo', variables).then((response) => {
           if (response.data.success) {
             message.success('성공적으로 업로드를 했습니다.')
             setTimeout(() => {
@@ -137,7 +137,7 @@ const UploadPage = (props) => {
                 }}
             >
                 <Title level={1} >
-                    <Text >Survival Upload</Text>
+                    <Text >Upload Video</Text>
                 </Title>
             </div>
 
@@ -180,19 +180,6 @@ const UploadPage = (props) => {
                 <br />
                 <label>Description</label>
                 <TextArea onChange={onDescriptionChange} value={Description} placeholder='콘텐츠 설명' />
-                <br />
-                <br />
-                <label>예약날짜</label>
-                <TextArea onChange={onDateChange} value={Opendate} placeholder='yyyy-mm-dd 00:00:00' />
-                <br />
-                <br />
-                <div></div>
-                <label>후보자</label>
-                <Input  onChange={onSurvivalList} value={Survival} placeholder='이름, 이름, 이름, ...'/>
-                <br />
-                <br />
-                <label>후보자 이미지</label>
-                <UserImg refreshFunction={updateImages} />
                 <br />
                 <br />
                 <select onChange={onPrivateChange}>

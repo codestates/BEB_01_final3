@@ -11,7 +11,8 @@ function Subscribe(props) {
     console.log(variable);
     axios.post('/api/subscribe/subscribeNumber', variable).then((response) => {
       if (response.data.success) {
-        console.log(response.data.subscribeNumber);
+        // console.log(response.data.subscribeNumber);
+        // console.log('sub', response.data)
         setSubscribeNumber(response.data.subscribeNumber);
       } else {
         alert('구독자 수 정보를 받아오지 못했습니다.');
