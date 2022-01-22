@@ -116,9 +116,7 @@
 
     }
 
-
     setApprovalForAll("sdfsdfsdfsdf",true); 
-
 
    판매 중 
    
@@ -126,8 +124,6 @@
    cookie / session 
    
 
-
-    
    const solContract = new contract(abi,df);
     const erc721Contract = new contract (abi,df)
    tx(

@@ -192,7 +192,7 @@ function Bar({ isLogin }) {
               {isAdmin ? (
                 <Button
                   variant="dark"
-                  href="/Adupload"
+                  href="/video/upload"
                   size="md"
                   className="me-1"
                 >
@@ -204,7 +204,7 @@ function Bar({ isLogin }) {
 
               <Button
                 variant="dark"
-                href="/video/upload"
+                href="/video/userupload"
                 size="md"
                 className="me-1"
               >
