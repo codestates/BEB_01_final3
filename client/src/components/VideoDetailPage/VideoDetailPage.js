@@ -41,7 +41,7 @@ function VideoDetailPage(props) {
 	}, []);
 
 	if (VideoDetail.writer) {
-		// console.log('VD', VideoDetail)
+		console.log('VD', VideoDetail)
 		const subscribeButton = VideoDetail.writer._id !==
 			localStorage.getItem('userId') && (
 			<Subscribe
