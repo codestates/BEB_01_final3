@@ -11,7 +11,7 @@ import LikeDisLike from '../../NFTcreate/LikeDisLike';
 function LikeNft () {
     const user = useSelector(state=> state.user.userData)
 
-    // console.log(user);
+    console.log(user._id);
 
     const [Likes, setLikes] = useState('');
     const [nft, setNft] = useState([]);
@@ -31,18 +31,17 @@ function LikeNft () {
         //   console.log(res.data.data);
         });
     }, []);
-
     
-    // let variable = {}
-    // variable = { nftId: {nft}._id, userId: user._id };
+    let variable = {}
+    variable = { userId: user._id };
     // console.log('var',variable)
 
     useEffect(() => {
 
-        axios.post('/api/like/getlikes', user._id)
+        axios.post('/api/like/getlikes', variable)
             .then(response => {
                 if (response.data.success) {
-
+                    // console.log("?!", response.data.likes);
                     setLikes(response.data.likes);
                     
                 } else {
@@ -57,12 +56,12 @@ function LikeNft () {
             // console.log(nft[i]._id);
             // console.log(Likes[i]);
             
-            if(Likes[i].nftId) {
+            if(Likes[i].nftId && Likes[i].userId === user._id) {
                 // console.log("Nft임 !", Likes[i]);
                 res[k] = Likes[i].nftId;
                 k = k + 1;
 
-                // console.log("res", res[i]);
+                console.log("res", res[i]);
             } 
             else {
                 // console.log("Nft가 아님!?", Likes[i]);
@@ -88,7 +87,7 @@ function LikeNft () {
             } 
         }
     }
-    // console.log(Likenft);
+    console.log(Likenft);
 
     function BuyNFT(tokenId){
         axios.post('/api/contract/buyNFT',{tokenId:tokenId})
@@ -126,6 +125,7 @@ function LikeNft () {
              alignContent: 'center',
             backgroundColor:'black'
           }}>
+            
             {
             Likenft.map((el) => {
                 return(

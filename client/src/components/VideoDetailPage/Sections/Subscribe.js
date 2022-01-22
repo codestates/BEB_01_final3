@@ -7,8 +7,11 @@ function Subscribe(props) {
 
   useEffect(() => {
     let variable = { userTo: props.userTo };
+
+    console.log(variable);
     axios.post('/api/subscribe/subscribeNumber', variable).then((response) => {
       if (response.data.success) {
+        console.log(response.data.subscribeNumber);
         setSubscribeNumber(response.data.subscribeNumber);
       } else {
         alert('구독자 수 정보를 받아오지 못했습니다.');
@@ -50,6 +53,7 @@ function Subscribe(props) {
       );
     } else {
       //구독중이 아니라면
+      console.log("여긴가?", subscribedVariable);
       axios.post('/api/subscribe/Subscribe', subscribedVariable).then(
         (response) => {
           if (response.data.success) {

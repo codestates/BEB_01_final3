@@ -10,7 +10,7 @@ const Dislike = require("../models/Dislike");
 router.post("/getlikes", (req, res) => {
 
   let variable = {};
-  console.log(req.body);
+  console.log("??", req.body);
 
   if (req.body.videoId) {
     variable = { videoId: req.body.videoId };

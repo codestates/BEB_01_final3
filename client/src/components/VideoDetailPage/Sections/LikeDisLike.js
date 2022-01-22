@@ -8,7 +8,7 @@ import axios from 'axios';
 
 
 function LikeDisLike(props) {
-
+    console.log(props);
     // const videoId = useParams().videoId;
     // const user = useSelector(state => state.user)
     const [Likes, setLikes] = useState(0);
@@ -25,7 +25,7 @@ function LikeDisLike(props) {
     // console.log('commentId', props.commentId)
 
     if (props.video) {
-        variable = { videoId: props.videoId, userId: props.userId };
+        variable = { videoId: props.VideoId, userId: props.userId };
         console.log('var',variable)
         //비디오 콘텐츠에 대한 정보(videoDetailPage)
     } else {

@@ -17,8 +17,8 @@ router.post("/subscribeNumber", (req, res) => {
 
 router.post("/subscribed", (req, res) => {
   Subscriber.find({
-    userTo: req.body.userTo,
     userFrom: req.body.userFrom,
+    userTo: req.body.userTo,
   }).exec((err, subscribe) => {
     if (err) res.status(400).send(err);
     let result = false;
@@ -40,6 +40,7 @@ router.post("/unSubscribe", (req, res) => {
 });
 
 router.post("/Subscribe", (req, res) => {
+  console.log("여긴가?", req.body);
   const subscribe = new Subscriber(req.body);
   subscribe.save((err, doc) => {
     if (err) return res.json({ success: false, err });
