@@ -1228,7 +1228,7 @@ module.exports = {
 			const info = await Batting.find({
 				contentsName: contentName,
 			}).exec();
-			console.log(info);
+			
 			if (info[0] !== undefined) {
 				res.json({ success: true, info });
 			}

@@ -35,6 +35,7 @@ function Batting() {
 	},[])
 
 	const Contents = styled.div`
+	width: 70vw;
 	display: flex;
 	flex-direction: column;
 	flex-wrap : wrap
@@ -47,6 +48,7 @@ function Batting() {
 	justify-content: center;
 	background-color : pink;
 	margin : 1%;
+
 	`;
 	const List13 = styled.div`
 	width:100%;
@@ -56,10 +58,7 @@ function Batting() {
 	background-color : pink;
 	margin : 1%;
 	`;
-	const Button = styled.button`
-	 margin : 1%;
-	`;
-
+	
 	function Name(num){
 	    
 		setName("active");
@@ -78,7 +77,7 @@ function Batting() {
 	return (
 		
 		
-		<Layout>
+		<Layout style={{display:'flex',justifyContent:'center',alignItems:'center', backgroundColor:"gray"}}>
 		
 			<Contents>
 		
@@ -87,16 +86,19 @@ function Batting() {
 						return (
 							<>
 								<Content onClick={() => { Name(el.contentNum) }}>
-									<div>{el.contentName}
-									<Button onClick={() => {setIsCheck(true)} }>나타내기</Button>
-									<Button onClick={() => {setIsCheck(false)} }>닫기</Button>
-									<Button>폐쇄하기</Button>
+								<Card bg='black' text='danger'>
+                               <Card.Body>
+                              <Card.Title>
+                               Content : {el.contentName}
+                               </Card.Title>
+                              <span>
+							<Button variant="black" style={{border:"1px dashed gray"}}>Game Close</Button>
+                              </span> 
+                            </Card.Body>
+									</Card>
+										<div className={name + el.contentNum} style={{display:'none'} } >
+										<BattingList id={el.contentsName} contentName={el.contentName} check={isCheck}></BattingList>
 									</div>
-									<div className={name+el.contentNum} >
-								
-									<BattingList id={el.contentsName} contentName={el.contentName} check={isCheck}></BattingList>
-								</div>
-								
 							</Content>
 								
 						</>

@@ -31,12 +31,12 @@ function BattingList({contentName,check}) {
 
 	const Contents = styled.div`
 	display: flex;
-	flex-direction: column;
+	flex-direction: row;
 	flex-wrap : wrap
 	width:100%;
-	height: 20vh;
+	height: 100%;
 	justify-content: center;
-	background-color : green;
+	background-color : darkgray;
 	`;
 	const Content = styled.div`
 	 width:100%;
@@ -47,27 +47,28 @@ function BattingList({contentName,check}) {
 		
 		
 			<>	
-			 
+			 <Contents>
 			{list.map((el) => {
 				return (
 					<>
-						<Contents  className={el.contentName}>
-						<Content>
-								{[el.contentsName] + el.subTitle + 'Ep.' + el.serial}
-								</Content>
-								<Content>
-								{"contentNum :" + [el.contentsNum]}
-								</Content>
-				
-						<Content>
-								<span><Button>Close</Button></span>
-						<span><Button></Button></span>
-						</Content>
-							</Contents>
+					
+						<Card bg='white' text='black' style={{margin:'1%'}}>
+                               <Card.Body>
+                              <Card.Title>
+                               Title : {[el.contentsName] + el.subTitle + 'Ep.' + el.serial}
+									</Card.Title>
+									<Card.Title>
+                               contentNum : {el.contentsNum}
+                               </Card.Title>
+                               <span>
+							   <Button variant="black" style={{border:"1px dashed gray", color:'red	'}}>Game Close</Button>
+							   </span>
+                            </Card.Body>
+						</Card>
 						</>
 				)
 			})}
-		     
+		     </Contents>
 			</>	
 		
 	);
