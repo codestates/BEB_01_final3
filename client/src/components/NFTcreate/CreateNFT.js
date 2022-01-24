@@ -13,9 +13,8 @@ import Spinner from '../spinner/spinner';
 
 const CreateNFT = (props) => {
     
-    const { TextArea } = Input
+const { TextArea } = Input
 const { Title, Text } = Typography
-
 
 
     const ipfs = create({
