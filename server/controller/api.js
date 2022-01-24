@@ -686,7 +686,7 @@ module.exports = {
 				const userInfo = {
 					publicKey: user.publicKey,
 					privateKey: user.privateKey,
-					wtToken: user.wtToken,
+					wtToken: user.wtToken,	// wt, nwt 가져오기
 					nwtToken: user.nwtToken,
 					image: user.image,
 				};
