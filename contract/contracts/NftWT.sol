@@ -2,13 +2,12 @@
     // SPDX-License-Identifier: MIT
     pragma solidity ^0.8.0;
 
-    import "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol"; 
-    import "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol";
-    import "../node_modules/@openzeppelin/contracts/utils/Counters.sol";
-    import "../node_modules/@openzeppelin/contracts/utils/Counters.sol";
-    import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
-    import "../node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
-    import "../node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol";
+   
+    import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+    import "@openzeppelin/contracts/utils/Counters.sol";
+    import "@openzeppelin/contracts/access/Ownable.sol";
+    import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+    import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
  
     contract WATTONFT is ERC721URIStorage, Ownable {
@@ -25,7 +24,6 @@
 
         constructor() ERC721("WATTONFTs", "WTNFT") {}   
 
-
     //-------------------함수시작 ------------- 
     //*참고사항* 서버중앙화 방식을 사용하기 때문에 onlyOwner가 들어가있고 
     //이때의  onwer 및 msg.sender가 어떻게 되는지 생각하면서 함수를 짜야한다.
@@ -39,19 +37,17 @@
             return true;
         }
 
-
+    
     //2. mintNFT erc721에 있는 _mint함수를 이용해서 유일한 토큰을 생성하는 함수 
     // 밑에 nft발행방식은 누군가에게 발헹해주는 방식이 아닌 서버계정 자체에 nft를 발행해주는 함수.
-        function mintNFT(string memory tokenURI,uint256 price) public onlyOwner returns (uint256) {
+        function mintNFT(string memory tokenURI) public onlyOwner returns (uint256) {
             
             _tokenIds.increment();
             uint256 newItemId = _tokenIds.current();
             _mint(msg.sender, newItemId);
-            tokenPrice[newItemId] = price;
             _setTokenURI(newItemId, tokenURI); 
             emit NewNft(msg.sender,newItemId,tokenURI);
-            getTokenId[tokenURI] = newItemId;  // 맵핑을 통해서 tokendI를 tokenUri와 맵핑해준다. 이방식은 tokenUri가 유일해야 한다는 전제가 필요하다.
-        
+           
             return newItemId;
         }
 
@@ -92,46 +88,86 @@
         
 
             token.transferFrom(buyer,tokenSeller,price);  // 구매자가 판매자게에 erc20토큰을 보내는 함수.
-
             safeTransferFrom(tokenSeller, buyer, _tokenId);  // 판매자가 구매자에게 tokenId를 넘기는 함수.
             
         }
 
 
-       // 이 밑에부분은 call vs delegatecall을 test하기위한 함수이다.
-        function sendToken(address sender,address receipent,uint256 amount,address _contract)public returns(uint){
-         (bool data, ) = _contract.call(abi.encodeWithSignature("send(address,address,uint256)",sender,receipent,amount));
-          if(data == true){
-              return 1;
-          }
+    event Start();
+    event Bid(address indexed sender, uint amount);
+    event Withdraw(address indexed bidder, uint amount);
+    event End(address winner, uint amount);
+
+    event Endedat(uint a);
+    
+
+    struct Auction {
+            bool started;
+            address owner;
+            uint nftId;
+            bool status;
+            uint endAt;
+            address highestBidder;
+            uint highestBid;
+            bool ended;
+            
         }
+    mapping(uint => Auction) auction;
+    mapping(uint => mapping(address => uint)) public bids;
+    
+    function startAuction(uint nftId, address owner, uint _startingBid) public {
+         auction[nftId].nftId = nftId;
+         auction[nftId].owner = owner;
+         auction[nftId].started = true;
+         auction[nftId].highestBid = _startingBid;
+         transferFrom(owner, address(this), nftId);
+         auction[nftId].endAt = block.timestamp + 1 days;
 
-        function tests(address _contract,address addr) public returns(bool){
-            (bool success, ) = _contract.call(abi.encodeWithSignature("blof(address)",addr));
-            return success;
+         emit Endedat(auction[nftId].endAt);
+      }
+
+    function bid(uint nftId, address buyer, uint amount) public {
+        require(auction[nftId].started, "not started");
+        require(block.timestamp < auction[nftId].endAt, "ended");
+        require(amount > auction[nftId].highestBid, "value < highest");
+
+        if (auction[nftId].highestBidder != address(0)) {
+            bids[nftId][auction[nftId].highestBidder] += auction[nftId].highestBid;
+            //현재 가장 높은 입찰자의 입찰 금액에 
+            //가장 높은 입찰자가 누군지도 알아야되서 
+            //bids[highestBidder] 선언
+            //300이더
+
         }
-
-
-        
+        token.transferFrom(buyer, address(this), amount);
+        auction[nftId].highestBidder = buyer;
+        auction[nftId].highestBid = amount;
 
     }
 
-    setApprovalForAll("sdfsdfsdfsdf",true); 
+    function withdraw(address addr, uint nftId) public {
+        uint bal = bids[nftId][addr];
+        bids[nftId][addr] = 0;
+        token.transferFrom(address(this), addr , bal);
+       //NftWt가 Erc20을 호출, msg.sender = NftWt
+       //
+        emit Withdraw(addr, bal);
+    }
 
-   판매 중 
-   
-   //////
-   cookie / session 
-   
+    function end(uint nftId) public {
+        require(auction[nftId].started, "not started");
+        require(block.timestamp >= auction[nftId].endAt, "not ended");
+        require(!auction[nftId].ended, "ended");
 
-   const solContract = new contract(abi,df);
-    const erc721Contract = new contract (abi,df)
-   tx(
-       to : '보내는사람',
-       from : 'CA'
-   )
+        auction[nftId].ended = true;
+        if (auction[nftId].highestBidder != address(0)) {
+            safeTransferFrom(address(this), auction[nftId].highestBidder, nftId);
+            token.transferFrom(address(this), auction[nftId].owner, auction[nftId].highestBid);
+        } else {
+            safeTransferFrom(address(this), auction[nftId].owner, nftId);
+        }
+        emit End(auction[nftId].highestBidder, auction[nftId].highestBid);
+    }
+}
 
-   // 순서 
-   erc721Contract.setApprove('서버계정',true); 
-   solContract.판매함수사용
-  
+
