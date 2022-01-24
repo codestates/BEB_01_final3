@@ -179,7 +179,7 @@ function MyPage() {
 
   const firstprikey = privKey.substring(0,4);
   const lastprikey = privKey.substring(60, 64);
-  console.log(lastprikey);
+  // console.log(lastprikey);
   return (
     <div
       style={{
@@ -258,7 +258,7 @@ function MyPage() {
           // }}
         >
           <p>
-            <input value={wtToken} readOnly style={{ border: "none", textAlign:"left", width:"8%", background: "black"} } ></input>WT (stable)
+            <span>{wtToken} WT (stable)</span>
           </p>
         </div>
         <div
@@ -269,11 +269,7 @@ function MyPage() {
           }}
         >
           <p>
-          <input
-              value={nwtToken}
-              readOnly
-              style={{ border: "none", textAlign:"left", width:"4%", background: "black" }}
-            />NWT (Flexible Coin)
+         <span>{nwtToken} NWT (Flexible Coin)</span>
           </p>
         </div>
         <div

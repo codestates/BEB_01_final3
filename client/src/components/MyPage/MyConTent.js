@@ -27,7 +27,7 @@ function MyConTent () {
         }
         });
     }, []);
-    console.log("video", Video);
+    // console.log("video", Video);
 
     const userVideo = [];
     for(let i = 0; i < Video.length; i++){
@@ -36,7 +36,7 @@ function MyConTent () {
       }
     }
 
-    console.log(userVideo);
+    // console.log(userVideo);
     const renderCards = userVideo.map((video, index) => {
         var minutes = Math.floor(video.duration / 60);
         var seconds = Math.floor(video.duration - minutes * 60);
