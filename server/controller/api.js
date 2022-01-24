@@ -765,19 +765,28 @@ module.exports = {
 			res.json({ failed: false, reason: 'i do not know' });
 		}
 	},
-
-	myPage: (req, res) => {
+	
+	myPage: async (req, res) => {
 		// console.log('here api')
-		console.log(req.user);
+		let wtdata = await wtContract.methods.balanceOf(serverAddress).call();
+		let wtData = web3.utils.fromWei(wtdata, 'ether')
+		// console.log(wtData);
+		let nwtdata = await nwtContract.methods.balanceOf(serverAddress).call();
+		let nwtData = web3.utils.fromWei(nwtdata, 'ether')
+		// console.log(nwtData);
+
+		// console.log(req.user);
 		try {
 			// 현재 로그인된 user 정보 찾아서
 			User.findOne({ _id: req.user._id }, (err, user) => {
 				// userInfo 에 필요한 정보 담고
+				
+				// console.log(wtContract.methods.balanceOf(serverAddress).call());
 				const userInfo = {
 					publicKey: user.publicKey,
 					privateKey: user.privateKey,
-					wtToken: user.wtToken,
-					nwtToken: user.nwtToken,
+					wtToken: wtData,
+					nwtToken: nwtData,
 					image: user.image,
 				};
 				// 그 유저가 가지고 있는 nft 정보를 가져옴

@@ -84,7 +84,7 @@ function App(props) {
           <Route exact path="/video/:videoId/counterpage" element={Auth(CounterPage, true)} />
           <Route exact path="/user/mypage/Like/LikeNft" element={Auth(LikeNft, true)} />
           <Route exact path="/user/mypage/Like/LikeConTent" element={Auth(LikeConTent, true)} />
-          <Route exact path="/batting" element={Auth(Batting, true)} />
+          <Route exact path="/Developer/batting" element={Auth(Batting, true)} />
         </Routes>
       </div>
     </BrowserRouter>

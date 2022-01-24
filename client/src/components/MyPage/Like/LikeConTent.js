@@ -94,7 +94,7 @@ function LikeNft () {
             } 
         }
     }
-    console.log(LikeContent);
+    // console.log(LikeContent);
 
     // function BuyNFT(tokenId){
     //     axios.post('/api/contract/buyNFT',{tokenId:tokenId})
@@ -117,7 +117,7 @@ function LikeNft () {
         var seconds = Math.floor(video.duration - minutes * 60);
     
         return (
-          <Col lg={7} md={10} xs={24} key={index}>
+          <Col lg={7} md={10} xs={24} key={index} style={{color:"white", margin:"1% 1% 1% 1%", paddingBottom:"1%", borderBottom:"solid white", width:"80vw"}}>
             {/*lg:가장클때 6그리드를쓰겠다. md:중간크기일때 8그리드를 쓰겠다. 
                 xs:가장작은 크기일때는 24그리드를 쓰겠다. 총24그리드 */}
             <div style={{ position: "relative"}}>
@@ -135,7 +135,7 @@ function LikeNft () {
                     right: 0,
                     position: "absolute",
                     margin: "4px",
-                    color: "#fff",
+                    color: "white",
                     backgroundColor: "rgba(17, 17, 17, 0.8)",
                     opacity: 0.8,
                     padding: "2px 4px",
@@ -169,7 +169,8 @@ function LikeNft () {
         <div style={{}}>
             <div style={{
                 fontSize: "50px",
-                // color: "white",
+                color: "white",
+                marginBottom: "-2%"
                 // background:'black',
                 // marginBottom:"2%"
             }}>

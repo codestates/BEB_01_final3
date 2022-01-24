@@ -123,7 +123,7 @@ function Bar({ isLogin }) {
 
           <Navbar.Collapse id="navbarScroll" className="d-flex justify-content-center">
             <Form className="d-flex">
-              <DropdownButton>
+              <DropdownButton variant="light">
                 <Dropdown.Item
                   type="option"
                   // value={option}
@@ -154,7 +154,7 @@ function Bar({ isLogin }) {
                   setSearchValue(e.target.value);
                 }}
               />
-              <Button variant="outline-success" method="get" onClick={onSubmit}>
+              <Button variant="light" method="get" onClick={onSubmit}>
                 Search
               </Button>
             </Form>

@@ -27,7 +27,7 @@ function Batting() {
 				if (res.data.success) {
 					const contentsName = res.data.contentsName;
 					setContentsName(contentsName);
-					console.log(res.data.content);
+					console.log(res.data);
 				}
 			})
 	},[])
@@ -62,9 +62,9 @@ function Batting() {
 	return (
 		
 		
-			<>	
-				
-		<Contents>
+		<Layout>
+		
+			<Contents>
 		
 					{contentsName.map((el) => {
 						return (
@@ -72,20 +72,20 @@ function Batting() {
 							<Content>
 								<div>{el.contentName}</div>
 								<div>
-										<Button onClick={() => {setIsCheck(true)} }>나타내기</Button>
+									<Button onClick={() => {setIsCheck(true)} }>나타내기</Button>
 									<Button onClick={() => {setIsCheck(false)} }>닫기</Button>
-										<Button>폐쇄하기</Button>
-										<BattingList contentName={el.contentName} check={isCheck}></BattingList>
-									</div>
+									<Button>폐쇄하기</Button>
+									<BattingList contentName={el.contentName} check={isCheck}></BattingList>
+								</div>
 								
-								</Content>
+							</Content>
 								
 						</>
 						
 						)
 					})}
-				</Contents>
-			</>	
+			</Contents>
+		</Layout>	
 		
 	);
 }
