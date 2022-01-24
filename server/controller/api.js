@@ -1073,7 +1073,7 @@ module.exports = {
 					contentsNum: num,
 					serial: Number(serialNo),
 				});
-				const contents = new Contents({ contentName: title });
+				const contents = new Contents({ contentName: title, contentNum : num });
 				batting.save((err, info) => {
 					contents.save((err, info) => {
 						console.log(err);
@@ -1228,7 +1228,7 @@ module.exports = {
 			const info = await Batting.find({
 				contentsName: contentName,
 			}).exec();
-			console.log(info);
+			
 			if (info[0] !== undefined) {
 				res.json({ success: true, info });
 			}

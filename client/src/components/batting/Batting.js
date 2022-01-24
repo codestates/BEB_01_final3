@@ -17,6 +17,8 @@ function Batting() {
 
 	const [contentsName, setContentsName] = useState([]);
 	const [isCheck, setIsCheck] = useState(false);
+	const [name, setName] = useState("");
+	// const [num, setNum] = useState(0);
 
 	useEffect(() => {
 		axios.get("/api/bat")
@@ -33,6 +35,7 @@ function Batting() {
 	},[])
 
 	const Contents = styled.div`
+	width: 70vw;
 	display: flex;
 	flex-direction: column;
 	flex-wrap : wrap
@@ -45,6 +48,7 @@ function Batting() {
 	justify-content: center;
 	background-color : pink;
 	margin : 1%;
+
 	`;
 	const List13 = styled.div`
 	width:100%;
@@ -54,30 +58,47 @@ function Batting() {
 	background-color : pink;
 	margin : 1%;
 	`;
-	const Button = styled.button`
-	 margin : 1%;
-	`;
+	
+	function Name(num){
+	    
+		setName("active");
+		const com = document.querySelector('.active' + num);	
+		
+		if (com.style.display === 'none') {
+			com.style.display = 'block';
+		} else {
+			com.style.display = 'none';
+		}
+		;
+	}
+	
 
 	
 	return (
 		
 		
-		<Layout>
+		<Layout style={{display:'flex',justifyContent:'center',alignItems:'center', backgroundColor:"gray"}}>
 		
 			<Contents>
 		
-					{contentsName.map((el) => {
+				{contentsName.map((el) => {
+				
 						return (
 							<>
-							<Content>
-								<div>{el.contentName}</div>
-								<div>
-									<Button onClick={() => {setIsCheck(true)} }>나타내기</Button>
-									<Button onClick={() => {setIsCheck(false)} }>닫기</Button>
-									<Button>폐쇄하기</Button>
-									<BattingList contentName={el.contentName} check={isCheck}></BattingList>
-								</div>
-								
+								<Content onClick={() => { Name(el.contentNum) }}>
+								<Card bg='black' text='danger'>
+                               <Card.Body>
+                              <Card.Title>
+                               Content : {el.contentName}
+                               </Card.Title>
+                              <span>
+							<Button variant="black" style={{border:"1px dashed gray"}}>Game Close</Button>
+                              </span> 
+                            </Card.Body>
+									</Card>
+										<div className={name + el.contentNum} style={{display:'none'} } >
+										<BattingList id={el.contentsName} contentName={el.contentName} check={isCheck}></BattingList>
+									</div>
 							</Content>
 								
 						</>
