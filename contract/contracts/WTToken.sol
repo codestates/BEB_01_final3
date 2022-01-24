@@ -7,13 +7,7 @@ import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 
 contract WTToken is ERC20, Ownable {
     uint256 _amountToken;
-    // uint256 _price;
-    // event showPrice(uint256 price);
-    // mapping(address => uint256) private _balances;
-    // uint256 private _totalSupply;
-    // Price _price;
-    // mapping(address => uint256) private _balances;
-
+    
     
 //배팅을 하는 플레이어에 대한 구조체
     struct Player {

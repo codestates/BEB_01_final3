@@ -73,7 +73,7 @@ const { Title, Text } = Typography
           console.log(nftName);
 
           const result = {
-             userId : "jun",
+             userId : "",
              contentTitle : contentTitle,
              nftName : nftName,
              nftDescription : nftDescription,
