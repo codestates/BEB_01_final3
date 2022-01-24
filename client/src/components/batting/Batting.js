@@ -1,3 +1,5 @@
+
+  
 import React, { useEffect, useState } from 'react';
 import '../../App.css';
 import Sidebar from '../DeveloperPage/DevComponent/Sidebar';
@@ -48,7 +50,6 @@ function Batting() {
 	justify-content: center;
 	background-color : pink;
 	margin : 1%;
-
 	`;
 	const List13 = styled.div`
 	width:100%;
