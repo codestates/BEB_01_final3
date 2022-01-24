@@ -17,6 +17,8 @@ function Batting() {
 
 	const [contentsName, setContentsName] = useState([]);
 	const [isCheck, setIsCheck] = useState(false);
+	const [name, setName] = useState("");
+	// const [num, setNum] = useState(0);
 
 	useEffect(() => {
 		axios.get("/api/bat")
@@ -58,6 +60,20 @@ function Batting() {
 	 margin : 1%;
 	`;
 
+	function Name(num){
+	    
+		setName("active");
+		const com = document.querySelector('.active' + num);	
+		
+		if (com.style.display === 'none') {
+			com.style.display = 'block';
+		} else {
+			com.style.display = 'none';
+		}
+		;
+	}
+	
+
 	
 	return (
 		
@@ -66,16 +82,19 @@ function Batting() {
 		
 			<Contents>
 		
-					{contentsName.map((el) => {
+				{contentsName.map((el) => {
+				
 						return (
 							<>
-							<Content>
-								<div>{el.contentName}</div>
-								<div>
+								<Content onClick={() => { Name(el.contentNum) }}>
+									<div>{el.contentName}
 									<Button onClick={() => {setIsCheck(true)} }>나타내기</Button>
 									<Button onClick={() => {setIsCheck(false)} }>닫기</Button>
 									<Button>폐쇄하기</Button>
-									<BattingList contentName={el.contentName} check={isCheck}></BattingList>
+									</div>
+									<div className={name+el.contentNum} >
+								
+									<BattingList id={el.contentsName} contentName={el.contentName} check={isCheck}></BattingList>
 								</div>
 								
 							</Content>

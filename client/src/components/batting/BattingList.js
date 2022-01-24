@@ -30,7 +30,7 @@ function BattingList({contentName,check}) {
 	},[])
 
 	const Contents = styled.div`
-	display: ${check === true ? 'flex' : 'none'};
+	display: flex;
 	flex-direction: column;
 	flex-wrap : wrap
 	width:100%;
@@ -41,16 +41,7 @@ function BattingList({contentName,check}) {
 	const Content = styled.div`
 	 width:100%;
 	`;
-	const List = styled.div`
-	width:100%;
-	display: ${props => props.color || 'none'};
-	flex-direction: column;
-	justify-content: center;
-	background-color : pink;
-	margin : 1%;
-	`;
 	
-
 	
 	return (
 		
@@ -60,7 +51,7 @@ function BattingList({contentName,check}) {
 			{list.map((el) => {
 				return (
 					<>
-						<Contents>
+						<Contents  className={el.contentName}>
 						<Content>
 								{[el.contentsName] + el.subTitle + 'Ep.' + el.serial}
 								</Content>
@@ -69,7 +60,7 @@ function BattingList({contentName,check}) {
 								</Content>
 				
 						<Content>
-						<span><Button>Close</Button></span>
+								<span><Button>Close</Button></span>
 						<span><Button></Button></span>
 						</Content>
 							</Contents>

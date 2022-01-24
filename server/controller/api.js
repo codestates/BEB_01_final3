@@ -1060,7 +1060,7 @@ module.exports = {
 			
 			console.log(title,subTitle,num,serialNo);
 			const batting = new Batting({contentsName : title, subTitle : subTitle, contentsNum : num, serial : Number(serialNo)});
-			const contents = new Contents({contentName : title});
+			const contents = new Contents({contentName : title, contentNum : num});
 			batting.save((err, info) => {
 				contents.save((err, info) => {
 					console.log(err);
