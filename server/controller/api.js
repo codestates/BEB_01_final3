@@ -22,6 +22,8 @@ const { json } = require('body-parser');
 //계정부분
 const serverAddress = process.env.SERVERADDRESS;
 const serverPrivateKey = process.env.SERVERPRIVATEKEY;
+// auth 권한 부여받은 계정(contract 이용가능 => msg.sender : owner)
+const subManagerAddress = '';
 
 // abi json
 const WTABI = fs.readFileSync('server/abi/WTToken.json', 'utf-8');
