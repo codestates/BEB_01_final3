@@ -72,13 +72,13 @@ function Batting() {
 							<Content>
 								<div>{el.contentName}</div>
 								<div>
-										<Button onClick={() => {setIsCheck(true)} }>나타내기</Button>
+									<Button onClick={() => {setIsCheck(true)} }>나타내기</Button>
 									<Button onClick={() => {setIsCheck(false)} }>닫기</Button>
-										<Button>폐쇄하기</Button>
-										<BattingList contentName={el.contentName} check={isCheck}></BattingList>
-									</div>
+									<Button>폐쇄하기</Button>
+									<BattingList contentName={el.contentName} check={isCheck}></BattingList>
+								</div>
 								
-								</Content>
+							</Content>
 								
 						</>
 						
