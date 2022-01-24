@@ -1,3 +1,5 @@
+
+  
 import React, { useEffect, useState } from 'react';
 import '../../App.css';
 import Sidebar from '../DeveloperPage/DevComponent/Sidebar';
@@ -17,8 +19,8 @@ function Batting() {
 
 	const [contentsName, setContentsName] = useState([]);
 	const [isCheck, setIsCheck] = useState(false);
-	const [checkName, setCheckName] = useState();
-	const [state, setState] = useState(0);
+	const [name, setName] = useState("");
+	// const [num, setNum] = useState(0);
 
 	useEffect(() => {
 		axios.get("/api/bat")
@@ -29,28 +31,13 @@ function Batting() {
 				if (res.data.success) {
 					const contentsName = res.data.contentsName;
 					setContentsName(contentsName);
-					// console.log(res.data);
-				}
-			})
-	},[])
-
-	const [list, setList] = useState([]);
-
-
-	useEffect(() => {
-	
-		axios.post("/api/bat/contentList", {checkName})
-			.then(res => {
-				//데이터 가공을 해주어야합니다. 같은 content끼리묵어야 합니다.
-				//일단 몇개의 데이터가 있는지 확인해 봅시다.
-			
-				if (res.data.success) {
-					setList(res.data.info);
+					console.log(res.data);
 				}
 			})
 	},[])
 
 	const Contents = styled.div`
+	width: 70vw;
 	display: flex;
 	flex-direction: column;
 	flex-wrap : wrap
@@ -72,146 +59,55 @@ function Batting() {
 	background-color : pink;
 	margin : 1%;
 	`;
-	const Button = styled.button`
-	 margin : 1%;
-	`;
-	const getCheck = (e) => {
-		// console.log(e);
-		setIsCheck(e);
+	
+	function Name(num){
+	    
+		setName("active");
+		const com = document.querySelector('.active' + num);	
+		
+		if (com.style.display === 'none') {
+			com.style.display = 'block';
+		} else {
+			com.style.display = 'none';
+		}
+		;
 	}
+	
 
-	const setCheck = (e, l, k) => {
-		setIsCheck(e);
-		setCheckName(l);
-		setState(k)
-	}
-
-	console.log(checkName);
+	
 	return (
 		
-		<div
-			style={{display: "flex", width:'100vw', height: '60vh',}}
-		>
-			{ isCheck === false ? 
-			contentsName.map((el) => {
-				return (
-					<div style={{margin: "2%", }}>
-					<Content>
-					<Button variant="dark" onClick={() => {setCheck(true, el.contentName)} } >{el.contentName}</Button>
-					<Card style={{ width: '19rem', margin:"1.5%", cursor:"pointer", height: "90%"}} bg='white' text='white' border='white'>
-						<Card.Body style={{marginBottom: '0px', borderBottom: '1px solid #DCDCDC'}}>
-						
-							
-							<BattingList contentName={checkName} check={isCheck} getCheck={getCheck} />
-						
-							<Button onClick={() => getCheck(false)}>뀨</Button> 
-						</Card.Body>
-					</Card>
-
-							{/* <Button >나타내기</Button> */}
-							{/* <Button onClick={() => {setIsCheck(false)} }>닫기</Button> */}
-							{/* <Button>폐쇄하기</Button> */}
-							{/* {isCheck === true && el.contentName === checkName ? 
-							<span><BattingList contentName={checkName} check={isCheck} getCheck={getCheck} />
-							<Button onClick={() => getCheck(false)}>뀨</Button></span>
-							
-								: <Button onClick={() => getCheck(false)}>뀨</Button>
-							} */}
-
-						
-					</Content>
-						
-				</div>
-				
-				)
-			})
-
-			:
-
-			
-			contentsName.map((el) => {
-				return (
-					<div style={{margin: "2%", }}>
-					<Content>
-					<Button variant="dark" onClick={() => {setCheck(true, el.contentName)} } >{el.contentName}</Button>
-					<Card style={{ width: '19rem', margin:"1.5%", cursor:"pointer", height: "90%"}} bg='white' text='white' border='white'>
-						<Card.Body style={{marginBottom: '0px', borderBottom: '1px solid #DCDCDC'}}>
-						
-						
-							{/* <BattingList contentName={checkName} check={isCheck} getCheck={getCheck} /> */}
-							
-							<Button onClick={() => getCheck(false)}>뀨</Button>
-						</Card.Body>
-					</Card>
-
-							{/* <Button >나타내기</Button> */}
-							{/* <Button onClick={() => {setIsCheck(false)} }>닫기</Button> */}
-							{/* <Button>폐쇄하기</Button> */}
-							{/* {isCheck === true && el.contentName === checkName ? 
-							<span><BattingList contentName={checkName} check={isCheck} getCheck={getCheck} />
-							<Button onClick={() => getCheck(false)}>뀨</Button></span>
-							
-								: <Button onClick={() => getCheck(false)}>뀨</Button>
-							} */}
-
-						
-					</Content>
-						
-				</div>
-				
-				)
-			})
-			
-		}
-			
-
-
-
-
-
-
-			{/* <Layout> */}
 		
-			{/* <Contents> */}
-	
-				{/* {contentsName.map((el) => { */}
-					{/* return ( */}
-						{/* <div style={{margin: "2%", }}> */}
-						{/* <Content> */}
-						{/* <Button variant="dark" onClick={() => {setCheck(true, el.contentName)} } >{el.contentName}</Button> */}
-						{/* <Card style={{ width: '19rem', margin:"1.5%", cursor:"pointer", height: "90%"}} bg='white' text='white' border='white'> */}
-							{/* <Card.Body style={{marginBottom: '0px', borderBottom: '1px solid #DCDCDC'}}> */}
-							
-								{/* { isCheck === true ? */}
-								{/* <BattingList contentName={checkName} check={isCheck} getCheck={getCheck} /> */}
-								{/* : */}
-								{/* <Button onClick={() => getCheck(false)}>뀨</Button> } */}
-							{/* </Card.Body> */}
-						{/* </Card> */}
-
-								{/* <Button >나타내기</Button> */}
-								{/* <Button onClick={() => {setIsCheck(false)} }>닫기</Button> */}
-								{/* <Button>폐쇄하기</Button> */}
-								{/* {isCheck === true && el.contentName === checkName ? 
-								<span><BattingList contentName={checkName} check={isCheck} getCheck={getCheck} />
-								<Button onClick={() => getCheck(false)}>뀨</Button></span>
+		<Layout style={{display:'flex',justifyContent:'center',alignItems:'center', backgroundColor:"gray"}}>
+		
+			<Contents>
+		
+				{contentsName.map((el) => {
+				
+						return (
+							<>
+								<Content onClick={() => { Name(el.contentNum) }}>
+								<Card bg='black' text='danger'>
+                               <Card.Body>
+                              <Card.Title>
+                               Content : {el.contentName}
+                               </Card.Title>
+                              <span>
+							<Button variant="black" style={{border:"1px dashed gray"}}>Game Close</Button>
+                              </span> 
+                            </Card.Body>
+									</Card>
+										<div className={name + el.contentNum} style={{display:'none'} } >
+										<BattingList id={el.contentsName} contentName={el.contentName} check={isCheck}></BattingList>
+									</div>
+							</Content>
 								
-									: <Button onClick={() => getCheck(false)}>뀨</Button>
-								} */}
-
-							
-						{/* </Content> */}
-							
-					{/* </div> */}
-					
-					{/* ) */}
-				{/* })} */}
-
-							
-			{/* </Contents> */}
-			{/* </Layout> */}
-		</div>
-			
+						</>
+						
+						)
+					})}
+			</Contents>
+		</Layout>	
 		
 	);
 }

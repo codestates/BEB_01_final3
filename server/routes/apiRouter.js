@@ -8,7 +8,8 @@ const {
 	userLogout,
 	userTokens,
 	Search,
-	setProfilImg
+	setProfilImg,
+	getServerList,
 } = require('../controller/api');
 // const { default: Search } = require('../../client/src/components/Search/Search');
 
@@ -24,7 +25,10 @@ router.get('/users/logout', auth, userLogout);
 
 router.get('/users/tokens', auth, userTokens);
 
-router.post('/users/setImg',auth,setProfilImg);
+router.post('/users/setImg', auth, setProfilImg);
+
+// server owner 계정들 가져오기
+router.get('/users/serverList', auth, getServerList);
 
 // router.post('/users/Search', Search);
 

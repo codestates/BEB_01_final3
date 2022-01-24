@@ -61,15 +61,16 @@ module.exports = {
 				'latest'
 			);
 			const gasprice = await web3.eth.getGasPrice();
-            const gasPrice = Math.round(Number(gasprice) + Number((gasprice / 10)));
-
+			const gasPrice = Math.round(
+				Number(gasprice) + Number(gasprice / 10)
+			);
 
 			const tx = {
 				from: serverAddress,
 				to: process.env.NFTTOKENCA,
 				nonce: nonce,
 				gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
-				gasLimit: 5000000,  
+				gasLimit: 5000000,
 				data: data,
 			};
 
@@ -654,8 +655,10 @@ module.exports = {
 				'latest'
 			);
 			const gasprice = await web3.eth.getGasPrice();
-			const gasPrice = Math.round(Number(gasprice) + Number((gasprice / 10)));
-			
+			const gasPrice = Math.round(
+				Number(gasprice) + Number(gasprice / 10)
+			);
+
 			const tx = {
 				from: serverAddress,
 				to: process.env.NFTTOKENCA,
@@ -727,8 +730,7 @@ module.exports = {
 			'latest'
 		);
 		const gasprice = await web3.eth.getGasPrice();
-		const gasPrice = Math.round(Number(gasprice) + Number((gasprice / 10)));
-		
+		const gasPrice = Math.round(Number(gasprice) + Number(gasprice / 10));
 
 		const tx = {
 			from: serverAddress,
@@ -765,22 +767,22 @@ module.exports = {
 			res.json({ failed: false, reason: 'i do not know' });
 		}
 	},
-	
+
 	myPage: async (req, res) => {
 		// console.log('here api')
 		let wtdata = await wtContract.methods.balanceOf(serverAddress).call();
-		let wtData = web3.utils.fromWei(wtdata, 'ether')
-		console.log(wtData);
+		let wtData = web3.utils.fromWei(wtdata, 'ether');
+		// console.log(wtData);
 		let nwtdata = await nwtContract.methods.balanceOf(serverAddress).call();
-		let nwtData = web3.utils.fromWei(nwtdata, 'ether')
-		console.log(nwtData);
+		let nwtData = web3.utils.fromWei(nwtdata, 'ether');
+		// console.log(nwtData);
 
 		// console.log(req.user);
 		try {
 			// 현재 로그인된 user 정보 찾아서
 			User.findOne({ _id: req.user._id }, (err, user) => {
 				// userInfo 에 필요한 정보 담고
-				
+
 				// console.log(wtContract.methods.balanceOf(serverAddress).call());
 				const userInfo = {
 					publicKey: user.publicKey,
@@ -1009,211 +1011,269 @@ module.exports = {
 	videoUpload: async (req, res) => {
 		console.log(req.body);
 		const rawTitle = req.body.title;
-		const title = rawTitle.slice(0, rawTitle.indexOf("]") + 1).replace(/(\s*)/g, "");
-		const subTitle = rawTitle.slice(rawTitle.indexOf("]") + 1, rawTitle.indexOf("E")).replace(/(\s*)/g, "")
-		const serialNo = rawTitle.slice(rawTitle.indexOf(".") + 1, rawTitle.length).replace(/(\s*)/g, "")
+		const title = rawTitle
+			.slice(0, rawTitle.indexOf(']') + 1)
+			.replace(/(\s*)/g, '');
+		const subTitle = rawTitle
+			.slice(rawTitle.indexOf(']') + 1, rawTitle.indexOf('E'))
+			.replace(/(\s*)/g, '');
+		const serialNo = rawTitle
+			.slice(rawTitle.indexOf('.') + 1, rawTitle.length)
+			.replace(/(\s*)/g, '');
 		console.log(serialNo);
-		
 
-		const result = await Batting.find({ contentsName : title }).exec();
+		const result = await Batting.find({ contentsName: title }).exec();
 		if (result[0] === undefined) {
-		
 			//새롭게 방을 만드는 거에요!
 			const video = new Video(req.body);
-		video.save(async (err, doc) => {
-		   
-			//비디오가 save되면서 contentsRoom이란느 함수를 실행시키고 
-			const data = await wtContract.methods
-			.createContent()
-			.encodeABI();
-		const nonce = await web3.eth.getTransactionCount(
-			serverAddress,
-			'latest'
-		);
-		    const gasprice = await web3.eth.getGasPrice();
-			const gasPrice = Math.round(Number(gasprice) + Number((gasprice / 10)));
-			
-		const tx = {
-			from: serverAddress,
-			to: process.env.WTTOKENCA,
-			nonce: nonce, 
-			gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
-			gasLimit: 5000000,
-			data: data,
-		};
+			video.save(async (err, doc) => {
+				//비디오가 save되면서 contentsRoom이란느 함수를 실행시키고
+				const data = await wtContract.methods
+					.createContent()
+					.encodeABI();
+				const nonce = await web3.eth.getTransactionCount(
+					serverAddress,
+					'latest'
+				);
+				const gasprice = await web3.eth.getGasPrice();
+				const gasPrice = Math.round(
+					Number(gasprice) + Number(gasprice / 10)
+				);
 
-		const signedTx = await web3.eth.accounts.signTransaction(
-			tx,
-			serverPrivateKey	
-		);
-		const hash = await web3.eth.sendSignedTransaction(
-			signedTx.rawTransaction
-		);
-		
-		const typesArray = [
-			{ type: 'uint256', name: 'num' },
-		];
-		
-		const decodedParameters = web3.eth.abi.decodeParameters(typesArray, hash.logs[0].data);
-		console.log(JSON.stringify(decodedParameters));
-		const num = decodedParameters.num;
-			
-			console.log(title,subTitle,num,serialNo);
-			const batting = new Batting({contentsName : title, subTitle : subTitle, contentsNum : num, serial : Number(serialNo)});
-			const contents = new Contents({contentName : title});
-			batting.save((err, info) => {
-				contents.save((err, info) => {
-					console.log(err);
-				if (err) return res.json({ success: false, err });
-				res.status(200).json({ success: true });
-				})
-				
+				const tx = {
+					from: serverAddress,
+					to: process.env.WTTOKENCA,
+					nonce: nonce,
+					gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
+					gasLimit: 5000000,
+					data: data,
+				};
+
+				const signedTx = await web3.eth.accounts.signTransaction(
+					tx,
+					serverPrivateKey
+				);
+				const hash = await web3.eth.sendSignedTransaction(
+					signedTx.rawTransaction
+				);
+
+				const typesArray = [{ type: 'uint256', name: 'num' }];
+
+				const decodedParameters = web3.eth.abi.decodeParameters(
+					typesArray,
+					hash.logs[0].data
+				);
+				console.log(JSON.stringify(decodedParameters));
+				const num = decodedParameters.num;
+
+				console.log(title, subTitle, num, serialNo);
+				const batting = new Batting({
+					contentsName: title,
+					subTitle: subTitle,
+					contentsNum: num,
+					serial: Number(serialNo),
+				});
+				const contents = new Contents({ contentName: title, contentNum : num });
+				batting.save((err, info) => {
+					contents.save((err, info) => {
+						console.log(err);
+						if (err) return res.json({ success: false, err });
+						res.status(200).json({ success: true });
+					});
+				});
+				//실행이 끝나면 DB에 방이 개설됬다고 열어주자.
 			});
-			//실행이 끝나면 DB에 방이 개설됬다고 열어주자.	
-
-
-   
-  });
 		} else {
-			
 			//이미 새롭게 방이 되어있습니다. serial에 추가시켜주시고 openSerialContent를 true로 활성화시켜주세요
 			const video = new Video(req.body);
-		video.save(async (err, doc) => {
-		   
-			//비디오가 save되면서 contentsRoom이란느 함수를 실행시키고 
-			const data = await wtContract.methods
-			.openSerialContent(result[0].contentsNum		)
-			.encodeABI();
-		const nonce = await web3.eth.getTransactionCount(
-			serverAddress,
-			'latest'
-		);
-		const gasprice = await web3.eth.getGasPrice();
-		const gasPrice = Math.round(Number(gasprice) + Number((gasprice / 10)));
-		
-		const tx = {
-			from: serverAddress,
-			to: process.env.WTTOKENCA,
-			nonce: nonce,
-			gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
-			gasLimit: 5000000,
-			data: data,
-		};
+			video.save(async (err, doc) => {
+				//비디오가 save되면서 contentsRoom이란느 함수를 실행시키고
+				const data = await wtContract.methods
+					.openSerialContent(result[0].contentsNum)
+					.encodeABI();
+				const nonce = await web3.eth.getTransactionCount(
+					serverAddress,
+					'latest'
+				);
+				const gasprice = await web3.eth.getGasPrice();
+				const gasPrice = Math.round(
+					Number(gasprice) + Number(gasprice / 10)
+				);
 
-		const signedTx = await web3.eth.accounts.signTransaction(
-			tx,
-			serverPrivateKey
-		);
-		const hash = await web3.eth.sendSignedTransaction(
-			signedTx.rawTransaction
-		);
-		
-		const batting = new Batting({contentsName : title, subTitle : subTitle, contentsNum : result[0].contentsNum , serial : Number(serialNo)});
-				                 
+				const tx = {
+					from: serverAddress,
+					to: process.env.WTTOKENCA,
+					nonce: nonce,
+					gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
+					gasLimit: 5000000,
+					data: data,
+				};
+
+				const signedTx = await web3.eth.accounts.signTransaction(
+					tx,
+					serverPrivateKey
+				);
+				const hash = await web3.eth.sendSignedTransaction(
+					signedTx.rawTransaction
+				);
+
+				const batting = new Batting({
+					contentsName: title,
+					subTitle: subTitle,
+					contentsNum: result[0].contentsNum,
+					serial: Number(serialNo),
+				});
+
 				batting.save((err, info) => {
 					if (err) return res.json({ success: false, err });
 					res.status(200).json({ success: true });
-				})
+				});
 
-    // if (err) return res.json({ success: false, err });
-    // res.status(200).json({ success: true });
-  });
+				// if (err) return res.json({ success: false, err });
+				// res.status(200).json({ success: true });
+			});
 		}
-		 
-		
 	},
 	test: async (req, res) => {
-	
-		//투표한 기록이 있는지 확인해주는 유효성검사 물론 블록체인에서도 검사하지만 두번유효성검사를 해줌으로써 안전에 기여하자. 
-		const duplicate = await Vote.find({ contentsName: req.body.title, userAddress: req.user.publicKey }).exec();
-		 if (duplicate[0] !== undefined) {
-				
-			 return res.json({ fail: false, detail: "user already vote that" });
-		 } else {
+		//투표한 기록이 있는지 확인해주는 유효성검사 물론 블록체인에서도 검사하지만 두번유효성검사를 해줌으로써 안전에 기여하자.
+		const duplicate = await Vote.find({
+			contentsName: req.body.title,
+			userAddress: req.user.publicKey,
+		}).exec();
+		if (duplicate[0] !== undefined) {
+			return res.json({ fail: false, detail: 'user already vote that' });
+		} else {
 			try {
-			const content = await Batting.find({ contentsName: req.body.title, serialNo: req.body.serialNo }).exec();
-			const info = {};
-			info.voter = req.user._id;
-			info.userAddress = req.user.publicKey;
-			info.contentName = req.body.title;
-			info.contentNum = content[0].contentsNum;
-			info.serialNo = req.body.serialNo;
-			info.select = req.body.select;
-			info.amount = req.body.amount
-		
-			
-			const data = await wtContract.methods
-				.vote(info.contentNum, info.userAddress, info.select)
-				.encodeABI();
-			const nonce = await web3.eth.getTransactionCount(
-				serverAddress,
-				'latest'
-			);
-			const gasprice = await web3.eth.getGasPrice();
-			const gasPrice = Math.round(Number(gasprice) + Number((gasprice / 10)));
+				const content = await Batting.find({
+					contentsName: req.body.title,
+					serialNo: req.body.serialNo,
+				}).exec();
+				const info = {};
+				info.voter = req.user._id;
+				info.userAddress = req.user.publicKey;
+				info.contentName = req.body.title;
+				info.contentNum = content[0].contentsNum;
+				info.serialNo = req.body.serialNo;
+				info.select = req.body.select;
+				info.amount = req.body.amount;
 
-			const tx = {
-				from: serverAddress,
-				to: process.env.WTTOKENCA,
-				nonce: nonce,
-				gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
-				gasLimit: 5000000,
-				data: data,
-			};
+				const data = await wtContract.methods
+					.vote(info.contentNum, info.userAddress, info.select)
+					.encodeABI();
+				const nonce = await web3.eth.getTransactionCount(
+					serverAddress,
+					'latest'
+				);
+				const gasprice = await web3.eth.getGasPrice();
+				const gasPrice = Math.round(
+					Number(gasprice) + Number(gasprice / 10)
+				);
 
-			const signedTx = await web3.eth.accounts.signTransaction(
-				tx,
-				serverPrivateKey
-			);
-			const hash = await web3.eth.sendSignedTransaction(
-				signedTx.rawTransaction
-			);
-			const typesArray = [
-				{
-					type: 'uint256', name: 'roomNumber',
-					type: 'address', name: 'user',
-					type: 'select', name: 'select',
-					type: 'uint256', name: 'amount',
+				const tx = {
+					from: serverAddress,
+					to: process.env.WTTOKENCA,
+					nonce: nonce,
+					gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
+					gasLimit: 5000000,
+					data: data,
+				};
 
-				},
-			];
+				const signedTx = await web3.eth.accounts.signTransaction(
+					tx,
+					serverPrivateKey
+				);
+				const hash = await web3.eth.sendSignedTransaction(
+					signedTx.rawTransaction
+				);
+				const typesArray = [
+					{
+						type: 'uint256',
+						name: 'roomNumber',
+						type: 'address',
+						name: 'user',
+						type: 'select',
+						name: 'select',
+						type: 'uint256',
+						name: 'amount',
+					},
+				];
 
-			const decodedParameters = web3.eth.abi.decodeParameters(typesArray, hash.logs[0].data);
-			console.log(JSON.stringify(decodedParameters));
-			const num = decodedParameters.roomNumber;
-			console.log(num);
+				const decodedParameters = web3.eth.abi.decodeParameters(
+					typesArray,
+					hash.logs[0].data
+				);
+				console.log(JSON.stringify(decodedParameters));
+				const num = decodedParameters.roomNumber;
+				console.log(num);
 
-			const vote = new Vote(info);
-			vote.save((err, info) => {
-				console.log("db저장성공", info);
-				res.json({ success: true, detail: "success db store" })
-				if (err) return res.json({ fail: false, detail : "failed store db" });
-			})
-  
-		} catch (e) {
-		 console.log("blockChain ERR : " + e);
-		 res.json({ fail: false, detail : "failed blockChain"});
+				const vote = new Vote(info);
+				vote.save((err, info) => {
+					console.log('db저장성공', info);
+					res.json({ success: true, detail: 'success db store' });
+					if (err)
+						return res.json({
+							fail: false,
+							detail: 'failed store db',
+						});
+				});
+			} catch (e) {
+				console.log('blockChain ERR : ' + e);
+				res.json({ fail: false, detail: 'failed blockChain' });
+			}
 		}
-	
-
-		 }
-		
-	
-             
-	
-			
 	},
 	contentList: async (req, res) => {
-
 		try {
 			const contentName = req.body.contentName;
-			const info = await Batting.find({ contentsName: contentName }).exec();
-			console.log(info);
+			const info = await Batting.find({
+				contentsName: contentName,
+			}).exec();
+			
 			if (info[0] !== undefined) {
-				res.json({success:true, info})
+				res.json({ success: true, info });
 			}
 		} catch (e) {
-			console.log("err발생 : "+e);
+			console.log('err발생 : ' + e);
 		}
-	 }
+	},
+	// server 계정들 가져오기
+	getServerList: async (req, res) => {
+		// console.log('api 부분');
+		const serverInfo = [];
+		const serverList = await User.find({ role: 1 }).exec();
+
+		try {
+			for (value in serverList) {
+				let imgInfo = await Nft.findOne({
+					address: serverList[value].publicKey,
+				}).exec();
+				let inputData;
+				if (imgInfo === null) {
+					inputData = {
+						name: serverList[value].name,
+						email: serverList[value].email,
+						publicKey: serverList[value].publicKey,
+						role: serverList[value].role,
+						image: undefined,
+					};
+				} else {
+					inputData = {
+						name: serverList[value].name,
+						email: serverList[value].email,
+						publicKey: serverList[value].publicKey,
+						role: serverList[value].role,
+						image: imgInfo.imgUri,
+					};
+				}
+
+				if (!(serverList[value].name in inputData)) {
+					serverInfo.push(inputData);
+				}
+			}
+			res.json({ success: true, serverInfo });
+		} catch (err) {
+			console.log('DB에서 불러오지 못 함');
+			res.json({ success: false, message: '디비에서 불러오지 못 함' });
+		}
+	},
 };

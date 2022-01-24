@@ -31,37 +31,18 @@ function BattingList({contentName, check, getCheck}) {
 	},[])
 
 	const Contents = styled.div`
-	/* display: ${check === true ? 'flex' : 'none'}; */
 	display: flex;
-	flex-direction: column;
+	flex-direction: row;
 	flex-wrap : wrap
 	width:100%;
-	height: 20vh;
+	height: 100%;
 	justify-content: center;
-	background-color : white;
-	color : black;
+	background-color : darkgray;
 	`;
 	const Content = styled.div`
 	 width:100%;
 	`;
-	const List = styled.div`
-	width:100%;
-	display: ${props => props.color || 'none'};
-	flex-direction: column;
-	justify-content: center;
-	background-color : pink;
-	margin : 1%;
-	`;
-	console.log({contentName},{check});
-
-	const onClick = (e) => {
-		
-		getCheck(false);
-	}
-	console.log(list);
-
-	const result = []
-
+	
 	
 
 console.log(result);
@@ -69,32 +50,30 @@ console.log(result);
 	return (
 		
 		
-			<div>	
-			{check === true ? 
-				list.map((el) => {
-					return (
-						<>
-							<Contents>
-								<Card.Title style={{textAlign:'center', marginTop: '3%', marginLeft:'-3%',}}>
-									{[el.contentsName] + el.subTitle + 'Ep.' + el.serial}
-								</Card.Title>
-								<Card.Title style={{textAlign:'center', marginTop: '3%', marginLeft:'-3%'}}>
-									{"contentNum : " + [el.contentsNum]}
-								</Card.Title>
+			<>	
+			 <Contents>
+			{list.map((el) => {
+				return (
+					<>
 					
-								{/* <Content> */}
-								<span><Button onClick={()=>onClick()}>Close</Button></span>
-								{/* <span><Button></Button></span> */}
-							{/* </Content> */}
-							</Contents>
-							</>
-					)
-				})
-				: <div></div>
-			} 
-			
-		     
-			</div>	
+						<Card bg='white' text='black' style={{margin:'1%'}}>
+                               <Card.Body>
+                              <Card.Title>
+                               Title : {[el.contentsName] + el.subTitle + 'Ep.' + el.serial}
+									</Card.Title>
+									<Card.Title>
+                               contentNum : {el.contentsNum}
+                               </Card.Title>
+                               <span>
+							   <Button variant="black" style={{border:"1px dashed gray", color:'red	'}}>Game Close</Button>
+							   </span>
+                            </Card.Body>
+						</Card>
+						</>
+				)
+			})}
+		     </Contents>
+			</>	
 		
 	);
 }
