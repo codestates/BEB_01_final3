@@ -13,6 +13,10 @@ import MyNft from "./MyNft";
 import MyConTent from "./MyConTent";
 
 
+
+
+
+
 function MyPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -29,6 +33,10 @@ function MyPage() {
   const [modalShow, setModalShow] = useState(false);
   const [profile, setProfile] = useState('')
   const [changeSell, setChangeSell] = useState(true);
+
+  
+  //타이머가 끝나는 조건 
+
   const [SubscribeNumber, setSubscribeNumber] = useState(0);
   const [userid, setUserid] = useState('');
   const [likeOption, setlikeOption] = useState("");
@@ -83,8 +91,10 @@ function MyPage() {
 
   
 
-  useEffect(() => {
 
+ 
+  useEffect(() => {
+    
     
 
     axios.get("/api/contract/myPage").then((res) => {
@@ -114,10 +124,13 @@ function MyPage() {
     });
   }, []);
 
+  
+
  
   function sellNFT(tokenId, imgUri) {
     // console.log(userInfo.privateKey);
     // console.log(userInfo.image === imgUri);
+    
     if (userInfo.image === imgUri) {
       setProfile(wtImg);
       axios 
@@ -174,8 +187,12 @@ function MyPage() {
   // modal을 ON / OFF하는 함수 true/false
 
 
-  
-  
+  const firstkey = pbKey.substring(0,4);
+  const lastkey = pbKey.substring(38, 42);
+
+  const firstprikey = privKey.substring(0,4);
+  const lastprikey = privKey.substring(60, 64);
+  // console.log(lastprikey);
   return (
     <div
       style={{
@@ -192,18 +209,23 @@ function MyPage() {
       
       <div
         style={{
-          width: "100%",
+          width: "60%",
           height: "100%",
           display: "flex",
           flexWrap: "wrap",
           // backgroundColor: "gray",
-          
+          border: "solid",
+          borderRadius:"50px 50px 50px 50px",
+          margin:"1% 0 1% 25%",
+          paddingBottom: "1%",
+          color: "white",
+          background: "black"
         }}
       >
         <div
           style={{
             width: "50%",
-            paddingLeft: "15%",
+            // paddingLeft: "15%",
             
           }}
         >
@@ -213,10 +235,12 @@ function MyPage() {
             // border: "solid",
             // borderRight: "0px",
             // borderRadius:"10px 0 0 10px"
+            justifyContent: "center",
+
           }}>
           <p style={{ fontWeight: "bold", fontSize: "4rem" }}>NFT PROFILE</p>
             <span onClick={() => { setModalShow(true) }}>
-              <img src={profile} style={{ height: "35vh", width: "15vw" }} ></img>
+              <img src={profile} style={{ height: "30vh", width: "15vw" }} ></img>
             </span>
           
           </div>
@@ -224,14 +248,16 @@ function MyPage() {
 
         <div
         style={{
-          width: "50%",
-          height: "auto",
+          // width: "40%",
+          // height: "50%",
           // backgroundColor: "red",
           display: "flex",
           flexDirection: "column",
           textAlign:"left",
-          paddingTop: "5%",
-          // justifyContent: "right",
+          // paddingTop: "5%",
+          // alignItems: "center",
+          marginLeft: "8%",
+          justifyContent: "center",
           // float: "left",
           // backgroundColor: "#eee",
           
@@ -245,53 +271,53 @@ function MyPage() {
           // }}
         >
           <p>
-            <input value={wtToken} readOnly style={{ border: "none", textAlign:"left", width:"8%"} } ></input>WT (stable)
+            <span>{wtToken} WT (stable)</span>
           </p>
         </div>
         <div
-          // style={{
-          //   width: "100%",
-          //   height: "50%",
-          // }}
+          style={{
+            // width: "100%",
+            // height: "50%",
+            marginTop: "2%",
+          }}
         >
           <p>
-          <input
-              value={nwtToken}
-              readOnly
-              style={{ border: "none", textAlign:"left", width:"2%" }}
-            />NWT (Flexible Coin)
+         <span>{nwtToken} NWT (Flexible Coin)</span>
           </p>
         </div>
         <div
-          // style={{
-          //   width: "100%",
-          //   height: "50%",
-          // }}
+          style={{
+            // width: "100%",
+            // height: "50%",
+            marginTop: "2%",
+          }}
         >
-          <p>내 주소 : {pbKey}</p>
+          <p>내 주소 : {firstkey}…………{lastkey}</p>
 
         </div>
         <div
-          // style={{
-          //   width: "100%",
-          //   height: "50%",
-          // }}
+          style={{
+            // width: "100%",
+            // height: "50%",
+            marginTop: "2%",
+          }}
         >
-          <p>비공개키 : {privKey}</p>
+          <p>비공개키 : {firstprikey}………{lastprikey}</p>
 
         </div>
-        <div><p>구독자 수 : {SubscribeNumber}</p></div>
+        <div style={{marginTop: "2%",}}><p>구독자 수 : {SubscribeNumber}명</p></div>
       </div>
 
-        <div style={{ padding: "1%", borderBottom: "1px solid", width:"100%" }}>
-          <Button className="me-3" onClick={()=>{likeResult(user._id, "LIKENFT")}}>Favorite NFT</Button>
-          <Button className="me-3" onClick={()=>{likeResult(user._id, "LIKECONTENT")}} >Favorite ConTent</Button>
-          <Button className="me-3" onClick={()=>{likeResult(user._id, "MYNFT")}} >My NFT</Button>
-          <Button className="" onClick={()=>{likeResult(user._id, "MYCONTENT")}} >My ConTent</Button>
+        
+      </div>
+      <div style={{ padding: "1%", width:"100%", background: "black"}}>
+          <Button className="me-3" variant="light" onClick={()=>{likeResult(user._id, "LIKENFT")}}>Favorite NFT</Button>
+          <Button className="me-3" variant="light" onClick={()=>{likeResult(user._id, "LIKECONTENT")}} >Favorite ConTent</Button>
+          <Button className="me-3" variant="light" onClick={()=>{likeResult(user._id, "MYNFT")}} >My NFT</Button>
+          <Button className="" variant="light" onClick={()=>{likeResult(user._id, "MYCONTENT")}} >My ConTent</Button>
 
         </div>
-        <div style={{width: "100%"}}>{obj[likeOption]}</div>
-      </div>
+        <div style={{width: "100%", background:"black", display:"flex", justifyContent: "center",}}>{obj[likeOption]}</div>
     </div>
   );
 }
