@@ -5,7 +5,7 @@ const { Batting } = require('../models/batting')
 const { Contents } = require('../models/Contents');
 const { Vote } = require('../models/Vote');
 const { auth } = require('../middleware/auth');
-const {test } = require('../controller/api');
+const {test,contentList } = require('../controller/api');
 
 
  
@@ -21,6 +21,7 @@ router.get('/', async (req, res) => {
 
  
 router.post('/vote', auth, test);
+router.post('/contentList', auth, contentList);
 
     
 
