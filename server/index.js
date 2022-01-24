@@ -7,7 +7,11 @@ const config = require('./config/prod');
 const apiRouter = require('./routes/apiRouter');
 const cors = require('cors');
 const coinRouter = require('./routes/coinRouter');
+const batRouter = require('./routes/battingRouter');
+const { auth } = require('./middleware/auth');
+
 // const { auth } = require('./middleware/auth');
+
 const { myPage } = require('./controller/api');
 
 
@@ -32,6 +36,7 @@ app.use('/api/video', require('./routes/video'));
 app.use('/api/user/video', require('./routes/uservideo'));
 app.use('/api/comment/', require('./routes/comment'))
 app.use('/api/contract', coinRouter);
+app.use('/api/bat', batRouter);
 app.use('/api/like/', require('./routes/like'))
 app.use('/api/subscribe', require('./routes/subscribe'))
 //current api/contract/mypage path is error
