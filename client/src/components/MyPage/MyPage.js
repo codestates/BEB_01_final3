@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { loginUser, auth } from "../../actions/user_action";
 import { useNavigate, useParams } from "react-router-dom";
@@ -11,6 +11,7 @@ import LikeNft from './Like/LikeNft';
 import LikeConTent from './Like/LikeConTent';
 import MyNft from "./MyNft";
 import MyConTent from "./MyConTent";
+import copyimg from "./copy.png";
 
 
 
@@ -33,6 +34,7 @@ function MyPage() {
   const [modalShow, setModalShow] = useState(false);
   const [profile, setProfile] = useState('')
   const [changeSell, setChangeSell] = useState(true);
+
 
   
   //타이머가 끝나는 조건 
@@ -192,7 +194,17 @@ function MyPage() {
 
   const firstprikey = privKey.substring(0,4);
   const lastprikey = privKey.substring(60, 64);
+
   // console.log(lastprikey);
+  const textcopy = useRef();
+
+  const copy = () => {
+    // const el = pbKey;
+    // console.log(el);
+    textcopy.current.select();
+    document.execCommand("copy")
+  }
+
   return (
     <div
       style={{
@@ -292,7 +304,8 @@ function MyPage() {
             marginTop: "2%",
           }}
         >
-          <p>내 주소 : {firstkey}…………{lastkey}</p>
+          {/* {firstkey}…………{lastkey} */}
+          <p>내 주소 : <input readOnly ref={textcopy} value={pbKey} style={{display:"inline-block", background:"black", border: "none", outline: "none"}} ></input> <img src={copyimg} width="23px" onClick={copy} /></p>
 
         </div>
         <div
