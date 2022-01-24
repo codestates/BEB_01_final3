@@ -13,6 +13,10 @@ import MyNft from "./MyNft";
 import MyConTent from "./MyConTent";
 
 
+
+
+
+
 function MyPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -29,6 +33,10 @@ function MyPage() {
   const [modalShow, setModalShow] = useState(false);
   const [profile, setProfile] = useState('')
   const [changeSell, setChangeSell] = useState(true);
+
+  
+  //타이머가 끝나는 조건 
+
   const [SubscribeNumber, setSubscribeNumber] = useState(0);
   const [userid, setUserid] = useState('');
   const [likeOption, setlikeOption] = useState("");
@@ -83,8 +91,10 @@ function MyPage() {
 
   
 
-  useEffect(() => {
 
+ 
+  useEffect(() => {
+    
     
 
     axios.get("/api/contract/myPage").then((res) => {
@@ -114,10 +124,13 @@ function MyPage() {
     });
   }, []);
 
+  
+
  
   function sellNFT(tokenId, imgUri) {
     // console.log(userInfo.privateKey);
     // console.log(userInfo.image === imgUri);
+    
     if (userInfo.image === imgUri) {
       setProfile(wtImg);
       axios 

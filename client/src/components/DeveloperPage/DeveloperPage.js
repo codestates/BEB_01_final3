@@ -8,6 +8,9 @@ import wtImg from '../img/wtimg.png';
 import axios from 'axios';
 import { default as Spinner } from './Spinner';
 import { Form, Col, Row } from 'antd';
+import Minting from './Minting';
+import Batting from '../batting/Batting';
+import Auth from "./Auth"
 
 function DeveloperPage() {
 	const [totalWT, setTotalWT] = useState(0);
@@ -15,6 +18,7 @@ function DeveloperPage() {
 	const [totalNWT, setTotalNWT] = useState(0);
 	const [serverNWTAmount, setServerNWTAmount] = useState(0);
 	const [isLoading, setIsLoading] = useState(false);
+	const [number, setNumber] = useState(0);
 
 	useEffect(() => {
 		async function getTokens() {
@@ -65,131 +69,28 @@ function DeveloperPage() {
 				alert('NWT 추가 발급 오류');
 			});
 	};
-	return (
-		<Layout>
-			<Layout width={300} className='ant-layout-has-sider'>
-				<Sidebar />
-				<Layout>
-					<Content>
-						<form
-							style={{
-								display: 'flex',
-								// justifyContent: "center",
-								// marginLeft: "0"
-							}}>
-							<Card
-								style={{
-									width: '22rem',
-									margin: '80px',
-									marginTop: '40px',
-								}}>
-								<Card.Body>
-									<Card.Title>
-										현재 개시된 Survival Contents 수
-									</Card.Title>
-									<Card.Text>개</Card.Text>
-									<hr />
-									<Card.Title>
-										현재 개시된 Contents 수
-									</Card.Title>
-									<Card.Text>개</Card.Text>
-									<hr />
-									<Card.Title>현재 이용자 수</Card.Title>
-									<Card.Text>명</Card.Text>
-								</Card.Body>
-							</Card>
-							{isLoading ? (
-								<Spinner />
-							) : (
-								<Form
-									style={{
-										display: 'flex',
-										justifyContent: 'center',
-									}}>
-									<Card
-										style={{
-											width: '18rem',
-											margin: '40px',
-											marginTop: '40px',
-										}}>
-										<div>
-											<Avatar
-												size={150}
-												src={wtImg}
-												alt
-												style={{
-													margin: '10px',
-												}}
-											/>
-										</div>
-										<Card.Body>
-											<Card.Title>WT</Card.Title>
-											<hr />
-											<Card.Text>WT 총 발행량</Card.Text>
-											{totalWT}
-											<Card.Text>개</Card.Text>
-											<hr />
-											<Card.Text>
-												WT 서버 보유량
-											</Card.Text>
-											{serverWTAmount}
-											<Card.Text>개</Card.Text>
-											<hr />
-											<Button
-												variant='danger'
-												size='md'
-												className='me-1'
-												onClick={onSubmitWT}>
-												WT 추가 발행
-											</Button>
-										</Card.Body>
-									</Card>
 
-									<Card
-										style={{
-											width: '18rem',
-											margin: '40px',
-											marginTop: '40px',
-										}}>
-										<div>
-											<Avatar
-												size={150}
-												src={''}
-												alt
-												style={{
-													margin: '10px',
-												}}
-											/>
-										</div>
-										<Card.Body>
-											<Card.Title>NWT</Card.Title>
-											<hr />
-											<Card.Text>NWT 총 발행량</Card.Text>
-											{totalNWT}
-											<Card.Text>개</Card.Text>
-											<hr />
-											<Card.Text>
-												NWT 서버 보유량
-											</Card.Text>
-											{serverNWTAmount}
-											<Card.Text>개</Card.Text>
-											<hr />
-											<Button
-												variant='danger'
-												size='md'
-												className='me-1'
-												onClick={onSubmitNWT}>
-												NWT 추가 발행
-											</Button>
-										</Card.Body>
-									</Card>
-								</Form>
-							)}
-						</form>
-					</Content>
-				</Layout>
+	const obj = {
+		0: <Minting />,
+		1: <Batting />,
+		2: <Auth />
+	}
+
+	const setNum = (number) => {
+		console.log(number);
+		setNumber(number)
+	}
+	
+	return (
+		<div>
+			<Layout>
+			<Layout width={300} className='ant-layout-has-sider'>
+				<Sidebar  getNum={setNum} />
+				<div style={{width:"100%"}}>{obj[number]}</div>
 			</Layout>
 		</Layout>
+		</div>
+		
 	);
 }
 
