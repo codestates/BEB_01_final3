@@ -770,10 +770,10 @@ module.exports = {
 		// console.log('here api')
 		let wtdata = await wtContract.methods.balanceOf(serverAddress).call();
 		let wtData = web3.utils.fromWei(wtdata, 'ether')
-		// console.log(wtData);
+		console.log(wtData);
 		let nwtdata = await nwtContract.methods.balanceOf(serverAddress).call();
 		let nwtData = web3.utils.fromWei(nwtdata, 'ether')
-		// console.log(nwtData);
+		console.log(nwtData);
 
 		// console.log(req.user);
 		try {

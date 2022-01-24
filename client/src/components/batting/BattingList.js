@@ -11,10 +11,11 @@ import styled from "styled-components";
 import { Form, Col, Row } from 'antd';
 
 
-function BattingList({contentName,check}) {
+function BattingList({contentName, check, getCheck}) {
 
 
 	const [list, setList] = useState([]);
+
 
 	useEffect(() => {
 	
@@ -30,13 +31,15 @@ function BattingList({contentName,check}) {
 	},[])
 
 	const Contents = styled.div`
-	display: ${check === true ? 'flex' : 'none'};
+	/* display: ${check === true ? 'flex' : 'none'}; */
+	display: flex;
 	flex-direction: column;
 	flex-wrap : wrap
 	width:100%;
 	height: 20vh;
 	justify-content: center;
-	background-color : green;
+	background-color : white;
+	color : black;
 	`;
 	const Content = styled.div`
 	 width:100%;
@@ -49,35 +52,49 @@ function BattingList({contentName,check}) {
 	background-color : pink;
 	margin : 1%;
 	`;
-	
+	console.log({contentName},{check});
+
+	const onClick = (e) => {
+		
+		getCheck(false);
+	}
+	console.log(list);
+
+	const result = []
 
 	
+
+console.log(result);
+
 	return (
 		
 		
-			<>	
-			 
-			{list.map((el) => {
-				return (
-					<>
-						<Contents>
-						<Content>
-								{[el.contentsName] + el.subTitle + 'Ep.' + el.serial}
-								</Content>
-								<Content>
-								{"contentNum :" + [el.contentsNum]}
-								</Content>
-				
-						<Content>
-						<span><Button>Close</Button></span>
-						<span><Button></Button></span>
-						</Content>
+			<div>	
+			{check === true ? 
+				list.map((el) => {
+					return (
+						<>
+							<Contents>
+								<Card.Title style={{textAlign:'center', marginTop: '3%', marginLeft:'-3%',}}>
+									{[el.contentsName] + el.subTitle + 'Ep.' + el.serial}
+								</Card.Title>
+								<Card.Title style={{textAlign:'center', marginTop: '3%', marginLeft:'-3%'}}>
+									{"contentNum : " + [el.contentsNum]}
+								</Card.Title>
+					
+								{/* <Content> */}
+								<span><Button onClick={()=>onClick()}>Close</Button></span>
+								{/* <span><Button></Button></span> */}
+							{/* </Content> */}
 							</Contents>
-						</>
-				)
-			})}
+							</>
+					)
+				})
+				: <div></div>
+			} 
+			
 		     
-			</>	
+			</div>	
 		
 	);
 }
