@@ -11,11 +11,10 @@ import styled from "styled-components";
 import { Form, Col, Row } from 'antd';
 
 
-function BattingList({contentName, check, getCheck}) {
+function BattingList({contentName,check}) {
 
 
 	const [list, setList] = useState([]);
-
 
 	useEffect(() => {
 	
@@ -44,9 +43,6 @@ function BattingList({contentName, check, getCheck}) {
 	`;
 	
 	
-
-console.log(result);
-
 	return (
 		
 		
