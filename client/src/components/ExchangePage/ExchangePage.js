@@ -44,8 +44,8 @@ function ExchangePage() {
 			try {
 				const res = await axios.get('/api/users/tokens');
 				const tokens = await res.data;
-				setMyWTTokens(tokens.wtToken);
-				setMyNWTTokens(tokens.nwtToken);
+				setMyWTTokens(tokens.userTokens.wtToken);
+				setMyNWTTokens(tokens.userTokens.nwtToken);
 			} catch (err) {
 				console.log(err);
 			}

@@ -14,7 +14,10 @@ const web3 = new Web3(
 );
 // const web3 = new Web3(new Web3.providers.HttpProvider('HTTP://127.0.0.1:7545'));
 const fs = require('fs');
-const { newContract, infuraWeb3Provider } = require('./index');
+
+// const { newContract, infuraWeb3Provider } = require('./index');
+const { newContract } = require('./index');
+const { json } = require('body-parser');
 
 //계정부분
 const serverAddress = process.env.SERVERADDRESS;
@@ -167,19 +170,49 @@ module.exports = {
 			}
 		);
 	},
-	userTokens: (req, res) => {
+	// 각자 DB 사용 시 주석 제거
+	userTokens: async (req, res) => {
 		try {
-			User.findOne({ _id: req.user._id }, (err, user) => {
+			const user = await User.findOne({ _id: req.user._id }).exec(); // login 되어 있는 user 정보확인
+			const userPK = user.publicKey; // user 의 주소
+			try {
+				const wtAmount = await wtContract.methods
+					.balanceOf(userPK)
+					.call(); // 유저의 wt 보유량
+				const nwtAmount = await nwtContract.methods
+					.balanceOf(userPK)
+					.call(); // 유저의 nwt 보유량
+
 				const userTokens = {
-					wtToken: user.wtToken,
-					nwtToken: user.nwtToken,
+					wtToken: web3.utils.fromWei(wtAmount, 'ether'),
+					nwtToken: web3.utils.fromWei(nwtAmount, 'ether'),
 				};
-				res.json(userTokens);
-			});
+
+				res.json({ success: true, userTokens });
+			} catch (err) {
+				res.json({
+					success: false,
+					message: '블록체인 네트워크에 오류가 있음',
+				});
+			}
 		} catch (err) {
-			res.json({ success: false, err });
+			res.json({ success: false, message: 'DB에 오류 생김' });
 		}
 	},
+	// 공용 DB 사용 시 주석 제거
+	// userTokens: (req, res) => {
+	// 	try {
+	// 		User.findOne({ _id: req.user._id }, (err, user) => {
+	// 			const userTokens = {
+	// 				wtToken: user.wtToken,
+	// 				nwtToken: user.nwtToken,
+	// 			};
+	// 			res.json(userTokens);
+	// 		});
+	// 	} catch (err) {
+	// 		res.json({ success: false, err });
+	// 	}
+	// },
 
 	// 현금 <-> WT
 	exchange_WTToken: async (req, res) => {
@@ -296,103 +329,145 @@ module.exports = {
 
 	// WT <-> NWT
 	exchange_NWTToken: async (req, res) => {
-		const nwtAmount = req.body.nwtToken; // 가격에 대한 wt token 개수
+		console.log('aaaaa');
+		const nwtAmount = req.body.nwtToken;
 		const nwt = parseInt(nwtAmount) / 5;
-		// console.log(nwtAmount, nwt);
 
-		// const inputWT = web3.utils.toWei(nwtAmount, 'ether'); // user가 nwt로 바꿀 wt 양
-		// const outputNWT = web3.utils.toWei(String(nwt), 'ether'); // server가 wt로 바꿔줄 nwt 양
+		const user = await User.findOne({ _id: req.user._id }).exec();
 
-		const userPK = await User.findOne({ _id: req.user._id }).exec(); // user의 정보
-
-		console.log(nwtAmount);
-
-		// nonce 값
-		const nonce = await web3.eth.getTransactionCount(
+		const nonce1 = await web3.eth.getTransactionCount(
+			// user.publicKey,
 			serverAddress,
 			'latest'
 		);
-		// 실행할 컨트랙트 함수 데이터
-		const data = await swapContract.methods
-			.swap(
-				nwtAmount,
-				userPK.publicKey,
-				process.env.SWAPCA,
-				process.env.WTTOKENCA,
-				process.env.NWTTOKENCA
-			)
+
+		const inputWT = web3.utils.toWei(nwtAmount, 'ether');
+
+		const data1 = await wtContract.methods
+			.approveToken(user.publicKey, process.env.SWAPCA)
 			.encodeABI();
 
-		const gasPrice = await web3.eth.getGasPrice();
+		// const data1 = await wtContract.methods
+		// 	.approve(process.env.SWAPCA, inputWT)
+		// 	.encodeABI();
 
-		// transaction
-		const tx = {
+		const gasPrice1 = await web3.eth.getGasPrice();
+
+		const gasPricee = Math.round(
+			Number(gasPrice1) + Number(gasPrice1 / 30)
+		);
+
+		const tx1 = {
 			from: serverAddress,
-			to: process.env.SWAPCA,
-			nonce: nonce,
-			gasPrice: gasPrice,
-			gas: 5000000,
-			data: data,
+			to: process.env.WTTOKENCA,
+			nonce: nonce1,
+			gasPrice: gasPrice1,
+			// gasPrice: gasPrice1,
+			gas: 500000,
+			data: data1,
 		};
 
-		const signedTx = await web3.eth.accounts.signTransaction(
-			tx,
+		const signedTx1 = await web3.eth.accounts.signTransaction(
+			tx1,
 			serverPrivateKey
 		);
-		try {
-			web3.eth
-				.sendSignedTransaction(signedTx.rawTransaction)
-				.on('receipt', (txHash) => {
-					try {
-						User.findOneAndUpdate(
-							{ publicKey: serverAddress },
-							{
-								$inc: {
-									wtToken: parseInt(nwtAmount),
-									nwtToken: -nwt,
-								},
-							}, // 현재 가라로 넣어놓음 , DB를 각자 사용하기 때문에 나중에 수정
-							(err, user) => {
-								if (err) {
-									// console.log(err);
-									console.log('server 계정 토큰 가감 실패');
-								} else {
-									// console.log(user);
-									console.log('server 계정 토큰 가감 성공');
-								}
+
+		await web3.eth
+			.sendSignedTransaction(signedTx1.rawTransaction)
+			.on('receipt', async (txHash) => {
+				// console.log(txHash);
+				try {
+					const nonce2 = await web3.eth.getTransactionCount(
+						// user.publicKey,
+						serverAddress,
+						'latest'
+					);
+
+					const data2 = await nwtContract.methods
+						.approveToken(serverAddress, process.env.SWAPCA)
+						.encodeABI();
+
+					const gasPrice2 = await web3.eth.getGasPrice();
+
+					const tx2 = {
+						from: serverAddress,
+						to: process.env.NWTTOKENCA,
+						nonce: nonce2,
+						gasPrice: gasPrice2,
+						// gasPrice: gasPrice1,
+						gas: 500000,
+						data: data2,
+					};
+					const signedTx2 = await web3.eth.accounts.signTransaction(
+						tx2,
+						serverPrivateKey
+					);
+					await web3.eth
+						.sendSignedTransaction(signedTx2.rawTransaction)
+						.on('receipt', async (txHash) => {
+							console.log('유저, 서버 둘다 approve 성공');
+
+							try {
+								const nonce3 =
+									await web3.eth.getTransactionCount(
+										// user.publicKey,
+										serverAddress,
+										'latest'
+									);
+								const data3 = await swapContract.methods
+									.swap(
+										parseInt(nwtAmount),
+										user.publicKey,
+										process.env.SWAPCA,
+										process.env.WTTOKENCA,
+										process.env.NWTTOKENCA
+									)
+									.encodeABI();
+
+								const gasPrice3 = await web3.eth.getGasPrice();
+
+								const tx3 = {
+									from: serverAddress,
+									to: process.env.SWAPCA,
+									nonce: nonce3,
+									gasPrice: gasPrice3,
+									// gasPrice: gasPrice1,
+									gas: 500000,
+									data: data3,
+								};
+								const signedTx3 =
+									await web3.eth.accounts.signTransaction(
+										tx3,
+										serverPrivateKey
+									);
+								await web3.eth
+									.sendSignedTransaction(
+										signedTx3.rawTransaction
+									)
+									.on('receipt', async (txHash) => {
+										console.log('교환 성공!!');
+										console.log(txHash);
+										res.json({
+											success: true,
+											message: '교환 성공',
+										});
+									});
+							} catch (err) {
+								console.log(err);
+								res.json({
+									success: false,
+									message: '교환실패',
+								});
 							}
-						);
-						User.findOneAndUpdate(
-							{ _id: req.user._id },
-							{
-								$inc: {
-									wtToken: -parseInt(nwtAmount),
-									nwtToken: nwt,
-								},
-							}, // 현재 가라로 넣어놓음 , DB를 각자 사용하기 때문에 나중에 수정
-							(err, user) => {
-								if (err) {
-									// console.log(err);
-									console.log('user 계정 토큰 가감 실패');
-								} else {
-									// console.log(user);
-									console.log('user 계정 토큰 가감 성공');
-								}
-							}
-						);
-					} catch (err) {
-						// console.log(err);
-						res.json({ success: false, message: 'DB 오류', err });
-					}
-				});
-		} catch (err) {
-			// console.log(err);
-			res.json({
-				success: false,
-				message: '블록체인에 오류가 생김',
-				err,
+						});
+				} catch (err) {
+					console.log(err);
+					res.json({
+						success: false,
+						message: '교환실패',
+					});
+				}
 			});
-		}
 	},
 
 	// 수정중.. (server 계정의 auth 유지.. 방법알기)
@@ -876,12 +951,12 @@ module.exports = {
 				let totalNwt = web3.utils.fromWei(dataNWT, 'ether'); // 총 발행된 nwt tokens
 
 				let data_server_WT = await wtContract.methods
-					.balanceOf(serverAddress)
+					.balanceOf(serverAddress) // 관리자 추가 생기면 server.publicKey로 교체
 					.call();
 				let server_WT = web3.utils.fromWei(data_server_WT, 'ether'); // server wt tokens
 
 				let data_server_NWT = await nwtContract.methods
-					.balanceOf(serverAddress)
+					.balanceOf(serverAddress) // 관리자 추가 생기면 server.publicKey로 교체
 					.call();
 				let server_NWT = web3.utils.fromWei(data_server_NWT, 'ether'); // server nwt tokens
 

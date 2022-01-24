@@ -208,6 +208,19 @@
 		"inputs": [
 			{
 				"internalType": "address",
+				"name": "_toAdd",
+				"type": "address"
+			}
+		],
+		"name": "addAuthorized",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
 				"name": "owner",
 				"type": "address"
 			},
@@ -503,6 +516,19 @@
 			}
 		],
 		"name": "payOut",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_toRemove",
+				"type": "address"
+			}
+		],
+		"name": "removeAuthorized",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
