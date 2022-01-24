@@ -1202,5 +1202,18 @@ module.exports = {
              
 	
 			
-	}
+	},
+	contentList: async (req, res) => {
+
+		try {
+			const contentName = req.body.contentName;
+			const info = await Batting.find({ contentsName: contentName }).exec();
+			console.log(info);
+			if (info[0] !== undefined) {
+				res.json({success:true, info})
+			}
+		} catch (e) {
+			console.log("err발생 : "+e);
+		}
+	 }
 };
