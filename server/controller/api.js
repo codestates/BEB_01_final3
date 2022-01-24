@@ -4,6 +4,7 @@ const { Nft } = require('../models/Nft');
 const { Video } = require('../models/Video');
 const { Batting } = require('../models/batting');
 const { Contents } = require('../models/Contents');
+const { Vote } = require('../models/Vote');
 
 const Web3 = require('web3');
 const web3 = new Web3(
@@ -56,12 +57,16 @@ module.exports = {
 				serverAddress,
 				'latest'
 			);
+			const gasprice = await web3.eth.getGasPrice();
+            const gasPrice = Math.round(Number(gasprice) + Number((gasprice / 10)));
+
 
 			const tx = {
 				from: serverAddress,
 				to: process.env.NFTTOKENCA,
 				nonce: nonce,
-				gas: 5000000,
+				gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
+				gasLimit: 5000000,  
 				data: data,
 			};
 
@@ -573,8 +578,9 @@ module.exports = {
 				serverAddress,
 				'latest'
 			);
-			const gasPrice = await web3.eth.getGasPrice();
-			console.log(gasPrice);
+			const gasprice = await web3.eth.getGasPrice();
+			const gasPrice = Math.round(Number(gasprice) + Number((gasprice / 10)));
+			
 			const tx = {
 				from: serverAddress,
 				to: process.env.NFTTOKENCA,
@@ -645,12 +651,16 @@ module.exports = {
 			serverAddress,
 			'latest'
 		);
+		const gasprice = await web3.eth.getGasPrice();
+		const gasPrice = Math.round(Number(gasprice) + Number((gasprice / 10)));
+		
 
 		const tx = {
 			from: serverAddress,
 			to: process.env.NFTTOKENCA,
 			nonce: nonce,
-			gas: 5000000,
+			gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
+			gasLimit: 500000,
 			data: data,
 		};
 		try {
@@ -683,6 +693,7 @@ module.exports = {
 
 	myPage: (req, res) => {
 		// console.log('here api')
+		console.log(req.user);
 		try {
 			// 현재 로그인된 user 정보 찾아서
 			User.findOne({ _id: req.user._id }, (err, user) => {
@@ -912,7 +923,7 @@ module.exports = {
 		);
 	},
 	videoUpload: async (req, res) => {
-		
+		console.log(req.body);
 		const rawTitle = req.body.title;
 		const title = rawTitle.slice(0, rawTitle.indexOf("]") + 1).replace(/(\s*)/g, "");
 		const subTitle = rawTitle.slice(rawTitle.indexOf("]") + 1, rawTitle.indexOf("E")).replace(/(\s*)/g, "")
@@ -922,7 +933,7 @@ module.exports = {
 
 		const result = await Batting.find({ contentsName : title }).exec();
 		if (result[0] === undefined) {
-			console.log(0);
+		
 			//새롭게 방을 만드는 거에요!
 			const video = new Video(req.body);
 		video.save(async (err, doc) => {
@@ -935,15 +946,14 @@ module.exports = {
 			serverAddress,
 			'latest'
 		);
-		const gasPrice = await web3.eth.getGasPrice();
-			console.log(gasPrice);
-			const gasPricee = gasPrice + ((gasPrice / 1000)&1000);
-			console.log(gasPricee);
+		    const gasprice = await web3.eth.getGasPrice();
+			const gasPrice = Math.round(Number(gasprice) + Number((gasprice / 10)));
+			
 		const tx = {
 			from: serverAddress,
 			to: process.env.WTTOKENCA,
-			nonce: nonce,
-			gasPrice: 3935608549, // maximum price of gas you are willing to pay for this transaction
+			nonce: nonce, 
+			gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
 			gasLimit: 5000000,
 			data: data,
 		};
@@ -994,8 +1004,9 @@ module.exports = {
 			serverAddress,
 			'latest'
 		);
-		const gasPrice = await web3.eth.getGasPrice();
-		console.log(gasPrice);
+		const gasprice = await web3.eth.getGasPrice();
+		const gasPrice = Math.round(Number(gasprice) + Number((gasprice / 10)));
+		
 		const tx = {
 			from: serverAddress,
 			to: process.env.WTTOKENCA,
@@ -1028,124 +1039,84 @@ module.exports = {
 		
 	},
 	test: async (req, res) => {
-        const rawTitle = req.body.title;
-		const title = rawTitle.slice(0, rawTitle.indexOf("]") + 1).replace(/(\s*)/g, "");
-		const subTitle = rawTitle.slice(rawTitle.indexOf("]") + 1, rawTitle.indexOf("E")).replace(/(\s*)/g, "")
-		const serialNo = rawTitle.slice(rawTitle.indexOf(".")+1, rawTitle.length).replace(/(\s*)/g, "")
-		console.log(rawTitle);
-		console.log(title);
-		console.log(subTitle);
-		console.log(serialNo);
 	
-		const price = 1700000120
-		const change = Math.roundprice + (price / 10);
-		console.log(price);
-		console.log(change);
-		const result = await Batting.find({ contentsName : req.body.title }).exec();
-		// if (result[0] === undefined) { } else {
-
-		// 	const video = new Video(req.body);
-		// 	video.save(async (err, doc) => {
-		   
-		// 		//비디오가 save되면서 contentsRoom이란느 함수를 실행시키고 
-		// 		const data = await wtContract.methods
-		// 			.openSerialContent(result[0].contentsNum)
-		// 			.encodeABI();
-		// 		const nonce = await web3.eth.getTransactionCount(
-		// 			serverAddress,
-		// 			'latest' 
-		// 		);
-		// 		const gasPrice = await web3.eth.getGasPrice();
-		// 		console.log(gasPrice);
-		// 		const tx = {
-		// 			from: serverAddress,
-		// 			to: process.env.WTTOKENCA,
-		// 			nonce: nonce,
-		// 			gasPrice: 3213232154, // maximum price of gas you are willing to pay for this transaction
-		// 			gasLimit: 5000000,
-		// 			data: data,
-		// 		};
-
-		// 		const signedTx = await web3.eth.accounts.signTransaction(
-		// 			tx,
-		// 			serverPrivateKey
-		// 		);
-		// 		const hash = await web3.eth.sendSignedTransaction(
-		// 			signedTx.rawTransaction
-		// 		);
-		
-		// 		console.log(result[0].contentsNum);
-		// 		const batting = new Batting({ contentsName: req.body.title, contentsNum: result[0].contentsNum, serial : 02 });
-				                 
-		// 		batting.save((err, info) => {
-		// 			if (err) console.log(err);
-					
-		// 			console.log(info);
-		// 		})
+		//투표한 기록이 있는지 확인해주는 유효성검사 물론 블록체인에서도 검사하지만 두번유효성검사를 해줌으로써 안전에 기여하자. 
+		const duplicate = await Vote.find({ contentsName: req.body.title, userAddress: req.user.publicKey }).exec();
+		 if (duplicate[0] !== undefined) {
 				
-		// 		//실행이 끝나면 DB에 방이 개설됬다고 열어주자.	
+			 return res.json({ fail: false, detail: "user already vote that" });
+		 } else {
+			try {
+			const content = await Batting.find({ contentsName: req.body.title, serialNo: req.body.serialNo }).exec();
+			const info = {};
+			info.voter = req.user._id;
+			info.userAddress = req.user.publicKey;
+			info.contentName = req.body.title;
+			info.contentNum = content[0].contentsNum;
+			info.serialNo = req.body.serialNo;
+			info.select = req.body.select;
+			info.amount = req.body.amount
+		
+			
+			const data = await wtContract.methods
+				.vote(info.contentNum, info.userAddress, info.select)
+				.encodeABI();
+			const nonce = await web3.eth.getTransactionCount(
+				serverAddress,
+				'latest'
+			);
+			const gasprice = await web3.eth.getGasPrice();
+			const gasPrice = Math.round(Number(gasprice) + Number((gasprice / 10)));
 
+			const tx = {
+				from: serverAddress,
+				to: process.env.WTTOKENCA,
+				nonce: nonce,
+				gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
+				gasLimit: 5000000,
+				data: data,
+			};
 
-		// 		// if (err) return res.json({ success: false, err });
-		// 		// res.status(200).json({ success: true });
-		// 	});
-		
-		// }
-		
-		// const data = await wtContract.methods
-		// 	.createContent()
-		// 	.encodeABI();
-		// const nonce = await web3.eth.getTransactionCount(
-		// 	serverAddress,
-		// 	'latest'
-		// );
-		// const gasPrice = await web3.eth.getGasPrice();
-		// console.log(gasPrice);
-		// const tx = {
-		// 	from: serverAddress,
-		// 	to: process.env.WTTOKENCA,
-		// 	nonce: nonce,
-		// 	gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
-		// 	gasLimit: 5000000,
-		// 	data: data,
-		// };
+			const signedTx = await web3.eth.accounts.signTransaction(
+				tx,
+				serverPrivateKey
+			);
+			const hash = await web3.eth.sendSignedTransaction(
+				signedTx.rawTransaction
+			);
+			const typesArray = [
+				{
+					type: 'uint256', name: 'roomNumber',
+					type: 'address', name: 'user',
+					type: 'select', name: 'select',
+					type: 'uint256', name: 'amount',
 
-		// const signedTx = await web3.eth.accounts.signTransaction(
-		// 	tx,
-		// 	serverPrivateKey
-		// );
-		// const hash = await web3.eth.sendSignedTransaction(
-		// 	signedTx.rawTransaction
-		// );
-		
-		// const typesArray = [
-		// 	{ type: 'uint256', name: 'num' },
-		// ];
-		
-		// const decodedParameters = web3.eth.abi.decodeParameters(typesArray, hash.logs[0].data);
-		// console.log(JSON.stringify(decodedParameters));
-		// const num = decodedParameters.num;
-		// console.log(num);
-		
-		
-		// const txHash = await web3.eth.getTransactionReceipt(hash);
-		// console.log(txHash);
-		// console.log(txHash.logs[0].topics);
-		// const tokenId = web3.utils.hexToNumberString(hash.logs[0].topics[0]);
-		// console.log(tokenId);
+				},
+			];
 
-		// await wtContract.getPastEvents('showContentNumber', {
-		// 	fromBlock: 0,
-		// 	toBlock: 'latest'
-		// }).then(
-		//   function(events){
-		// 	events.forEach(event => {
-		// 	  console.log(`past event - transaction hash: ${event.transactionHash}`)
-		// 	  console.log(`past event - sender: - ${event.returnValues.num}`);
-		
-		// 	});
-		//   }
-		// );
+			const decodedParameters = web3.eth.abi.decodeParameters(typesArray, hash.logs[0].data);
+			console.log(JSON.stringify(decodedParameters));
+			const num = decodedParameters.roomNumber;
+			console.log(num);
+
+			const vote = new Vote(info);
+			vote.save((err, info) => {
+				console.log("db저장성공", info);
+				res.json({ success: true, detail: "success db store" })
+				if (err) return res.json({ fail: false, detail : "failed store db" });
+			})
+  
+		} catch (e) {
+		 console.log("blockChain ERR : " + e);
+		 res.json({ fail: false, detail : "failed blockChain"});
+		}
 	
+
+		 }
+		
+	
+             
+	
+			
 	}
 };

@@ -31,18 +31,15 @@ function Batting() {
 	},[])
 
 	const Contents = styled.div`
-
 	display: flex;
-	justify-content: space-between;
+	flex-direction: column;
 	flex-wrap : wrap
-	align-items: center	
-	background-color : pink;
+	justify-content: center;
 	`;
 	const Content = styled.div`
 	display: flex;
 	justify-content: center;
 	background-color : pink;
-	flex-direction: column;
 	height : 30vh;
 	width :  30vw;
 	margin : 1%;

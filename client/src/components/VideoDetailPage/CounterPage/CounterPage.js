@@ -12,6 +12,7 @@ import "../style.css";
 import Modals from "./Modals";
 import ImgModals from "./ImgModals";
 
+
 function CounterPage() {
   const videoId = useParams().videoId;
   const variable = { videoId: videoId };
@@ -21,6 +22,8 @@ function CounterPage() {
   const [modalShow, setModalShow] = useState(false);
   const [imgModalShow, setImgModalShow] = useState(false);
   const [survivalImgShow, setSurvivalImgShow] = useState("");
+  const [videoName, setVideoName] = useState('');
+  const [amount, setAmount] = useState('');
 
   const showImg = (e) => {
     setSurvivalImgShow(e.target.src);
@@ -38,6 +41,7 @@ function CounterPage() {
           if (response.data.success) {
             console.log("getvideodata", response.data);
             console.log("Img", response.data.videoDetail.image);
+           setVideoName(response.data.videoDetail.title);
             const image = response.data.videoDetail.image;
             setVideoDetail(response.data.videoDetail);
             const Member = response.data.videoDetail.survival[0].split(", ");
@@ -115,6 +119,30 @@ function CounterPage() {
     timer = setInterval(showRemaining, 1000);
   }, []);
 
+
+  function vote(name) {
+    
+
+    //일단 누가 누구에게 투표를 했는지 보낸다. 
+    //필수정보 방이름 방번호가 필요하다. 그이
+    console.log(name);
+    const rawTitle = videoName;
+		const title = rawTitle.slice(0, rawTitle.indexOf("]") + 1).replace(/(\s*)/g, "");
+		const subTitle = rawTitle.slice(rawTitle.indexOf("]") + 1, rawTitle.indexOf("E")).replace(/(\s*)/g, "")
+    const serialNo = rawTitle.slice(rawTitle.indexOf(".") + 1, rawTitle.length).replace(/(\s*)/g, "")
+    
+    
+    axios.post('/api/bat/vote', { select: name, title, serialNo, amount })
+      .then((res) => {
+        if (res.data.success) {
+          
+        } else  {
+          alert(res.data.detail);
+        
+        }
+      })
+  }
+
   const renderCard = Survival.map((survival, index) => {
     return (
       <Card
@@ -146,14 +174,14 @@ function CounterPage() {
           <Card.Title>생존자 후보</Card.Title>
           <hr />
           <Card.Text>{survival.name}</Card.Text>
-          <Button variant="danger" size="md" className="me-1" onClick>
+          <Button variant="danger" size="md" className="me-1" onClick={() => {vote(survival.name)}}>
             투표
           </Button>
           <input
             type="text"
             size="8"
             style={{ border: "none", borderBottom: "1px solid" }}
-            onChange
+            onChange={(e) => { setAmount(e.target.value)}}
             placeholder="WT 갯수"
             //   style={{justifyContent: 'flex-start', alignItems: 'flex-start'}}
           ></input>
