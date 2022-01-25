@@ -10,7 +10,7 @@
     import "../node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
  
-    contract WATTONFT is ERC721URIStorage, Ownable {
+    contract WATTONFT is ERC721URIStorage, Ownable {  
         using Counters for Counters.Counter;
         Counters.Counter private _tokenIds;
 
