@@ -30,7 +30,7 @@ const nftSchema = mongoose.Schema({
 	},
 	sale: {
 		type: Boolean,
-		default:true
+		default:false
 	}
 });
 

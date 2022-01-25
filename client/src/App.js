@@ -10,7 +10,8 @@ import VideoDetailPage from './components/VideoDetailPage/VideoDetailPage';
 import Auth from './hoc/auth';
 import SearchNft from './components/Search/SearchNft';
 import CreateNFT from './components/NFTcreate/CreateNFT';
-import NftList from './components/NFTcreate/NftList';
+import FixedNftList from './components/NFTcreate/FixedNftList';
+import AuctionNftList from './components/NFTcreate/AuctionNftList';
 import MyPage from './components/MyPage/MyPage';
 import ExchangePage from './components/ExchangePage/ExchangePage';
 import SearchContent from "./components/Search/SearchContent";
@@ -75,7 +76,8 @@ function App(props) {
 
           <Route exact path="/nft/create" element={Auth(CreateNFT, true, true)} />
           <Route exact path="/Developer" element={Auth(DeveloperPage, true, true)} />
-          <Route exact path="/nft/list" element={Auth(NftList, null)} />
+          <Route exact path="/nft/fixedlist" element={Auth(FixedNftList, null)} />
+          <Route exact path="/nft/auctionlist" element={Auth(AuctionNftList, null)} />
           <Route exact path="/user/mypage" element={Auth(MyPage, true)} />
           <Route exact path="/exchange" element={Auth(ExchangePage, true)} />
           <Route exact path='/SearchNft' element={Auth(SearchNft, null)} />

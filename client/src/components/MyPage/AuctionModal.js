@@ -6,14 +6,18 @@ const AuctionModal = ({ check, modalInfo, userInfo }) => {
   
     const [Auctionsell, setsellPrice] = useState("");
     
+    const publicKey = userInfo.publicKey
+    
 
     function sell(tokenId, imgUri) {
+     
       if (userInfo.image === imgUri) {
         axios.post("/api/contract/nft/auction", {
           tokenId,
-          privateKey:userInfo.privateKey,
+          privateKey: userInfo.privateKey,
           Auctionsell,
-          publickey: userInfo.publickey
+          publicKey,
+          userInfo
         })
         .then((res) => {
           if (res.data.success) {
@@ -34,7 +38,6 @@ const AuctionModal = ({ check, modalInfo, userInfo }) => {
           });
         }
     }
-
     // fixed
       //마이 엔에프티 nft 카드 fixed 클릭 => fixed 함수 이동 => 모달 함수 전달 => useState 모달 저장 => fixedmodal 컴포넌트로 정보 전달 => 모달창에서 금액 누르고 셀 누르면 => sell 함수로 이동
       // => 정보 받고 받아온 sellNft 함수 실행

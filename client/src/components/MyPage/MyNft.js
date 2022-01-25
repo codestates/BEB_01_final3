@@ -63,7 +63,7 @@ function MyNft () {
         .post("/api/contract/nft/sell", {
           tokenId,
           sellPrice,
-          privateKey:userInfo.privateKey
+          privateKey: userInfo.privateKey
         })
         .then((res) => {
           if (res.data.success) {

@@ -4,7 +4,7 @@ const router = express.Router();
 const multer = require("multer");
 const ffmpeg = require("fluent-ffmpeg");
 const {Video} = require("../models/Video");
-const { SearchContent,videoUpload, test } = require('../controller/api');
+const { SearchContent,videoUpload } = require('../controller/api');
 
 
 let storage = multer.diskStorage({
@@ -52,7 +52,7 @@ router.post("/uploads", (req, res) => {
 });
 
 router.post("/uploadVideo", videoUpload);
-router.post("/test", test);
+
 
 router.get("/getVideos", (req, res) => {
   //비디오를 DB에서 가져와서 클라이언트에 보낸다.

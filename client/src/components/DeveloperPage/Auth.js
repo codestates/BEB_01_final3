@@ -6,10 +6,13 @@ import axios from 'axios';
 import { Form, Col, Row } from 'antd';
 import wtImg from './basic.png';
 import BootstrapSwitchButton from 'bootstrap-switch-button-react';
+import { default as Spinner } from './Spinner';
 // import Toggle from 'react-bootstrap-toggle';
 
 function Auth() {
 	const [addOwner, setAddOwner] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
+	const [pk, setPk] = useState('');
 	const [list, setList] = useState([
 		{
 			// idx: 0,
@@ -53,33 +56,44 @@ function Auth() {
 		getList();
 	}, []);
 
-	const onChange = (e) => {
-		console.log('클릭함');
-		console.log(e.target.value);
-	};
-
-	// setInfoData((prevState) => ({
-	// 	...prevState,
-	// 	major: {
-	// 	  ...prevState.major,
-	// 	  name: "Tan Long",
-	// 	}
-	//   }));
-
-	// const onToggle = id => {
-	// 	setUsers(users.map(
-	// 	  user => user.id === id
-	// 	  ? {...user, active: !user.active}
-	// 	  : user
-	// 	))
-	//   }
-
 	const toggleClick = (e) => {
+		const publicKey = e.publicKey;
 		// e 값이 boolean 값
-		// console.log(e.target.value);	
-		console.log(e);
-		// setPublicKey(e);
-		// console.log(PublicKey)
+		setIsLoading(true);
+		if (e.checkAuth === false) {
+			axios
+				.post('/api/users/serverAddOwner', {
+					publicKey,
+				})
+				.then((res) => {
+					setIsLoading(false);
+					console.log('여기는 프론트', res);
+					alert('권한 부여 완료');
+					window.location.reload();
+				})
+				.catch((err) => {
+					setIsLoading(false);
+					console.log(err);
+					alert('권한 부여 실패');
+					window.location.reload();
+				});
+			console.log('aaa');
+		} else {
+			axios
+				.post('/api/users/serverRemoveOwner', { publicKey })
+				.then((res) => {
+					setIsLoading(false);
+					console.log('여기는 프론트', res);
+					alert('권한 삭제 완료');
+					window.location.reload();
+				})
+				.catch((err) => {
+					setIsLoading(false);
+					console.log(err);
+					alert('권한 삭제 실패');
+					window.location.reload();
+				});
+		}
 	};
 
 	// function toggleClick(e) {
@@ -91,111 +105,105 @@ function Auth() {
 				<div>각 서버계정의 현 보유 토큰 총 량</div>
 				<div>wt : {currentWT}</div>
 				<div>nwt : {currentNWT}</div>
-				<form
-					style={{
-						display: 'flex',
-						flexWrap: 'wrap',
-						justifyContent: 'center',
-						// margin: '1%',
-					}}>
-					{/* <div> */}
-					{list.length !== 1 ? (
-					list.map((data) => {
-						
-						if (data.name !== '') {
-							return (
-								<Card
-									// key={idx}
-									style={{
-										width: '18rem',
-										height: '27rem',
-										// flexWrap: 'wrap',
-										margin: '1%',
-									}}>
-									{data.img === undefined ? (
-										<Card.Img
-											// size={100}
+				{isLoading ? (
+					<Spinner />
+				) : (
+					<form
+						style={{
+							display: 'flex',
+							flexWrap: 'wrap',
+							justifyContent: 'center',
+							// margin: '1%',
+						}}>
+						{list.map((data) => {
+							if (data.name !== '') {
+								return (
+									<Card
+										// key={idx}
+										style={{
+											width: '18rem',
+											height: '27rem',
+											// flexWrap: 'wrap',
+											margin: '1%',
+										}}>
+										{data.img === undefined ? (
+											<Card.Img
+												// size={100}
 
-											variant='top'
-											src={wtImg}
-											alt
-											style={{
-												margin: '1px',
-												width: '15vw',
-												height: '15.5vh',
-												justifyContent: 'center',
-											}}
-										/>
-									) : (
-										<Card.Img
-											// size={100}
-
-											variant='top'
-											src={data.img}
-											alt
-											style={{
-												margin: '1px',
-												width: '15vw',
-												height: '15.5vh',
-												justifyContent: 'center',
-											}}
-										/>
-									)}
-									<Card.Body>
-										<Card.Title>
-											name : {data.name}
-										</Card.Title>
-										<Card.Text>
-											publicKey : {data.publicKey}
-										</Card.Text>
-									</Card.Body>
-									<ListGroup className='list-group-flush'>
-										<ListGroupItem>
-											email : {data.email}
-										</ListGroupItem>
-										<ListGroupItem>
-											role : {data.role}
-										</ListGroupItem>
-									</ListGroup>
-									<Card.Body>
-										{/* <Button variant='primary'>
-											Add Ownership
-										</Button> */}
-										{data.checkOwner === 1 ? (
-											'최고관리자'
+												variant='top'
+												src={wtImg}
+												alt
+												style={{
+													margin: '1px',
+													width: '15vw',
+													height: '15.5vh',
+													justifyContent: 'center',
+												}}
+											/>
 										) : (
-											// <Toggle
-											// 	onClick={this.onToggle}
-											// 	on={<h2>ON</h2>}
-											// 	off={<h2>OFF</h2>}
-											// 	size='xs'
-											// 	offstyle='danger'
-											// 	active={this.state.toggleActive}
-											// />
-											<BootstrapSwitchButton
-												checked={data.checkAuth}
-												onstyle='dark'
-												size='lg'
-												
-												// key={data.publicKey}
-												// onChange= {() => {toggleClick({publicKey: data.publicKey})}}
-												onChange= {() => {toggleClick({publickkey : data.publicKey, 
-													checkAuth : data.checkAuth})}}
-												// onClick={toggleClick(
-												// 	data.publicKey
-												// )}
+											<Card.Img
+												// size={100}
+
+												variant='top'
+												src={data.img}
+												alt
+												style={{
+													margin: '1px',
+													width: '15vw',
+													height: '15.5vh',
+													justifyContent: 'center',
+												}}
 											/>
 										)}
-									</Card.Body>
-								</Card>
-							);
-						}
-					})
-					) : (
-						<div> data is not exist</div>
-					)}
-					{/* </div> */}
-				</form>
+										<Card.Body>
+											<Card.Title>
+												name : {data.name}
+											</Card.Title>
+											<Card.Text>
+												publicKey : {data.publicKey}
+											</Card.Text>
+										</Card.Body>
+										<ListGroup className='list-group-flush'>
+											<ListGroupItem>
+												email : {data.email}
+											</ListGroupItem>
+											<ListGroupItem>
+												role : {data.role}
+											</ListGroupItem>
+										</ListGroup>
+										<Card.Body>
+											{/* <Button variant='primary'>
+											Add Ownership
+										</Button> */}
+											{data.checkOwner === 1 ? (
+												'최고관리자'
+											) : (
+												<BootstrapSwitchButton
+													checked={data.checkAuth}
+													onstyle='dark'
+													size='lg'
+													// key={data.publicKey}
+													// onChange={toggleClick}
+													onChange={() => {
+														toggleClick({
+															publicKey:
+																data.publicKey,
+															checkAuth:
+																data.checkAuth,
+														});
+													}}
+													// onClick={toggleClick(
+													// 	data.publicKey
+													// )}
+												/>
+											)}
+										</Card.Body>
+									</Card>
+								);
+							}
+						})}
+					</form>
+				)}
 			</Content>
 		</Layout>
 	);
