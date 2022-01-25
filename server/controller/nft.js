@@ -360,6 +360,21 @@ module.exports = {
 			 const hash = 
 			  await web3.eth.sendSignedTransaction(signedTx.rawTransaction)
 			  console.log(hash)
+			  
+			  if(hash) {
+				Nft.findOneAndUpdate(
+					{ tokenId: tokenId },
+					{ address: process.env.NFTTOKENCA , sale: true, price: Auctionsell, type : "Auction"},
+					(err, result) => {
+						console.log('DB success');
+						res.json({
+							success: true,
+							detail: 'success set sell and change basic image',
+						});
+						if (err) console.log(err);
+					}
+				);
+			  }
 		  } catch (e) {
 			  console.log(e);
 			  res.json({ failed: false });
