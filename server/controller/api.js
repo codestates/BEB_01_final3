@@ -1160,30 +1160,50 @@ module.exports = {
 		}
 	},
 	// server 계정들 가져오기
+	// checkAuth : 최고 owner(server) 계정은 무조건 false
 	getServerList: async (req, res) => {
 		// console.log('api 부분');
 		const serverInfo = [];
 		let totalCurrentWT = 0;
 		let totalCurrentNWT = 0;
+
 		const serverList = await User.find({ role: 1 }).exec();
 
 		try {
 			for (value in serverList) {
+				let checkOwner = 0;
+				let checkAuth = false;
+				// db에서 가져오는 server 계정들의 nft
 				let imgInfo = await Nft.findOne({
 					address: serverList[value].publicKey,
 				}).exec();
+				// 서버계정의 토큰 보유량
 				let serverWT = await wtContract.methods
 					.balanceOf(serverList[value].publicKey)
 					.call();
 				let serverNWT = await nwtContract.methods
 					.balanceOf(serverList[value].publicKey)
 					.call();
+				// token total
 				totalCurrentWT += parseInt(
 					web3.utils.fromWei(serverWT, 'ether')
 				);
 				totalCurrentNWT += parseInt(
 					web3.utils.fromWei(serverNWT, 'ether')
 				);
+
+				checkAuth = await wtContract.methods
+					.checkAuth(serverList[value].publicKey)
+					.call();
+
+				if (serverList[value].publicKey === serverAddress) {
+					checkOwner = 1;
+				} else {
+					checkOwner = 0;
+				}
+
+				console.log(checkAuth, checkOwner);
+
 				let inputData;
 				if (imgInfo === null) {
 					inputData = {
@@ -1192,6 +1212,8 @@ module.exports = {
 						publicKey: serverList[value].publicKey,
 						role: serverList[value].role,
 						image: undefined,
+						checkAuth: checkAuth,
+						checkOwner: checkOwner,
 					};
 				} else {
 					inputData = {
@@ -1200,6 +1222,8 @@ module.exports = {
 						publicKey: serverList[value].publicKey,
 						role: serverList[value].role,
 						image: imgInfo.imgUri,
+						checkAuth: checkAuth,
+						checkOwner: checkOwner,
 					};
 				}
 
