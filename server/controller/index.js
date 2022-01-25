@@ -42,7 +42,10 @@ const newContract = (web3, abi, ca) => {
 	});
 };
 
-// 서버가 가지고 있는 wt, nwt 토큰 양이 적으면 서버 교체해주는 함수
+// server
+// const
+
+// 서버가 가지고 있는 wt, nwt 토큰 양이 적으면 서버 교체해주는 함수 (수정중)
 const changeAuther = async () => {
 	// 필터링 : role : 1 이면서 checkOwner 이 true 인 계정이 authoer 계정
 	const server = await User.find({ role: 1 }).exec();
@@ -65,6 +68,6 @@ const changeAuther = async () => {
 	// const serverCheckOwner = await wtContract.methods.checkOwner()
 };
 
-changeAuther();
+// changeAuther();
 
 module.exports = { infuraWeb3Provider, newContract };
