@@ -84,7 +84,7 @@ const { Title, Text } = Typography
               
             if(res.data.success){
                 setLoading(false)
-                navigate('/nft/list');
+                navigate('/user/myPage');
             }else if(res.data.failed === false){
                 setLoading(false)   
                 alert(res.data.reason)

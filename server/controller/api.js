@@ -48,7 +48,7 @@ module.exports = {
 		//지갑을 생성하고 지갑을 추가해주는 메서드
 		const account = await web3.eth.accounts.create(
 			web3.utils.randomHex(32)
-		);
+		);	
 		await web3.eth.accounts.wallet.add({
 			address: account.address,
 			privateKey: account.privateKey,
@@ -57,7 +57,7 @@ module.exports = {
 		try {
 			const data = await nftContract.methods
 				.approveSale(account.address)
-				.encodeABI();
+				.encodeABI();	
 			const nonce = await web3.eth.getTransactionCount(
 				serverAddress,
 				'latest'
@@ -243,8 +243,8 @@ module.exports = {
 			.exchange(userPK.publicKey, parseInt(wtAmount))
 			.encodeABI();
 
-		const gasPrice = await web3.eth.getGasPrice();
-
+			const gasprice = await web3.eth.getGasPrice();
+			const gasPrice = Math.round(Number(gasprice) + Number(gasprice / 5));
 		// transaction
 		const tx = {
 			from: serverAddress,
@@ -492,7 +492,7 @@ module.exports = {
 			.mintToken(
 				serverAddress,
 				web3.utils.toWei('100000', 'ether'),
-				process.env.NFTTOKENCA //1e18  100000000
+				process.env.NFTTOKENCA //1e18  100000000	
 			)
 			.encodeABI();
 

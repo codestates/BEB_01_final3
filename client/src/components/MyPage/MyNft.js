@@ -131,21 +131,7 @@ function MyNft () {
 }
 
 
-  function BuyNFT(tokenId){
-    axios.post('/api/contract/buyNFT',{tokenId:tokenId})
-      .then((res) => {
-              
-        
-           if(res.data.failed === false){
-             alert('구매가 되지 않았습니다. 확인해주세요!!!, reason :'+res.data.reason)
-           }else if(res.data.success){
-             alert('구매가 완료되었습니다. 구매자의 mypage로 이동하겠습니다.')
-             navigate('/user/myPage')
-
-           }
-          
-        });
-  }
+  
 
   return (
 
