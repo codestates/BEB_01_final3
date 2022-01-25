@@ -624,33 +624,24 @@ module.exports = {
 		}
 	},
 	NFTlist: (req, res) => {
-		console.log('list');
+		console.log("NFTlist search");
 		Nft.find({ sale: true }, (err, result) => {
 			res.json({ data: result });
 		});
 	},
 	createNFT: async (req, res) => {
 		const {
-			userId,
 			contentTitle,
 			nftName,
 			nftDescription,
 			imgURI,
-			tokenURI,
-			price,
+			tokenURI,	
 		} = req.body.result;
 		try {
-			var regexp = /^[0-9]*$/;
-			if (!regexp.test(price)) {
-				console.log(1);
-				res.json({
-					failed: false,
-					reason: '정확한 가격을 작성해주세요!!',
-				});
-			}
+			
 
 			const data = await nftContract.methods
-				.mintNFT(tokenURI, web3.utils.toWei(price, 'ether'))
+				.mintNFT(tokenURI)
 				.encodeABI();
 			const nonce = await web3.eth.getTransactionCount(
 				serverAddress,
@@ -658,7 +649,7 @@ module.exports = {
 			);
 			const gasprice = await web3.eth.getGasPrice();
 			const gasPrice = Math.round(
-				Number(gasprice) + Number(gasprice / 10)
+				Number(gasprice) + Number(gasprice / 5)
 			);
 
 			const tx = {
@@ -677,10 +668,8 @@ module.exports = {
 			const hash = await web3.eth.sendSignedTransaction(
 				signedTx.rawTransaction
 			);
-			console.log(hash.logs[0].topics[3]);
-			console.log(hash.logs[0].topics);
 			const tokenId = web3.utils.hexToNumber(hash.logs[0].topics[3]);
-			console.log(tokenId);
+			console.log('tokenId 생성 :'+tokenId);
 			const nft = new Nft();
 			nft.address = serverAddress;
 			nft.tokenId = tokenId;
@@ -689,8 +678,6 @@ module.exports = {
 			nft.description = nftDescription;
 			nft.imgUri = imgURI;
 			nft.tokenUrl = tokenURI;
-			nft.price = price;
-
 			nft.save((err, userInfo) => {
 				if (!err) {
 					console.log(2);
@@ -812,9 +799,21 @@ module.exports = {
 	},
 
 	setForSell: async (req, res) => {
+
 		const tokenId = req.body.tokenId;
 		const privateKey = req.body.privateKey;
 		const sellPrice = req.body.sellPrice;
+
+		//가격에 숫자이외의 문자가 들어오지 않게 하기위한 정규식 
+			var regexp = /^[0-9]*$/;
+			if (!regexp.test(sellPrice)) {
+				console.log(1);
+				res.json({
+					fail : false,
+					detail: '정확한 가격을 작성해주세요!!',
+				});
+			}
+		
 		console.log(tokenId, privateKey, sellPrice);
 		const data = await nftContract.methods
 			.setForSale(tokenId, web3.utils.toWei(sellPrice, 'ether'))
@@ -823,11 +822,16 @@ module.exports = {
 			serverAddress,
 			'latest'
 		);
+		const gasprice = await web3.eth.getGasPrice();
+				const gasPrice = Math.round(
+					Number(gasprice) + Number(gasprice / 5)
+				);
 		const tx = {
 			from: serverAddress,
 			to: process.env.NFTTOKENCA,
 			nonce: nonce,
-			gas: 5000000,
+			gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
+			gasLimit: 5000000,
 			data: data,
 		};
 
@@ -847,7 +851,7 @@ module.exports = {
 					if (privateKey === undefined) {
 						Nft.findOneAndUpdate(
 							{ tokenId: tokenId },
-							{ sale: true },
+							{ sale : true, price : sellPrice },
 							(err, result) => {
 								console.log('DB success');
 								res.json({
@@ -863,7 +867,7 @@ module.exports = {
 								tokenId: tokenId,
 							},
 							{
-								sale: true,
+								sale: true, price : sellPrice 
 							},
 							(err, result) => {
 								console.log(privateKey);
@@ -1183,7 +1187,7 @@ module.exports = {
 				const signedTx = await web3.eth.accounts.signTransaction(
 					tx,
 					serverPrivateKey
-				);
+				)
 				const hash = await web3.eth.sendSignedTransaction(
 					signedTx.rawTransaction
 				);
