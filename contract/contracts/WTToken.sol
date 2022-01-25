@@ -47,7 +47,7 @@ contract WTToken is ERC20, Ownable {
      
 
      //1.WTTOKEN을 발행해주는 메서드 
-    function mintToken(address to, uint256 amount) public onlyOwner returns (bool) {
+    function mintToken(address to, uint256 amount) public onlyAuthorized returns (bool) {
         require(to != address(0x0));
         require(amount > 0);
         _mint(to, amount);
@@ -57,7 +57,7 @@ contract WTToken is ERC20, Ownable {
     }
 
     //transferFrom 함수로 인해 spender부분 때문에 만들어 놓은 함수 
-    function approveToken(address owner,address spender) onlyOwner public {
+    function approveToken(address owner,address spender) onlyAuthorized public {
          uint256 amount = balanceOf(owner);
         _approve(owner,spender,amount);
     }
@@ -66,7 +66,7 @@ contract WTToken is ERC20, Ownable {
 
     // 교환해주는 함수
 
-    function exchange(address _to, uint256 price) public onlyOwner returns (bool) {
+    function exchange(address _to, uint256 price) public onlyAuthorized returns (bool) {
         require(_to != address(0x0));
         require(balanceOf(msg.sender) > 0);
         _amountToken = (price * 1e18) / 1000;  // 가라로 고정으로 설정 (원화)
@@ -79,7 +79,7 @@ contract WTToken is ERC20, Ownable {
      // 베팅 함수들 
 
      // 1.베팅할 수 있는 방을 개설하는 함수.
-      function createContent () public onlyOwner returns (uint roomNum){
+      function createContent () public onlyAuthorized returns (uint roomNum){
      rooms[roomLen].SerialStatus = true;
      rooms[roomLen].contentStatus = true;
      roomNum = roomLen;
@@ -88,7 +88,7 @@ contract WTToken is ERC20, Ownable {
     }
 
      // 2. 유효성검사를 해주는 함수.
-     function validVoter(address voter, uint roomNum) view public  onlyOwner returns(bool){
+     function validVoter(address voter, uint roomNum) view public  onlyAuthorized returns(bool){
         for(uint i=0; i<rooms[roomNum].taker.length; i++){
            if(voter == rooms[roomNum].taker[i].addr){
                return false;
@@ -97,7 +97,7 @@ contract WTToken is ERC20, Ownable {
         return true;
     }
      // 3.투표하는 함수
-     function vote (uint roomNum,address user,string memory select) public onlyOwner {
+     function vote (uint roomNum,address user,string memory select) public onlyAuthorized {
         uint price = 10e18;
         require(rooms[roomNum].SerialStatus == true,"cloesed SerialContents");
          require(rooms[roomNum].contentStatus == true,"cloesed AllContents");
@@ -123,20 +123,20 @@ contract WTToken is ERC20, Ownable {
     // }
 
     // 5.시간이 종료되면 투표를 막을 수 있는 장치를 만들어 놨다.
-    function closeSerialContent(uint roomNum) public onlyOwner {
+    function closeSerialContent(uint roomNum) public onlyAuthorized {
         rooms[roomNum].SerialStatus=false;
     }
-    function openSerialContent(uint roomNum) public onlyOwner {
+    function openSerialContent(uint roomNum) public onlyAuthorized {
         rooms[roomNum].SerialStatus=true;
     }
-    function closeContent(uint roomNum) public onlyOwner {
+    function closeContent(uint roomNum) public onlyAuthorized {
         rooms[roomNum].contentStatus=false;
     }
     // 6.회차로인해서 다시 true로 변경해서 투표를 할 수 있게 합니다. 
     
    
     // 정답을 맞춘 인원이 몇명이니지 계산해보자. 
-    function CountWinner(string memory res, uint roomNum) public onlyOwner returns(uint256){
+    function CountWinner(string memory res, uint roomNum) public onlyAuthorized returns(uint256){
          uint256 count;
 
         for(uint i=0; i<rooms[roomNum].taker.length; i++){
@@ -154,7 +154,7 @@ contract WTToken is ERC20, Ownable {
     //정산해 주는 로직을 작성해봅시다. 
   
 
-    function payOut(string memory res, uint roomNum) public onlyOwner {
+    function payOut(string memory res, uint roomNum) public onlyAuthorized {
     
     require(rooms[roomNum].contentStatus == false,"still open contentsRoom");
         
