@@ -67,31 +67,7 @@ function MyPage() {
   // }, []);
 
   // console.log(SubscribeNumber);
-  
-  const obj = {
-    0: <LikeNft />,
-    1: <LikeConTent />,
-    2: <MyNft />,
-    3: <MyConTent />
-  }
 
-
-  function likeResult(userId, click) {
-    if(click === "LIKENFT") {
-      setlikeOption(0)
-    }
-    else if(click === "LIKECONTENT"){
-      setlikeOption(1)
-    }
-    else if (click === "MYNFT"){
-      setlikeOption(2)
-    }
-    else if (click === "MYCONTENT"){
-      setlikeOption(3)
-    }
-  }
-
-  
 
 
  
@@ -102,6 +78,7 @@ function MyPage() {
     axios.get("/api/contract/myPage").then((res) => {
       const nftInfo = res.data.nftInfo;
       const userInfo = res.data.userInfo;
+      console.log(1);
 
       // console.log(nftInfo);
       // console.log((user._id, nftInfo._id));
@@ -125,6 +102,31 @@ function MyPage() {
       setNwtToken(userInfo.nwtToken);
     });
   }, []);
+
+    
+  const obj = {
+    0: <LikeNft />,
+    1: <LikeConTent />,
+    2: <MyNft nftlist={nftInfo} />,
+    3: <MyConTent />
+  }
+
+
+  function likeResult(userId, click) {
+    if(click === "LIKENFT") {
+      setlikeOption(0)
+    }
+    else if(click === "LIKECONTENT"){
+      setlikeOption(1)
+    }
+    else if (click === "MYNFT"){
+      setlikeOption(2)
+    }
+    else if (click === "MYCONTENT"){
+      setlikeOption(3)
+    }
+  }
+
 
   
 
@@ -175,6 +177,7 @@ function MyPage() {
   }
   
   function pfp(a) {
+   
     
     axios
       .post("/api/users/setImg", {

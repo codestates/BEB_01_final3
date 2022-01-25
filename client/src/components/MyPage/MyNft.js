@@ -3,7 +3,8 @@ import { Modal,Card, Button } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import wtImg from "./basic.png";
 import axios from "axios";
-import Modals  from './Modals';
+import FixedModal  from './FixedModal';
+import AuctionModal  from './AuctionModal';
 import LikeDisLike from "../NFTcreate/LikeDisLike";
 
 function MyNft () {
@@ -18,6 +19,9 @@ function MyNft () {
     const [profile, setProfile] = useState('')
     const [isCheck, setIsCheck] = useState(false);
     const [sellPrice, setSellPrice] = useState("");
+    const [fixed, setFixed] = useState(false);
+    const [auction, setAuction] = useState(false);
+    const [modalInfo, setModalInfo] = useState({});
 
     const navigate = useNavigate();
 
@@ -51,11 +55,10 @@ function MyNft () {
     });
   }, []);
 
-  function sellNFT(tokenId, imgUri) {
+  function sellNFT(tokenId, imgUri, sellPrice) {
     // console.log(userInfo.privateKey);
     // console.log(userInfo.image === imgUri);
     if (userInfo.image === imgUri) {
-      setProfile(wtImg);
       axios 
         .post("/api/contract/nft/sell", {
           tokenId,
@@ -64,6 +67,7 @@ function MyNft () {
         })
         .then((res) => {
           if (res.data.success) {
+            setProfile(wtImg);
             window.location.reload();
           }
         });
@@ -84,7 +88,6 @@ function MyNft () {
   }
 
   function cancel(tokenId) {
-    console.log(tokenId);
 
     axios
       .post("/api/contract/nft/cancel", { tokenId })
@@ -107,6 +110,26 @@ function MyNft () {
         }
       });
   }
+
+  function Fixed(info) {
+   
+      if (fixed) {
+        setFixed(false);
+      } else {
+        setFixed(true);
+      }
+      setModalInfo(info);
+  }
+  function Auction(info) {
+   
+    if (auction) {
+      setAuction(false);
+    } else {
+      setAuction(true);
+    }
+    setModalInfo(info);
+}
+
 
   function BuyNFT(tokenId){
     axios.post('/api/contract/buyNFT',{tokenId:tokenId})
@@ -133,7 +156,7 @@ function MyNft () {
         background:'black',
         // marginBottom:"2%"
     }}>
-        My NFT ! !
+      
     </div>
 
     <div style={{
@@ -144,12 +167,17 @@ function MyNft () {
     justifyContent: 'center',
      alignContent: 'center',
     backgroundColor:'black'
-  }}>
+      }}>
+        {/* 판매부분 fixed / Acution 모달창  */}
+        {fixed === true ? <FixedModal check={Fixed} modalInfo={modalInfo} sellNFT={sellNFT}/> : null}
+        {auction === true ? <AuctionModal check={Auction} modalInfo={modalInfo} /> : null}
     {nftInfo.length !== 0 ? (
     nftInfo.map((el) => {
-        return(
+      return (
+             <>
+             
             <Card style={{ width: '19rem', margin:"1.5%", cursor:"pointer"}} bg='black' text='white' border='white'>
-                <Card.Img variant="top" src={el.imgUri} style={{height:'100%', width:'100%', }} />
+                <Card.Img variant="top" src={el.imgUri} style={{height:'100%', width:'100%'}} />
                 <Card.Body style={{marginBottom: '0px', borderBottom: '1px solid #DCDCDC'}}>
                 <Card.Title style={{textAlign:'left', marginTop: '3%', marginLeft:'-3%'}}>
                     Content : {el.contentTitle}
@@ -157,9 +185,9 @@ function MyNft () {
                 <Card.Title style={{textAlign:'left', marginTop: '5%', marginLeft:'-3%'}}>
                     Name : {el.nftName}
                 </Card.Title>
-                <Card.Title style={{textAlign:'left', marginTop: '5%', marginLeft:'-3%'}}>
+                { el.sale === true ?  <Card.Title style={{textAlign:'left', marginTop: '5%', marginLeft:'-3%'}}>
                     Price : {el.price}
-                </Card.Title>
+                  </Card.Title> : null }
             </Card.Body>
             <Card.Body style={{marginBottom: '0px', borderBottom: '1px solid #DCDCDC'}}>
                 <Card.Text style={{textAlign:'left', marginLeft:'-3%', fontSize:'20px'}}>
@@ -167,18 +195,31 @@ function MyNft () {
                 </Card.Text>
             </Card.Body>
             <Card.Body style={{display:"flex", marginLeft:'-3%', marginRight:'-9%'}}>
-                <div>
-                    <Button variant="warning" style={{fontWeight:"bold"}}  onClick={()=>{BuyNFT(el.tokenId)}} >판매중</Button>
-                </div>
-                <div style={{width:"60%"}}></div>
+            {
+                el.sale === true ?
+                  <>
+                  <div>
+                      <Button variant="warning" style={{fontWeight:"bold"}}  onClick={()=>{cancel(el.tokenId)}} >판매취소</Button>
+                  </div>
+                    <div style={{ width: "55%" }}></div>
+                    </>
+                  :
+                  <>
+                  <div style={{ display: 'flex' }}>
+                      <span style={{ marginRight: "8%" }}><Button variant="warning" style={{ fontWeight: "bold" }} onClick={() => { Fixed({tokenId:el.tokenId,imgUri:el.imgUri}) }} >Fixed</Button></span>
+                    <span><Button variant="warning" style={{ fontWeight: "bold" }}  onClick={() => { Auction({tokenId:el.tokenId,imgUri:el.imgUri}) }} >Auction</Button></span>
+                  </div>
+                    <div style={{ width: "30%" }}></div>
+                    </>
+                     }
                 <LikeDisLike userId={localStorage.getItem('userId')} nftId={ el._id } />
                 </Card.Body>
             </Card>
-
+           </>
         )
     })
     ) : (
-      <div style={{ height: "40vh" }}><p style={{fontSize:"4rem", color: "white"}}> NFT를 소유하고 있지않습니다.</p></div>
+      <div style={{ height: "40vh" }}><p style={{fontSize:"4rem", color: "white"}}> NFT is not exist</p></div>
   )}
 
 </div>

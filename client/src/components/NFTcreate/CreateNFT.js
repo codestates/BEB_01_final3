@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import React, { useState } from 'react'
 import { Typography, Button, Form, Input, message } from 'antd';
 import Dropzone from 'react-dropzone';
@@ -50,14 +52,9 @@ const { Title, Text } = Typography
       const onClickXButton = () => {
         setImgSrc('');
       };
-
-
-
     const onSubmit = async (e) => {
         e.preventDefault() //새로고침방지
         setLoading(true)
-
-        
         //ipfs로 imgURI를 먼저 얻는다. 
         const imgHash = await ipfs.add(files);
       
@@ -68,12 +65,8 @@ const { Title, Text } = Typography
             nftDescription : nftDescription,
             imgURI: `https://ipfs.io/ipfs/${imgHash.path}`,
           };
-
           const tokenURI = await ipfs.add(JSON.stringify(metadata));
-          console.log(nftName);
-
           const result = {
-             userId : "jun",
              contentTitle : contentTitle,
              nftName : nftName,
              nftDescription : nftDescription,
@@ -81,7 +74,8 @@ const { Title, Text } = Typography
              tokenURI : `https://ipfs.io/ipfs/${tokenURI.path}`,
              price : price
           }
-
+        
+        console.log('------ipfs 종료 / 트랜잭션 시작-------');
           
           axios.post("/api/contract/nft/create",{
               result : result
@@ -128,58 +122,48 @@ const { Title, Text } = Typography
                 </div>
                  
                 <Form onSubmit={onSubmit}>
-                    <div style={{width:"100%",height: "400px ",border:"1px dashed"}}> 
+                    <div style={{width:"100%",height: "500px"}}> 
                     {imgSrc == '' ?
                      <label style={{cursor:"pointer"}}>
                     <div style={{
                          width :  "100%",
-                         height: "500px",
-                         display: 'flex',
-                          justifyContent: 'space-between',
-                           background : `url(${background}) no-repeat center center`,backgroundSize:"100% auto ",
-    
+                         height: "500px",   
+                         background : `url(${background}) no-repeat center center`,backgroundSize:"100% auto ",
                          }}>
                          <input type="file" style={{visibility:"hidden"}}  onChange={onHandleChange}></input>
                     </div>
                     </label> :
                      <>
-                     
+                     <button style={{ backgroundColor: 'black', color: "red" }} onClick={() => {setImgSrc('')} }>X</button>
                      <img src={imgSrc} style={{width:"100%",height:"100%"}}></img>
                      </>
                     }
                     </div>
                     <div style={{
-                        marginTop:"8%"
+                        marginTop:"5%"
                     }}>
-                    <div style={{backgroundColor:"black"}}>
+                    <div style={{backgroundColor:"black", marginTop:"3%"}}>
                     <label style={{fontSize:"3rem",fontFamily:"fantasy",color:"red"}}>Content Title </label>
                     </div>
-                    <Input onChange={(e)=>{setContentTitle(e.target.value)}} style={{color:"white",backgroundColor:"black"}} />
-                    <br />
-                    <br />
-                    <div style={{backgroundColor:"black"}}>
+                    <Input onChange={(e)=>{setContentTitle(e.target.value)}} style={{color:"white",backgroundColor:"black",borderBottom:"1px dashed red"}} />
+                    <div style={{backgroundColor:"black", marginTop:"3%"}}>
                     <label style={{fontSize:"3rem",fontFamily:"fantasy",color:"red"}}>NFT NAME </label>
                     </div>
                     <Input  onChange={(e)=>{setNftName(e.target.value)}} style={{color:"white",backgroundColor:"black"}} />
-                    <br />
-                    <br />
-    
-                    <div style={{backgroundColor:"black"}}>
+                    <div style={{backgroundColor:"black",  marginTop:"3%" }}>
                     <label style={{fontSize:"3rem",fontFamily:"fantasy",color:"red"}}>Content Description </label>
                     </div>
                     <TextArea  onChange={(e)=>{setNftDescription (e.target.value)}}   style={{color:"white",backgroundColor:"black"}}/>
-                    
                     </div>
     
-                    <div style={{backgroundColor:"black"}}>
+                    {/* <div style={{backgroundColor:"black"}}>
                     <label style={{fontSize:"3rem",fontFamily:"fantasy",color:"red"}}>PRICE (NWT)</label>
                     </div>
                     <Input  onChange={(e)=>{setPrice(e.target.value)}} style={{color:"white",backgroundColor:"black"}} />
                     <br />
-                    <br />
-                    
+                    <br /> */}
                    
-                    <Button type="primary" size="large" onClick={onSubmit}>
+                            <Button variant="warning" size="large" onClick={onSubmit} style={{ margin:"3%"}}>
                         Submit
                     </Button>
                 </Form>
