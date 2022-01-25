@@ -6,6 +6,9 @@ const contentsSchema = mongoose.Schema(
     contentName: {
       type: String,
     },
+    contentNum: {
+      type: Number,
+    },
     status: {
       type: Boolean,
       default: true

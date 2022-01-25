@@ -20,6 +20,7 @@ function Sidebar({getNum}) {
     else if(e === "1") getNum(1);
     else if(e === "2") getNum(2);
     else if(e === "3") getNum(3);
+    else if(e === "4") getNum(4);
 
   }
 
@@ -35,16 +36,21 @@ function Sidebar({getNum}) {
         </Menu.Item>
         <Menu.Item key="2" icon={<UserOutlined />}>
         <a onClick={()=>{onClick("0")}}>
-            NFT 민팅
+            토큰 발행
           </a>
         </Menu.Item>
         <Menu.Item key="3" icon={<UserOutlined />}>
-          <a onClick={()=>{onClick("1")}}>
+        <a onClick={()=>{onClick("1")}}>
+            NFT 민팅
+          </a>
+        </Menu.Item>
+        <Menu.Item key="4" icon={<UserOutlined />}>
+          <a onClick={()=>{onClick("2")}}>
             Battinig
           </a>
         </Menu.Item>
-        <Menu.Item key="4" icon={<UploadOutlined />}>
-          <a onClick={()=>{onClick("2")}}>
+        <Menu.Item key="5" icon={<UploadOutlined />}>
+          <a onClick={()=>{onClick("3")}}>
             관리자권한부여
           </a>
         </Menu.Item>

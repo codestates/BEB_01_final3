@@ -8,9 +8,10 @@ import wtImg from '../img/wtimg.png';
 import axios from 'axios';
 import { default as Spinner } from './Spinner';
 import { Form, Col, Row } from 'antd';
-import Minting from './Minting';
+import TokenMinting from './TokenMinting';
 import Batting from '../batting/Batting';
 import Auth from "./Auth"
+import NftMinting from '../NFTcreate/CreateNFT'
 
 function DeveloperPage() {
 	
@@ -19,9 +20,10 @@ function DeveloperPage() {
 
 
 	const obj = {
-		0: <Minting />,
-		1: <Batting />,
-		2: <Auth />
+		0: <TokenMinting />,
+		1: <NftMinting />,
+		2: <Batting />,
+		3: <Auth />
 	}
 
 	const setNum = (number) => {
