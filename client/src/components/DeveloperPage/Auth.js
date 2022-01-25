@@ -36,7 +36,6 @@ function Auth() {
 				const server = res.data.serverInfo;
 				const currentWT = res.data.totalCurrentWT;
 				const currentNWT = res.data.totalCurrentNWT;
-				console.log(server);
 				const inputData = server.map((rowData) => ({
 					name: rowData.name,
 					email: rowData.email,
