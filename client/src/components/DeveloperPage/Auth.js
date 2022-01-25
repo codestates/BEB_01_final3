@@ -27,7 +27,7 @@ function Auth() {
 	]);
 	const [currentWT, setCurrentWT] = useState('');
 	const [currentNWT, setCurrentNWT] = useState('');
-
+	// const [PublicKey, setPublicKey] = useState('');
 	useEffect(() => {
 		async function getList() {
 			try {
@@ -36,6 +36,7 @@ function Auth() {
 				const server = res.data.serverInfo;
 				const currentWT = res.data.totalCurrentWT;
 				const currentNWT = res.data.totalCurrentNWT;
+				// console.log('server', server);
 				const inputData = server.map((rowData) => ({
 					name: rowData.name,
 					email: rowData.email,
@@ -95,6 +96,9 @@ function Auth() {
 		}
 	};
 
+	// function toggleClick(e) {
+	// 	setPublicKey(e);
+	// }
 	return (
 		<Layout width={300} className='ant-layout-has-sider'>
 			<Content>

@@ -131,21 +131,7 @@ function MyNft () {
 }
 
 
-  function BuyNFT(tokenId){
-    axios.post('/api/contract/buyNFT',{tokenId:tokenId})
-      .then((res) => {
-              
-        
-           if(res.data.failed === false){
-             alert('구매가 되지 않았습니다. 확인해주세요!!!, reason :'+res.data.reason)
-           }else if(res.data.success){
-             alert('구매가 완료되었습니다. 구매자의 mypage로 이동하겠습니다.')
-             navigate('/user/myPage')
-
-           }
-          
-        });
-  }
+  
 
   return (
 
@@ -170,7 +156,7 @@ function MyNft () {
       }}>
         {/* 판매부분 fixed / Acution 모달창  */}
         {fixed === true ? <FixedModal check={Fixed} modalInfo={modalInfo} sellNFT={sellNFT}/> : null}
-        {auction === true ? <AuctionModal check={Auction} modalInfo={modalInfo} /> : null}
+        {auction === true ? <AuctionModal check={Auction} modalInfo={modalInfo} userInfo={userInfo} /> : null}
     {nftInfo.length !== 0 ? (
     nftInfo.map((el) => {
       return (
@@ -206,7 +192,7 @@ function MyNft () {
                   :
                   <>
                   <div style={{ display: 'flex' }}>
-                      <span style={{ marginRight: "8%" }}><Button variant="warning" style={{ fontWeight: "bold" }} onClick={() => { Fixed({tokenId:el.tokenId,imgUri:el.imgUri}) }} >Fixed</Button></span>
+                    <span style={{ marginRight: "8%" }}><Button variant="warning" style={{ fontWeight: "bold" }} onClick={() => { Fixed({tokenId:el.tokenId,imgUri:el.imgUri}) }} >Fixed</Button></span>
                     <span><Button variant="warning" style={{ fontWeight: "bold" }}  onClick={() => { Auction({tokenId:el.tokenId,imgUri:el.imgUri}) }} >Auction</Button></span>
                   </div>
                     <div style={{ width: "30%" }}></div>
