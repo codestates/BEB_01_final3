@@ -13,7 +13,7 @@ function NftList() {
     
 
     useEffect(() => {
-        axios.get('/api/contract/nft/list').then((res) => {
+      axios.post('/api/contract/nft/list',{type:"fixed"}).then((res) => {
           if(res.data.data.length !== 0){
             setNft(res.data.data)
             console.log(res.data.data.length);

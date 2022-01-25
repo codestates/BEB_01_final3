@@ -39,7 +39,7 @@ router.post('/token/exchangeWT', auth, exchange_WTToken);
 router.post('/token/exchangeNWT', auth, exchange_NWTToken);
 
 //import nftList
-router.get('/nft/list', auth, NFTlist);
+router.post('/nft/list', auth, NFTlist);
 
 // server address create NFT MINT
 router.post('/nft/create', auth, createNFT);

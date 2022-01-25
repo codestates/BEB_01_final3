@@ -538,8 +538,8 @@ module.exports = {
 		}
 	},
 	NFTlist: (req, res) => {
-		console.log("NFTlist search");
-		Nft.find({ sale: true }, (err, result) => {
+	
+		Nft.find({ sale: true,type:req.body.type }, (err, result) => {
 			res.json({ data: result });
 		});
 	},
