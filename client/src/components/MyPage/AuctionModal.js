@@ -51,7 +51,7 @@ const AuctionModal = ({ check, modalInfo, sellNFT }) => {
                 flexWrap: "wrap",
                 justifyContent: "center"
             }}>
-                <p> startPrice </p>
+                <p> startPrice  </p>
                 
             </Modal.Footer >
            
