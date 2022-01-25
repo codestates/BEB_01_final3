@@ -14,6 +14,7 @@ const web3 = new Web3(
 );
 // const web3 = new Web3(new Web3.providers.HttpProvider('HTTP://127.0.0.1:7545'));
 const fs = require('fs');
+//filesystem nodejs 함수
 
 // const { newContract, infuraWeb3Provider } = require('./index');
 const { newContract } = require('./index');
@@ -238,7 +239,7 @@ module.exports = {
 		}
 		
 
-		console.log(tokenId, privateKey, sellPrice);
+		console.log('sell', tokenId, privateKey, sellPrice);
 		const data = await nftContract.methods
 			.setForSale(tokenId, web3.utils.toWei(sellPrice, 'ether'))
 			.encodeABI();
@@ -312,6 +313,59 @@ module.exports = {
 			
 		}
 	},
+
+	nftauction: async (req, res) => {
+		const tokenId = req.body.tokenId;
+		const privateKey = req.body.privateKey;
+		const Auctionsell = req.body.Auctionsell;
+		const publickey = req.body.publicKey;
+		// const userInfo = await User.findOne({ email: email }).exec();
+		// const publicKey = userInfo.publicKey;
+		console.log('nft', tokenId, privateKey, publickey, Auctionsell);
+		//가격에 숫자이외의 문자가 들어오지 않게 하기위한 정규식 
+		var regexp = /^[0-9]*$/;
+		if (!regexp.test(Auctionsell)) {
+			console.log(1);
+			res.json({
+				fail : false,
+				detail: '정확한 가격을 작성해주세요!!',
+			});
+		}
+	  
+		  const data = await nftContract.methods
+		  .startAuction(tokenId, publickey, web3.utils.toWei(Auctionsell, 'ether'))
+		  .encodeABI();
+		  const nonce = await web3.eth.getTransactionCount(
+			  serverAddress,
+			  'latest'
+			  //내가 몇번째 트렌잭션을 날리는지
+		  );
+		  const gasprice = await web3.eth.getGasPrice();
+				  const gasPrice = Math.round(
+					  Number(gasprice) + Number(gasprice / 5)
+				  );
+		  const tx = {
+			  from: serverAddress,
+			  to: process.env.NFTTOKENCA,
+			  nonce: nonce,
+			  gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
+			  gasLimit: 5000000,
+			  data: data,
+		  };
+		  try {
+			  const signedTx = await web3.eth.accounts.signTransaction(
+				  tx,
+				  serverPrivateKey
+			  );
+			 const hash = 
+			  await web3.eth.sendSignedTransaction(signedTx.rawTransaction)
+			  console.log(hash)
+		  } catch (e) {
+			  console.log(e);
+			  res.json({ failed: false });
+		  }
+	  },
+
 	cancel: (req, res) => {
 		const tokenId = req.body.tokenId;
 		Nft.findOneAndUpdate(
