@@ -55,10 +55,10 @@ function NFTauction({ nftlist }) {
     axios.post('/api/contract/bid', variables)
        .then((res) => {
         if(res.data.failed === false){
-          alert('구매가 되지 않았습니다. 확인해주세요!!!, reason :'+res.data.reason)
+          alert('입찰에 실패하였습니다. 확인해주세요!, reason :'+res.data.reason)
         }else if(res.data.success){
-          alert('구매가 완료되었습니다. 구매자의 mypage로 이동하겠습니다.')
-          navigate('/user/myPage')
+          alert('입찰이 완료되었습니다.')
+          navigate('/nft/auctionlist')
         }
      });
    }
@@ -81,7 +81,7 @@ function NFTauction({ nftlist }) {
                     Name : {el.nftName}
                      </Card.Title>
                   <Card.Title style={{textAlign:'left', marginTop: '5%', marginLeft:'-3%'}}>
-                    Price : {el.price}
+                    최고가 : {el.price}
                   </Card.Title> 
                  
                 </Card.Body>
