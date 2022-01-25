@@ -539,11 +539,12 @@ module.exports = {
 	},
 
 	myPage: async (req, res) => {
+		const addr = req.user.publicKey;
 		// console.log('here api')
-		let wtdata = await wtContract.methods.balanceOf(serverAddress).call();
+		let wtdata = await wtContract.methods.balanceOf(addr).call();
 		let wtData = web3.utils.fromWei(wtdata, 'ether');
 		// console.log(wtData);
-		let nwtdata = await nwtContract.methods.balanceOf(serverAddress).call();
+		let nwtdata = await nwtContract.methods.balanceOf(addr).call();
 		let nwtData = web3.utils.fromWei(nwtdata, 'ether');
 		// console.log(nwtData);
 
@@ -850,7 +851,7 @@ module.exports = {
 					checkOwner = 0;
 				}
 
-				console.log(checkAuth, checkOwner);
+				// console.log(checkAuth, checkOwner);
 
 				let inputData;
 				if (imgInfo === null) {
