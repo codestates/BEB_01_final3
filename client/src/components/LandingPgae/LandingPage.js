@@ -170,10 +170,12 @@ function LandingPage() {
           >
             <SubMenu key="sub1" icon={<LaptopOutlined />} title="NFT">
               <Menu.Item key="1">
-              <Link to="/nft/list" className="nav-text">NFT LIST</Link>
-                </Menu.Item>
-              <Menu.Item key="2">NFT Ranking</Menu.Item>
-              <Menu.Item key="3">option3</Menu.Item>
+                <Link to="/nft/fixedlist" className="nav-text">NFT LIST(Fixed)</Link>
+              </Menu.Item>
+              <Menu.Item key="2">
+                <Link to="/nft/auctionlist" className="nav-text">NFT LIST(Auction)</Link>
+              </Menu.Item>
+              <Menu.Item key="3">NFT Ranking</Menu.Item>
               <Menu.Item key="4">option4</Menu.Item>
             </SubMenu>
             <SubMenu key="sub2" icon={<LaptopOutlined />} title="비고">

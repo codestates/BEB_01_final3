@@ -12,7 +12,7 @@ const {test,contentList } = require('../controller/api');
 router.get('/', async (req, res) => {
     
 
-    const contentsName = await Contents.find({}).exec();   
+    const contentsName = await Contents.find({}).exec();  
     const content = await Batting.find({}).exec();
     // console.log(contentsName);
     res.json({success:true, contentsName, content})
