@@ -170,7 +170,7 @@ function MyNft () {
       }}>
         {/* 판매부분 fixed / Acution 모달창  */}
         {fixed === true ? <FixedModal check={Fixed} modalInfo={modalInfo} sellNFT={sellNFT}/> : null}
-        {auction === true ? <AuctionModal check={Auction} modalInfo={modalInfo} /> : null}
+        {auction === true ? <AuctionModal check={Auction} modalInfo={modalInfo} userInfo={userInfo} /> : null}
     {nftInfo.length !== 0 ? (
     nftInfo.map((el) => {
       return (
@@ -206,7 +206,7 @@ function MyNft () {
                   :
                   <>
                   <div style={{ display: 'flex' }}>
-                      <span style={{ marginRight: "8%" }}><Button variant="warning" style={{ fontWeight: "bold" }} onClick={() => { Fixed({tokenId:el.tokenId,imgUri:el.imgUri}) }} >Fixed</Button></span>
+                    <span style={{ marginRight: "8%" }}><Button variant="warning" style={{ fontWeight: "bold" }} onClick={() => { Fixed({tokenId:el.tokenId,imgUri:el.imgUri}) }} >Fixed</Button></span>
                     <span><Button variant="warning" style={{ fontWeight: "bold" }}  onClick={() => { Auction({tokenId:el.tokenId,imgUri:el.imgUri}) }} >Auction</Button></span>
                   </div>
                     <div style={{ width: "30%" }}></div>

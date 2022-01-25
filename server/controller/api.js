@@ -685,7 +685,7 @@ module.exports = {
 			// 현재 로그인된 user 정보 찾아서
 			User.findOne({ _id: req.user._id }, (err, user) => {
 				// userInfo 에 필요한 정보 담고
-
+			
 				// console.log(wtContract.methods.balanceOf(serverAddress).call());
 				const userInfo = {
 					publicKey: user.publicKey,
@@ -697,7 +697,7 @@ module.exports = {
 				// 그 유저가 가지고 있는 nft 정보를 가져옴
 				Nft.find({ address: user.publicKey }, (err, nft) => {
 					const nftInfo = nft;
-
+					console.log(nft)
 					// nft 가 없으면 유저 정보만 넘기고
 					if (nft === null) {
 						res.json({ success: true, userInfo });
@@ -810,6 +810,8 @@ module.exports = {
 			res.json({ failed: false });
 		}
 	},
+
+	
 	ownerOf: async (req, res) => {
 		const owner = await nftContract.methods.ownerOf('8').call();
 
@@ -1160,30 +1162,50 @@ module.exports = {
 		}
 	},
 	// server 계정들 가져오기
+	// checkAuth : 최고 owner(server) 계정은 무조건 false
 	getServerList: async (req, res) => {
 		// console.log('api 부분');
 		const serverInfo = [];
 		let totalCurrentWT = 0;
 		let totalCurrentNWT = 0;
+
 		const serverList = await User.find({ role: 1 }).exec();
 
 		try {
 			for (value in serverList) {
+				let checkOwner = 0;
+				let checkAuth = false;
+				// db에서 가져오는 server 계정들의 nft
 				let imgInfo = await Nft.findOne({
 					address: serverList[value].publicKey,
 				}).exec();
+				// 서버계정의 토큰 보유량
 				let serverWT = await wtContract.methods
 					.balanceOf(serverList[value].publicKey)
 					.call();
 				let serverNWT = await nwtContract.methods
 					.balanceOf(serverList[value].publicKey)
 					.call();
+				// token total
 				totalCurrentWT += parseInt(
 					web3.utils.fromWei(serverWT, 'ether')
 				);
 				totalCurrentNWT += parseInt(
 					web3.utils.fromWei(serverNWT, 'ether')
 				);
+
+				checkAuth = await wtContract.methods
+					.checkAuth(serverList[value].publicKey)
+					.call();
+
+				if (serverList[value].publicKey === serverAddress) {
+					checkOwner = 1;
+				} else {
+					checkOwner = 0;
+				}
+
+				console.log(checkAuth, checkOwner);
+
 				let inputData;
 				if (imgInfo === null) {
 					inputData = {
@@ -1192,6 +1214,8 @@ module.exports = {
 						publicKey: serverList[value].publicKey,
 						role: serverList[value].role,
 						image: undefined,
+						checkAuth: checkAuth,
+						checkOwner: checkOwner,
 					};
 				} else {
 					inputData = {
@@ -1200,6 +1224,8 @@ module.exports = {
 						publicKey: serverList[value].publicKey,
 						role: serverList[value].role,
 						image: imgInfo.imgUri,
+						checkAuth: checkAuth,
+						checkOwner: checkOwner,
 					};
 				}
 
