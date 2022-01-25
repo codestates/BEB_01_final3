@@ -5,31 +5,46 @@ import { Button, Card, ListGroup, ListGroupItem } from 'react-bootstrap';
 import axios from 'axios';
 import { Form, Col, Row } from 'antd';
 import wtImg from './basic.png';
+import BootstrapSwitchButton from 'bootstrap-switch-button-react';
+// import Toggle from 'react-bootstrap-toggle';
 
 function Auth() {
 	const [addOwner, setAddOwner] = useState(false);
 	const [list, setList] = useState([
 		{
+			// idx: 0,
 			name: '',
 			email: '',
 			publicKey: '',
 			role: '',
 			img: '',
+			checkAuth: false,
+			checkOwner: 0,
 		},
 	]);
+	const [currentWT, setCurrentWT] = useState('');
+	const [currentNWT, setCurrentNWT] = useState('');
 
 	useEffect(() => {
 		async function getList() {
 			try {
 				const res = await axios.get('/api/users/serverList');
+
 				const server = res.data.serverInfo;
+				const currentWT = res.data.totalCurrentWT;
+				const currentNWT = res.data.totalCurrentNWT;
+				console.log(server);
 				const inputData = server.map((rowData) => ({
 					name: rowData.name,
 					email: rowData.email,
 					publicKey: rowData.publicKey,
 					role: rowData.role,
 					img: rowData.image,
+					checkAuth: rowData.checkAuth,
+					checkOwner: rowData.checkOwner,
 				}));
+				setCurrentWT(currentWT);
+				setCurrentNWT(currentNWT);
 				setList(list.concat(inputData));
 			} catch (err) {
 				console.log(err);
@@ -38,17 +53,40 @@ function Auth() {
 		getList();
 	}, []);
 
-	// if (list.img !== "") {
-	//     setList(userInfo.image);
-	//   } else if (userInfo.image === "cryptoWT") {
-	//     setProfile(wtImg);
+	const onChange = (e) => {
+		console.log('클릭함');
+		console.log(e.target.value);
+	};
+
+	// setInfoData((prevState) => ({
+	// 	...prevState,
+	// 	major: {
+	// 	  ...prevState.major,
+	// 	  name: "Tan Long",
+	// 	}
+	//   }));
+
+	// const onToggle = id => {
+	// 	setUsers(users.map(
+	// 	  user => user.id === id
+	// 	  ? {...user, active: !user.active}
+	// 	  : user
+	// 	))
 	//   }
 
-	// console.log(list);
+	const toggleClick = (e) => {
+		// e 값이 boolean 값
+		// console.log(e.target.value);
+		console.log(e);
+		console.log(e.id);
+	};
 
 	return (
 		<Layout width={300} className='ant-layout-has-sider'>
 			<Content>
+				<div>각 서버계정의 현 보유 토큰 총 량</div>
+				<div>wt : {currentWT}</div>
+				<div>nwt : {currentNWT}</div>
 				<form
 					style={{
 						display: 'flex',
@@ -61,6 +99,7 @@ function Auth() {
 						if (data.name !== '') {
 							return (
 								<Card
+									// key={idx}
 									style={{
 										width: '18rem',
 										height: '27rem',
@@ -96,13 +135,6 @@ function Auth() {
 											}}
 										/>
 									)}
-
-									{/* variant="top"
-                                        src={el.imgUri}
-                                        style={{
-                                            height:"100%"
-                                        }} */}
-									{/* 이미지 링크 넣기 */}
 									<Card.Body>
 										<Card.Title>
 											name : {data.name}
@@ -120,9 +152,32 @@ function Auth() {
 										</ListGroupItem>
 									</ListGroup>
 									<Card.Body>
-										<Button variant='primary'>
+										{/* <Button variant='primary'>
 											Add Ownership
-										</Button>
+										</Button> */}
+										{data.checkOwner === 1 ? (
+											'최고관리자'
+										) : (
+											// <Toggle
+											// 	onClick={this.onToggle}
+											// 	on={<h2>ON</h2>}
+											// 	off={<h2>OFF</h2>}
+											// 	size='xs'
+											// 	offstyle='danger'
+											// 	active={this.state.toggleActive}
+											// />
+											<BootstrapSwitchButton
+												checked={data.checkAuth}
+												onstyle='dark'
+												size='lg'
+												id={data.publicKey}
+												// key={data.publicKey}
+												onChange={toggleClick}
+												// onClick={toggleClick(
+												// 	data.publicKey
+												// )}
+											/>
+										)}
 									</Card.Body>
 								</Card>
 							);
@@ -131,30 +186,7 @@ function Auth() {
 					{/* </div> */}
 				</form>
 			</Content>
-
-			{/* <Card style={{ width: '18rem' }}>
-  <Card.Img variant="top" src="holder.js/100px180?text=Image cap" />
-  <Card.Body>
-    <Card.Title>Card Title</Card.Title>
-    <Card.Text>
-      Some quick example text to build on the card title and make up the bulk of
-      the card's content.
-    </Card.Text>
-  </Card.Body>
-  <ListGroup className="list-group-flush">
-    <ListGroupItem>Cras justo odio</ListGroupItem>
-    <ListGroupItem>Dapibus ac facilisis in</ListGroupItem>
-    <ListGroupItem>Vestibulum at eros</ListGroupItem>
-  </ListGroup>
-  <Card.Body>
-    <Card.Link href="#">Card Link</Card.Link>
-    <Card.Link href="#">Another Link</Card.Link>
-  </Card.Body>
-</Card>  */}
 		</Layout>
-		// <div>
-		// 	<span style={{ fontSize: '50px' }}>준비중입니다?</span>
-		// </div>
 	);
 }
 
