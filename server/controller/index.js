@@ -42,6 +42,65 @@ const newContract = (web3, abi, ca) => {
 	});
 };
 
+// 경우 1 : 로그인한 계정이 서버한테 권한을 받고 nft 민팅을 진행하려고 함. => serverAddress 가 로그인 중인 서버 계정이어야함
+// 원래 기존의 CA배포한 서버계정(serverAddress), 로그인되어 있는 서버 주소({ _id: req.user._id }, {role:1})
+// serverAddress 를 현재 로그인 중인 서버계정으로 바꾸는 함수
+const changeAuther = async (highPrivilege, loginServer) => {
+	// param1, param2 같은지 체크
+	// Auth 권한 받은지 체크, role : 1 체크
+	// 로그인 되어 있는 서버 계정의 이더양 체크
+	let difCheck = false;
+	let web3Check = false;
+	let roleCheck = false;
+	let etherCheck = false;
+
+	if (highPrivilege !== loginServer) {
+		difCheck = true;
+	} else {
+		difCheck = false;
+	}
+
+	const wtContract = newContract(web3, wtAbi, process.env.WTTOKENCA); // wt
+	const nwtContract = newContract(web3, nwtAbi, process.env.NWTTOKENCA); // nwt
+	const nftContract = newContract(web3, nftAbi, process.env.NFTTOKENCA); // nft
+
+	const serverDB_addr = await User.find({ role: 1 }).exec();
+
+	for (value in serverDB_addr) {
+		if (serverDB_addr[value].publicKey === loginServer) {
+			roleCheck = true;
+		}
+	}
+
+	const checkWT = await wtContract.methods.checkAuth(loginServer).call();
+	const checkNWT = await nwtContract.methods.checkAuth(loginServer).call();
+	const checkNFT = await nftContract.methods.checkAuth(loginServer).call();
+	if (checkWT && checkNWT && checkNFT) {
+		web3Check = true;
+	} else {
+		web3Check = false;
+	}
+
+	const loginEther = await web3.eth.getBalance(loginServer);
+	if (parseFloat(loginEther) >= 0.01) {
+		etherCheck = true;
+	}
+
+	if (difCheck && roleCheck && web3Check && etherCheck) {
+		return loginServer;
+	} else {
+		return highPrivilege;
+	}
+};
+
+// changeAuther(
+// 	'0x31e39BBAFB77c4B0411CBfe43875D15AA7697A5c',
+// 	'0xFb63340661D504fbC389bA9015D05aEF00a94cd0'
+// );
+
+// 경우 2 : 유저들이 wt, nwt 토큰을 발행,
+// 경우 3 :
+
 // 로그인한 서버가 자신의 이더를 사용 => 컨트랙트 실행
 // 로그인한 서버가 아직은 최고 관리자의 이더를 사용 => 컨트랙트 실행
 // 1순위 : 최고관리자, 2순위 : 현재 로그인한 서버계정, 3순위 : 서버계정중 가장 많은 양의 이더를 가진 계정
@@ -51,7 +110,7 @@ const targetServerAddress = async (address) => {
 	try {
 		const ownerList = await User.findOne({
 			role: 1,
-			_id: req.user._id,
+			// _id: req.user._id,
 		}).exec();
 		console.log(ownerList);
 	} catch (err) {
@@ -63,10 +122,10 @@ const targetServerAddress = async (address) => {
 
 // nft 민팅 : 권한을 받은 서버계정이 먼저 1순위
 
-targetServerAddress(process.env.SERVERADDRESS);
+// targetServerAddress(process.env.SERVERADDRESS);
 
 // 서버가 가지고 있는 wt, nwt 토큰 양이 적으면 서버 교체해주는 함수 (수정중)
-const changeAuther = async () => {
+const changeAuther1 = async () => {
 	// 필터링 : role : 1 이면서 checkOwner 이 true 인 계정이 authoer 계정
 	const server = await User.find({ role: 1 }).exec();
 	const wtContract = newContract(web3, wtAbi, process.env.WTTOKENCA); // wt
@@ -93,4 +152,4 @@ const changeAuther = async () => {
 
 // changeAuther();
 
-module.exports = { infuraWeb3Provider, newContract };
+module.exports = { infuraWeb3Provider, newContract, changeAuther };
