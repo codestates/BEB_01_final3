@@ -17,12 +17,18 @@ function Auth() {
 			img: '',
 		},
 	]);
+	const [currentWT, setCurrentWT] = useState('');
+	const [currentNWT, setCurrentNWT] = useState('');
 
 	useEffect(() => {
 		async function getList() {
 			try {
 				const res = await axios.get('/api/users/serverList');
+
 				const server = res.data.serverInfo;
+				const currentWT = res.data.totalCurrentWT;
+				const currentNWT = res.data.totalCurrentNWT;
+				// console.log(typeof currentWT, typeof currentNWT);
 				const inputData = server.map((rowData) => ({
 					name: rowData.name,
 					email: rowData.email,
@@ -30,6 +36,8 @@ function Auth() {
 					role: rowData.role,
 					img: rowData.image,
 				}));
+				setCurrentWT(currentWT);
+				setCurrentNWT(currentNWT);
 				setList(list.concat(inputData));
 			} catch (err) {
 				console.log(err);
@@ -38,17 +46,12 @@ function Auth() {
 		getList();
 	}, []);
 
-	// if (list.img !== "") {
-	//     setList(userInfo.image);
-	//   } else if (userInfo.image === "cryptoWT") {
-	//     setProfile(wtImg);
-	//   }
-
-	// console.log(list);
-
 	return (
 		<Layout width={300} className='ant-layout-has-sider'>
 			<Content>
+				<div>각 서버계정의 현 보유 토큰 총 량</div>
+				<div>wt : {currentWT}</div>
+				<div>nwt : {currentNWT}</div>
 				<form
 					style={{
 						display: 'flex',
@@ -96,13 +99,6 @@ function Auth() {
 											}}
 										/>
 									)}
-
-									{/* variant="top"
-                                        src={el.imgUri}
-                                        style={{
-                                            height:"100%"
-                                        }} */}
-									{/* 이미지 링크 넣기 */}
 									<Card.Body>
 										<Card.Title>
 											name : {data.name}
@@ -131,30 +127,7 @@ function Auth() {
 					{/* </div> */}
 				</form>
 			</Content>
-
-			{/* <Card style={{ width: '18rem' }}>
-  <Card.Img variant="top" src="holder.js/100px180?text=Image cap" />
-  <Card.Body>
-    <Card.Title>Card Title</Card.Title>
-    <Card.Text>
-      Some quick example text to build on the card title and make up the bulk of
-      the card's content.
-    </Card.Text>
-  </Card.Body>
-  <ListGroup className="list-group-flush">
-    <ListGroupItem>Cras justo odio</ListGroupItem>
-    <ListGroupItem>Dapibus ac facilisis in</ListGroupItem>
-    <ListGroupItem>Vestibulum at eros</ListGroupItem>
-  </ListGroup>
-  <Card.Body>
-    <Card.Link href="#">Card Link</Card.Link>
-    <Card.Link href="#">Another Link</Card.Link>
-  </Card.Body>
-</Card>  */}
 		</Layout>
-		// <div>
-		// 	<span style={{ fontSize: '50px' }}>준비중입니다?</span>
-		// </div>
 	);
 }
 
