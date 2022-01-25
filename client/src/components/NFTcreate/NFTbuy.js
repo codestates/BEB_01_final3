@@ -10,13 +10,17 @@ import LikeDisLike from './LikeDisLike';
 
 
 
-function NFTbuy ({nftlist}) {
+function NFTbuy({ nftlist }) {
+  
+
+  console.log(1);
 
    
     const navigate = useNavigate();
     const [buyer,setBuyer] = useState('');
 
     const [check, setCheck] = useState(false);
+    const [sell, setSell] = useState(false);
 
     const nftId = useParams().nftId;
     console.log(nftId);
@@ -27,7 +31,8 @@ function NFTbuy ({nftlist}) {
     }
     
 
-   function BuyNFT(tokenId){
+  function BuyNFT(tokenId) {
+     console.log(tokenId);
     axios.post('/api/contract/buyNFT',{tokenId:tokenId})
       .then((res) => {
               
@@ -41,7 +46,8 @@ function NFTbuy ({nftlist}) {
            }
           
         });
-  }
+   }
+
     
   return (
 
@@ -58,27 +64,29 @@ function NFTbuy ({nftlist}) {
                   </Card.Title>
                   <Card.Title style={{textAlign:'left', marginTop: '5%', marginLeft:'-3%'}}>
                     Name : {el.nftName}
-                  </Card.Title>
+                     </Card.Title>
                   <Card.Title style={{textAlign:'left', marginTop: '5%', marginLeft:'-3%'}}>
                     Price : {el.price}
-                  </Card.Title>
+                  </Card.Title> 
+                 
                 </Card.Body>
                 <Card.Body style={{marginBottom: '0px', borderBottom: '1px solid #DCDCDC'}}>
                   <Card.Text style={{textAlign:'left', marginLeft:'-3%', fontSize:'20px'}}>
                     desription : {el.description}
                   </Card.Text>
                 </Card.Body>
-                <Card.Body style={{display:"flex", marginLeft:'-3%', marginRight:'-9%'}}>
-                  <div>
-                    <Button variant="warning" style={{fontWeight:"bold"}}  onClick={()=>{BuyNFT(el.tokenId)}} >판매중</Button>
-                  </div>
-                  <div style={{width:"60%"}}></div>
+                   <Card.Body style={{ display: "flex", marginLeft: '-3%', marginRight: '-9%' }}>
+                    <div>
+                      <Button variant="warning" style={{fontWeight:"bold"}}  onClick={()=>{BuyNFT(el.tokenId)}} >구매하기</Button>
+                    </div> 
+                 
+                  <div style={{width:"55%"}}></div>
                   <LikeDisLike userId={localStorage.getItem('userId')} nftId={ el._id } />
                 </Card.Body>
                   
                 
               </Card>
-              
+            
                )
              })
              

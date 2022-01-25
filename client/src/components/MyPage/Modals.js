@@ -9,6 +9,7 @@ const Modals = ({show,img, off,pfp}) => {
    `
 
     const selectImg = (a) => {
+        console.log(a);
         pfp(a)
         off(false);
     }
