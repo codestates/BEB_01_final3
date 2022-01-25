@@ -5,16 +5,21 @@ import { Button, Card, ListGroup, ListGroupItem } from 'react-bootstrap';
 import axios from 'axios';
 import { Form, Col, Row } from 'antd';
 import wtImg from './basic.png';
+import BootstrapSwitchButton from 'bootstrap-switch-button-react';
+// import Toggle from 'react-bootstrap-toggle';
 
 function Auth() {
 	const [addOwner, setAddOwner] = useState(false);
 	const [list, setList] = useState([
 		{
+			// idx: 0,
 			name: '',
 			email: '',
 			publicKey: '',
 			role: '',
 			img: '',
+			checkAuth: false,
+			checkOwner: 0,
 		},
 	]);
 	const [currentWT, setCurrentWT] = useState('');
@@ -28,13 +33,15 @@ function Auth() {
 				const server = res.data.serverInfo;
 				const currentWT = res.data.totalCurrentWT;
 				const currentNWT = res.data.totalCurrentNWT;
-				// console.log(typeof currentWT, typeof currentNWT);
+				console.log(server);
 				const inputData = server.map((rowData) => ({
 					name: rowData.name,
 					email: rowData.email,
 					publicKey: rowData.publicKey,
 					role: rowData.role,
 					img: rowData.image,
+					checkAuth: rowData.checkAuth,
+					checkOwner: rowData.checkOwner,
 				}));
 				setCurrentWT(currentWT);
 				setCurrentNWT(currentNWT);
@@ -45,6 +52,34 @@ function Auth() {
 		}
 		getList();
 	}, []);
+
+	const onChange = (e) => {
+		console.log('클릭함');
+		console.log(e.target.value);
+	};
+
+	// setInfoData((prevState) => ({
+	// 	...prevState,
+	// 	major: {
+	// 	  ...prevState.major,
+	// 	  name: "Tan Long",
+	// 	}
+	//   }));
+
+	// const onToggle = id => {
+	// 	setUsers(users.map(
+	// 	  user => user.id === id
+	// 	  ? {...user, active: !user.active}
+	// 	  : user
+	// 	))
+	//   }
+
+	const toggleClick = (e) => {
+		// e 값이 boolean 값
+		// console.log(e.target.value);
+		console.log(e);
+		console.log(e.id);
+	};
 
 	return (
 		<Layout width={300} className='ant-layout-has-sider'>
@@ -64,6 +99,7 @@ function Auth() {
 						if (data.name !== '') {
 							return (
 								<Card
+									// key={idx}
 									style={{
 										width: '18rem',
 										height: '27rem',
@@ -116,9 +152,32 @@ function Auth() {
 										</ListGroupItem>
 									</ListGroup>
 									<Card.Body>
-										<Button variant='primary'>
+										{/* <Button variant='primary'>
 											Add Ownership
-										</Button>
+										</Button> */}
+										{data.checkOwner === 1 ? (
+											'최고관리자'
+										) : (
+											// <Toggle
+											// 	onClick={this.onToggle}
+											// 	on={<h2>ON</h2>}
+											// 	off={<h2>OFF</h2>}
+											// 	size='xs'
+											// 	offstyle='danger'
+											// 	active={this.state.toggleActive}
+											// />
+											<BootstrapSwitchButton
+												checked={data.checkAuth}
+												onstyle='dark'
+												size='lg'
+												id={data.publicKey}
+												// key={data.publicKey}
+												onChange={toggleClick}
+												// onClick={toggleClick(
+												// 	data.publicKey
+												// )}
+											/>
+										)}
 									</Card.Body>
 								</Card>
 							);
