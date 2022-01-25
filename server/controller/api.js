@@ -995,12 +995,14 @@ module.exports = {
 				});
 				const contents = new Contents({
 					contentName: title,
-					contentNum: num,
+					contentNum : num,
 				});
+				console.log("content",num);
 				batting.save((err, info) => {
 					contents.save((err, info) => {
 						console.log(err);
 						if (err) return res.json({ success: false, err });
+						console.log(info);
 						res.status(200).json({ success: true });
 					});
 				});
@@ -1218,4 +1220,5 @@ module.exports = {
 			res.json({ success: false, message: '디비에서 불러오지 못 함' });
 		}
 	},
+
 };
