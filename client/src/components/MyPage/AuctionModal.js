@@ -15,8 +15,7 @@ const AuctionModal = ({ check, modalInfo, sellNFT }) => {
 
     function sell(tokenId, imgUri) {
        
-        sellNFT(tokenId, imgUri,sellPrice)
-        return;
+        //서버로 토큰아이디를 보낸다. 
     }
     //  console.log("a",this.img);
   

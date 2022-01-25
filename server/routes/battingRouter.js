@@ -5,14 +5,14 @@ const { Batting } = require('../models/batting')
 const { Contents } = require('../models/Contents');
 const { Vote } = require('../models/Vote');
 const { auth } = require('../middleware/auth');
-const {test,contentList } = require('../controller/api');
+const {vote,contentList } = require('../controller/batting');
 
 
  
 router.get('/', async (req, res) => {
     
 
-    const contentsName = await Contents.find({}).exec();   
+    const contentsName = await Contents.find({}).exec();  
     const content = await Batting.find({}).exec();
     // console.log(contentsName);
     res.json({success:true, contentsName, content})
@@ -21,7 +21,7 @@ router.get('/', async (req, res) => {
 
 
  
-router.post('/vote', auth, test);
+router.post('/vote', auth, vote);
 router.post('/contentList', auth, contentList);
 
     
