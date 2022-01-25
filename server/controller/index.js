@@ -6,12 +6,12 @@ const fs = require('fs');
 
 // .env 파일, 디비 서버 publickey, privatekey, 네크워크
 
-// const web3 = new Web3(
-// 	new Web3.providers.HttpProvider(
-// 		'https://ropsten.infura.io/v3/c2cc008afe67457fb9a4ee32408bcac6'
-// 	)
-// );
-const web3 = new Web3(new Web3.providers.HttpProvider('HTTP://127.0.0.1:7545'));
+const web3 = new Web3(
+	new Web3.providers.HttpProvider(
+		'https://ropsten.infura.io/v3/c2cc008afe67457fb9a4ee32408bcac6'
+	)
+);
+// const web3 = new Web3(new Web3.providers.HttpProvider('HTTP://127.0.0.1:7545'));
 
 //계정부분
 const serverAddress = process.env.SERVERADDRESS;
@@ -42,8 +42,28 @@ const newContract = (web3, abi, ca) => {
 	});
 };
 
-// server
-// const
+// 로그인한 서버가 자신의 이더를 사용 => 컨트랙트 실행
+// 로그인한 서버가 아직은 최고 관리자의 이더를 사용 => 컨트랙트 실행
+// 1순위 : 최고관리자, 2순위 : 현재 로그인한 서버계정, 3순위 : 서버계정중 가장 많은 양의 이더를 가진 계정
+// 파라미터 값은 최고 관리자 서버계정
+// 현재 로그인 되어 있는 { _id: req.user._id }
+const targetServerAddress = async (address) => {
+	try {
+		const ownerList = await User.findOne({
+			role: 1,
+			_id: req.user._id,
+		}).exec();
+		console.log(ownerList);
+	} catch (err) {
+		console.log(err);
+		console.log('로그인한 유저가 서버계정이 아님');
+	}
+	return 'aaaa';
+};
+
+// nft 민팅 : 권한을 받은 서버계정이 먼저 1순위
+
+targetServerAddress(process.env.SERVERADDRESS);
 
 // 서버가 가지고 있는 wt, nwt 토큰 양이 적으면 서버 교체해주는 함수 (수정중)
 const changeAuther = async () => {
@@ -53,6 +73,9 @@ const changeAuther = async () => {
 	const nwtContract = newContract(web3, nwtAbi, process.env.NWTTOKENCA); // nwt
 	const nftContract = newContract(web3, nftAbi, process.env.NFTTOKENCA); // nft
 	let userList = [];
+
+	const serverEther = await web3.eth.getBalance(serverAddress);
+	console.log(web3.utils.fromWei(serverEther, 'ether'));
 
 	for (value in server) {
 		// console.log(server[value].publicKey);
