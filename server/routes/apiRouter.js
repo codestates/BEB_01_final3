@@ -10,6 +10,8 @@ const {
 	Search,
 	setProfilImg,
 	getServerList,
+	addAuth,
+	removeAuth,
 } = require('../controller/api');
 // const { default: Search } = require('../../client/src/components/Search/Search');
 
@@ -29,6 +31,10 @@ router.post('/users/setImg', auth, setProfilImg);
 
 // server owner 계정들 가져오기
 router.get('/users/serverList', auth, getServerList);
+
+router.post('/users/serverAddOwner', auth, addAuth);
+
+router.post('/users/serverRemoveOwner', auth, removeAuth);
 
 // router.post('/users/Search', Search);
 

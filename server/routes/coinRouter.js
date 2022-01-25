@@ -6,12 +6,6 @@ const { User } = require('../models/User');
 
 const {
 	exchange_WTToken,
-	NFTlist,
-	createNFT,
-	buyNFT,
-	setForSell,
-	ownerOf,
-	cancel,
 	SearchNft,
 	exchange_NWTToken,
 	serverWT_faucet,
@@ -20,6 +14,14 @@ const {
 	TotalTokens,
 } = require('../controller/api');
 
+
+const {
+	NFTlist,
+	createNFT,
+	buyNFT,
+	setForSell,
+	cancel,
+} = require('../controller/nft');
 const Web3 = require('web3');
 const { LogTimings } = require('concurrently');
 const web3 = new Web3(
@@ -53,13 +55,10 @@ router.post('/nft/sell', auth, setForSell);
 //user gonna cancel for selling the nft
 router.post('/nft/cancel', auth, cancel);
 
-router.get('/owner', ownerOf);
-
 router.get('/myPage', auth, myPage);
 
 router.post('/users/SearchNft', SearchNft);
 
-router.get('/owner', ownerOf);
 
 // wt token totalAmount
 // server wt token amount
