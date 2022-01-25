@@ -1159,6 +1159,8 @@ module.exports = {
 	getServerList: async (req, res) => {
 		// console.log('api 부분');
 		const serverInfo = [];
+		let totalCurrentWT = 0;
+		let totalCurrentNWT = 0;
 		const serverList = await User.find({ role: 1 }).exec();
 
 		try {
@@ -1166,6 +1168,18 @@ module.exports = {
 				let imgInfo = await Nft.findOne({
 					address: serverList[value].publicKey,
 				}).exec();
+				let serverWT = await wtContract.methods
+					.balanceOf(serverList[value].publicKey)
+					.call();
+				let serverNWT = await nwtContract.methods
+					.balanceOf(serverList[value].publicKey)
+					.call();
+				totalCurrentWT += parseInt(
+					web3.utils.fromWei(serverWT, 'ether')
+				);
+				totalCurrentNWT += parseInt(
+					web3.utils.fromWei(serverNWT, 'ether')
+				);
 				let inputData;
 				if (imgInfo === null) {
 					inputData = {
@@ -1189,7 +1203,12 @@ module.exports = {
 					serverInfo.push(inputData);
 				}
 			}
-			res.json({ success: true, serverInfo });
+			res.json({
+				success: true,
+				serverInfo,
+				totalCurrentWT,
+				totalCurrentNWT,
+			});
 		} catch (err) {
 			console.log('DB에서 불러오지 못 함');
 			res.json({ success: false, message: '디비에서 불러오지 못 함' });
