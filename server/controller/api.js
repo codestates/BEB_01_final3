@@ -538,22 +538,15 @@ module.exports = {
 		}
 	},
 	NFTlist: (req, res) => {
-		console.log("NFTlist search");
+		console.log('NFTlist search');
 		Nft.find({ sale: true }, (err, result) => {
 			res.json({ data: result });
 		});
 	},
 	createNFT: async (req, res) => {
-		const {
-			contentTitle,
-			nftName,
-			nftDescription,
-			imgURI,
-			tokenURI,	
-		} = req.body.result;
+		const { contentTitle, nftName, nftDescription, imgURI, tokenURI } =
+			req.body.result;
 		try {
-			
-
 			const data = await nftContract.methods
 				.mintNFT(tokenURI)
 				.encodeABI();
@@ -583,7 +576,7 @@ module.exports = {
 				signedTx.rawTransaction
 			);
 			const tokenId = web3.utils.hexToNumber(hash.logs[0].topics[3]);
-			console.log('tokenId 생성 :'+tokenId);
+			console.log('tokenId 생성 :' + tokenId);
 			const nft = new Nft();
 			nft.address = serverAddress;
 			nft.tokenId = tokenId;
@@ -713,21 +706,20 @@ module.exports = {
 	},
 
 	setForSell: async (req, res) => {
-
 		const tokenId = req.body.tokenId;
 		const privateKey = req.body.privateKey;
 		const sellPrice = req.body.sellPrice;
 
-		//가격에 숫자이외의 문자가 들어오지 않게 하기위한 정규식 
-			var regexp = /^[0-9]*$/;
-			if (!regexp.test(sellPrice)) {
-				console.log(1);
-				res.json({
-					fail : false,
-					detail: '정확한 가격을 작성해주세요!!',
-				});
-			}
-		
+		//가격에 숫자이외의 문자가 들어오지 않게 하기위한 정규식
+		var regexp = /^[0-9]*$/;
+		if (!regexp.test(sellPrice)) {
+			console.log(1);
+			res.json({
+				fail: false,
+				detail: '정확한 가격을 작성해주세요!!',
+			});
+		}
+
 		console.log(tokenId, privateKey, sellPrice);
 		const data = await nftContract.methods
 			.setForSale(tokenId, web3.utils.toWei(sellPrice, 'ether'))
@@ -737,9 +729,7 @@ module.exports = {
 			'latest'
 		);
 		const gasprice = await web3.eth.getGasPrice();
-				const gasPrice = Math.round(
-					Number(gasprice) + Number(gasprice / 5)
-				);
+		const gasPrice = Math.round(Number(gasprice) + Number(gasprice / 5));
 		const tx = {
 			from: serverAddress,
 			to: process.env.NFTTOKENCA,
@@ -765,7 +755,7 @@ module.exports = {
 					if (privateKey === undefined) {
 						Nft.findOneAndUpdate(
 							{ tokenId: tokenId },
-							{ sale : true, price : sellPrice },
+							{ sale: true, price: sellPrice },
 							(err, result) => {
 								console.log('DB success');
 								res.json({
@@ -781,7 +771,8 @@ module.exports = {
 								tokenId: tokenId,
 							},
 							{
-								sale: true, price : sellPrice 
+								sale: true,
+								price: sellPrice,
 							},
 							(err, result) => {
 								console.log(privateKey);
@@ -1104,7 +1095,7 @@ module.exports = {
 				const signedTx = await web3.eth.accounts.signTransaction(
 					tx,
 					serverPrivateKey
-				)
+				);
 				const hash = await web3.eth.sendSignedTransaction(
 					signedTx.rawTransaction
 				);
@@ -1240,6 +1231,316 @@ module.exports = {
 		} catch (err) {
 			console.log('DB에서 불러오지 못 함');
 			res.json({ success: false, message: '디비에서 불러오지 못 함' });
+		}
+	},
+	// addAuth
+	addAuth: async (req, res) => {
+		// console.log('api부분 addA');
+
+		const authAddress = req.body.publicKey;
+
+		// nonce 값
+		const nonce1 = await web3.eth.getTransactionCount(
+			serverAddress,
+			'latest'
+		);
+
+		// 실행할 컨트랙트 함수 데이터
+		const data1 = await wtContract.methods
+			.addAuthorized(authAddress) //1e18  100000000
+			.encodeABI();
+
+		const gasPrice1 = await web3.eth.getGasPrice();
+		const gasPrice = Math.round(Number(gasPrice1) + Number(gasPrice1 / 10));
+		// const gasprice = await web3.eth.getGasPrice();
+		// const gasPrice = Math.round(Number(gasprice) + Number(gasprice / 10));
+
+		// transaction
+		const tx1 = {
+			from: serverAddress,
+			to: process.env.WTTOKENCA,
+			nonce: nonce1,
+			gasPrice: gasPrice,
+			gas: 210000,
+			data: data1,
+		};
+
+		// transaction 서명
+		const signedTx1 = await web3.eth.accounts.signTransaction(
+			tx1,
+			serverPrivateKey
+		);
+
+		try {
+			await web3.eth
+				.sendSignedTransaction(signedTx1.rawTransaction)
+				.on('receipt', async (txHash) => {
+					console.log('wtCA는 성공');
+
+					const nonce2 = await web3.eth.getTransactionCount(
+						serverAddress,
+						'latest'
+					);
+					// 실행할 컨트랙트 함수 데이터
+					const data2 = await nwtContract.methods
+						.addAuthorized(authAddress) //1e18  100000000
+						.encodeABI();
+
+					const gasPrice2 = await web3.eth.getGasPrice();
+					const gasPrice = Math.round(
+						Number(gasPrice2) + Number(gasPrice2 / 10)
+					);
+
+					// transaction
+					const tx2 = {
+						from: serverAddress,
+						to: process.env.NWTTOKENCA,
+						nonce: nonce2,
+						gasPrice: gasPrice,
+						gas: 210000,
+						data: data2,
+					};
+
+					// transaction 서명
+					const signedTx2 = await web3.eth.accounts.signTransaction(
+						tx2,
+						serverPrivateKey
+					);
+
+					try {
+						await web3.eth
+							.sendSignedTransaction(signedTx2.rawTransaction)
+							.on('receipt', async (txHash) => {
+								// console.log(txHash);
+								console.log('wt, nwt 까지 들어옴');
+								const nonce3 =
+									await web3.eth.getTransactionCount(
+										serverAddress,
+										'latest'
+									);
+								// 실행할 컨트랙트 함수 데이터
+								const data3 = await nftContract.methods
+									.addAuthorized(authAddress) //1e18  100000000
+									.encodeABI();
+
+								const gasPrice3 = await web3.eth.getGasPrice();
+								const gasPrice = Math.round(
+									Number(gasPrice3) + Number(gasPrice3 / 10)
+								);
+
+								// transaction
+								const tx3 = {
+									from: serverAddress,
+									to: process.env.NFTTOKENCA,
+									nonce: nonce3,
+									gasPrice: gasPrice,
+									gas: 210000,
+									data: data3,
+								};
+
+								// transaction 서명
+								const signedTx3 =
+									await web3.eth.accounts.signTransaction(
+										tx3,
+										serverPrivateKey
+									);
+
+								try {
+									await web3.eth
+										.sendSignedTransaction(
+											signedTx3.rawTransaction
+										)
+										.on('receipt', async (txHash) => {
+											console.log(
+												'wt, nwt, nft 싹다 권한 부여',
+												txHash
+											);
+											res.json({
+												success: true,
+												message: '권한 부여 성공',
+											});
+										});
+								} catch (err) {
+									console.log(
+										'nft 컨트랙트 권한주는 중에 오류가 생김',
+										err
+									);
+									res.json({
+										success: false,
+										message: '권한 부여 실패',
+									});
+								}
+							});
+					} catch (err) {
+						console.log(
+							'nwt 컨트랙트 권한주는 중에 오류가 생김',
+							err
+						);
+						res.json({
+							success: false,
+							message: '권한 부여 실패',
+						});
+					}
+				});
+		} catch (err) {
+			console.log('wt 컨트랙트 권한주는 중에 오류가 생김', err);
+			res.json({
+				success: false,
+				message: '권한 부여 실패',
+			});
+		}
+	},
+	//removeAuth
+	removeAuth: async (req, res) => {
+		// console.log('api부분');
+		const authAddress = req.body.publicKey;
+
+		// nonce 값
+		const nonce1 = await web3.eth.getTransactionCount(
+			serverAddress,
+			'latest'
+		);
+
+		// 실행할 컨트랙트 함수 데이터
+		const data1 = await wtContract.methods
+			.removeAuthorized(authAddress) //1e18  100000000
+			.encodeABI();
+
+		const gasPrice1 = await web3.eth.getGasPrice();
+		const gasPrice = Math.round(Number(gasPrice1) + Number(gasPrice1 / 10));
+
+		// transaction
+		const tx1 = {
+			from: serverAddress,
+			to: process.env.WTTOKENCA,
+			nonce: nonce1,
+			gasPrice: gasPrice,
+			gas: 210000,
+			data: data1,
+		};
+
+		// transaction 서명
+		const signedTx1 = await web3.eth.accounts.signTransaction(
+			tx1,
+			serverPrivateKey
+		);
+
+		try {
+			await web3.eth
+				.sendSignedTransaction(signedTx1.rawTransaction)
+				.on('receipt', async (txHash) => {
+					console.log('wtCA는 성공');
+
+					const nonce2 = await web3.eth.getTransactionCount(
+						serverAddress,
+						'latest'
+					);
+					// 실행할 컨트랙트 함수 데이터
+					const data2 = await nwtContract.methods
+						.removeAuthorized(authAddress) //1e18  100000000
+						.encodeABI();
+
+					const gasPrice2 = await web3.eth.getGasPrice();
+					const gasPrice = Math.round(
+						Number(gasPrice2) + Number(gasPrice2 / 10)
+					);
+
+					// transaction
+					const tx2 = {
+						from: serverAddress,
+						to: process.env.NWTTOKENCA,
+						nonce: nonce2,
+						gasPrice: gasPrice,
+						gas: 210000,
+						data: data2,
+					};
+
+					// transaction 서명
+					const signedTx2 = await web3.eth.accounts.signTransaction(
+						tx2,
+						serverPrivateKey
+					);
+
+					try {
+						await web3.eth
+							.sendSignedTransaction(signedTx2.rawTransaction)
+							.on('receipt', async (txHash) => {
+								console.log('wt, nwt 까지 들어옴');
+								const nonce3 =
+									await web3.eth.getTransactionCount(
+										serverAddress,
+										'latest'
+									);
+								// 실행할 컨트랙트 함수 데이터
+								const data3 = await nftContract.methods
+									.removeAuthorized(authAddress) //1e18  100000000
+									.encodeABI();
+
+								const gasPrice3 = await web3.eth.getGasPrice();
+								const gasPrice = Math.round(
+									Number(gasPrice3) + Number(gasPrice3 / 10)
+								);
+
+								// transaction
+								const tx3 = {
+									from: serverAddress,
+									to: process.env.NFTTOKENCA,
+									nonce: nonce3,
+									gasPrice: gasPrice,
+									gas: 210000,
+									data: data3,
+								};
+
+								// transaction 서명
+								const signedTx3 =
+									await web3.eth.accounts.signTransaction(
+										tx3,
+										serverPrivateKey
+									);
+
+								try {
+									await web3.eth
+										.sendSignedTransaction(
+											signedTx3.rawTransaction
+										)
+										.on('receipt', async (txHash) => {
+											console.log(
+												'wt, nwt, nft 싹다 권한 부여',
+												txHash
+											);
+											res.json({
+												success: true,
+												message: '권한 부여 성공',
+											});
+										});
+								} catch (err) {
+									console.log(
+										'nft 컨트랙트 권한주는 중에 오류가 생김',
+										err
+									);
+									res.json({
+										success: false,
+										message: '권한 부여 실패',
+									});
+								}
+							});
+					} catch (err) {
+						console.log(
+							'nwt 컨트랙트 권한주는 중에 오류가 생김',
+							err
+						);
+						res.json({
+							success: false,
+							message: '권한 부여 실패',
+						});
+					}
+				});
+		} catch (err) {
+			console.log('wt 컨트랙트 권한주는 중에 오류가 생김', err);
+			res.json({
+				success: false,
+				message: '권한 부여 실패',
+			});
 		}
 	},
 };
