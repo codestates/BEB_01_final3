@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import '../../App.css';
 import Sidebar from '../DeveloperPage/DevComponent/Sidebar';
 import Layout, { Content } from 'antd/lib/layout/layout';
-import { Button, Card } from 'react-bootstrap';
+import { Button, Card, ToggleButton } from 'react-bootstrap';
 import Avatar from 'antd/lib/avatar/avatar';
 import wtImg from '../img/wtimg.png';
 import axios from 'axios';
@@ -29,8 +29,8 @@ function Batting() {
 				//일단 몇개의 데이터가 있는지 확인해 봅시다.
 			
 				if (res.data.success) {
-					const contentsName = res.data.contentsName;
-					setContentsName(contentsName);
+					let contentName = res.data.contentsName;
+					setContentsName(contentName);
 					console.log(res.data);
 				}
 			})
@@ -61,6 +61,7 @@ function Batting() {
 	`;
 	
 	function Name(num){
+		console.log(num);
 	    
 		setName("active");
 		const com = document.querySelector('.active' + num);	
@@ -74,7 +75,11 @@ function Batting() {
 	}
 	
 
-	
+	const butclick = (e) => {
+		console.log(e);
+	}
+
+	console.log(contentsName);
 	return (
 		
 		
@@ -93,7 +98,7 @@ function Batting() {
                                Content : {el.contentName}
                                </Card.Title>
                               <span>
-							<Button variant="black" style={{border:"1px dashed gray"}}>Game Close</Button>
+							<Button variant="black" style={{border:"1px dashed gray"}} onClick={() => {butclick("hello")}} >Game Close</Button>
                               </span> 
                             </Card.Body>
 									</Card>
