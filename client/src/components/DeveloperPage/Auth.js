@@ -17,12 +17,18 @@ function Auth() {
 			img: '',
 		},
 	]);
+	const [currentWT, setCurrentWT] = useState('');
+	const [currentNWT, setCurrentNWT] = useState('');
 
 	useEffect(() => {
 		async function getList() {
 			try {
 				const res = await axios.get('/api/users/serverList');
+
 				const server = res.data.serverInfo;
+				const currentWT = res.data.totalCurrentWT;
+				const currentNWT = res.data.totalCurrentNWT;
+				// console.log(typeof currentWT, typeof currentNWT);
 				const inputData = server.map((rowData) => ({
 					name: rowData.name,
 					email: rowData.email,
@@ -30,6 +36,8 @@ function Auth() {
 					role: rowData.role,
 					img: rowData.image,
 				}));
+				setCurrentWT(currentWT);
+				setCurrentNWT(currentNWT);
 				setList(list.concat(inputData));
 			} catch (err) {
 				console.log(err);
@@ -41,6 +49,9 @@ function Auth() {
 	return (
 		<Layout width={300} className='ant-layout-has-sider'>
 			<Content>
+				<div>각 서버계정의 현 보유 토큰 총 량</div>
+				<div>wt : {currentWT}</div>
+				<div>nwt : {currentNWT}</div>
 				<form
 					style={{
 						display: 'flex',
