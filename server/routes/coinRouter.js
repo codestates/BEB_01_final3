@@ -22,8 +22,8 @@ const {
 	setForSell,
 	cancel,
 	nftauction,
-	setToken
-
+	setToken,
+	bids
 } = require('../controller/nft');
 const Web3 = require('web3');
 const { LogTimings } = require('concurrently');
@@ -52,6 +52,7 @@ router.post('/nft/create', auth, createNFT);
 // user or server gonna buy a NFT
 router.post('/buyNFT', auth, buyNFT);
 
+router.post('/bid', auth, bids);
 // user gonna set price for nft
 router.post('/nft/sell', auth, setForSell);
 

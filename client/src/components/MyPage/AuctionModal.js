@@ -8,6 +8,7 @@ const AuctionModal = ({ check, modalInfo, userInfo }) => {
     
     const publicKey = userInfo.publicKey
     
+    
 
     function sell(tokenId, imgUri) {
      
@@ -29,6 +30,8 @@ const AuctionModal = ({ check, modalInfo, userInfo }) => {
       axios
           .post("/api/contract/nft/auction", {
             tokenId,
+            Auctionsell,
+            publicKey,
             Auctionsell
           })
           .then((res) => {
