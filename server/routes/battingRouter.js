@@ -5,7 +5,7 @@ const { Batting } = require('../models/batting')
 const { Contents } = require('../models/Contents');
 const { Vote } = require('../models/Vote');
 const { auth } = require('../middleware/auth');
-const {vote,contentList } = require('../controller/batting');
+const {vote,contentList,allowance,closeSerial,closeContent,payOut } = require('../controller/batting');
 
 
  
@@ -20,9 +20,13 @@ router.get('/', async (req, res) => {
 })
 
 
+router.get("/allowance", auth, allowance);
  
 router.post('/vote', auth, vote);
 router.post('/contentList', auth, contentList);
+router.post('/closeSerial', auth, closeSerial);
+router.post('/closeContent', closeContent);
+router.post('/payOut', payOut);
 
     
 

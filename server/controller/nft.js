@@ -120,6 +120,7 @@ module.exports = {
 		}
 	},
 	buyNFT: async (req, res) => {
+		
 		const tokenId = req.body.tokenId;
 		const email = req.user.email;
 		const userInfo = await User.findOne({ email: email }).exec();

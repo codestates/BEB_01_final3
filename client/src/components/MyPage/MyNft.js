@@ -67,7 +67,7 @@ function MyNft () {
           privateKey : userInfo.privateKey
         })
         .then((res) => {
-          if (res.data.success) {
+          if (res.data.success) { 
             setProfile(wtImg);
             window.location.reload();
           }

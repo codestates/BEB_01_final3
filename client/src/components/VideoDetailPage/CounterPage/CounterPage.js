@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import moment from "moment";
 import { useCallback } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Form, Row, Col } from "react-bootstrap";
 import { Button, Card } from "react-bootstrap";
 // const { Meta } = Card;
@@ -11,7 +11,7 @@ import "moment-timezone";
 import "../style.css";
 import Modals from "./Modals";
 import ImgModals from "./ImgModals";
-
+import Swal from "sweetalert2";
 
 function CounterPage() {
   const videoId = useParams().videoId;
@@ -24,6 +24,8 @@ function CounterPage() {
   const [survivalImgShow, setSurvivalImgShow] = useState("");
   const [videoName, setVideoName] = useState('');
   const [amount, setAmount] = useState('');
+  const [closeInfo, setCloseInfo] = useState("");
+  const navigate = useNavigate();
 
   const showImg = (e) => {
     setSurvivalImgShow(e.target.src);
@@ -39,8 +41,10 @@ function CounterPage() {
         .post("/api/video/getVideoDetail", variable)
         .then((response) => {
           if (response.data.success) {
+            console.log("close",response.data.close);
             console.log("getvideodata", response.data);
             console.log("Img", response.data.videoDetail.image);
+            setCloseInfo(response.data.success);
            setVideoName(response.data.videoDetail.title);
             const image = response.data.videoDetail.image;
             setVideoDetail(response.data.videoDetail);
@@ -58,6 +62,7 @@ function CounterPage() {
     }
     getVideo();
   }, []);
+
 
   // console.log('s', Survival);
   // console.log("img",response.data.videoDetail.image)
@@ -135,9 +140,40 @@ function CounterPage() {
     axios.post('/api/bat/vote', { select: name, title, serialNo, amount })
       .then((res) => {
         if (res.data.success) {
-          
-        } else  {
-          alert(res.data.detail);
+          Swal.fire({
+            icon: 'success',
+            title: 'Wow.....' ,  
+            text: `${name}에 ${amount}WT를 베팅했습니다.`,
+            // showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
+            // confirmButtonColor: '#3085d6', // confrim 버튼 색깔 지정
+            // cancelButtonColor: '#d33', // cancel 버튼 색깔 지정
+            // confirmButtonText: '승인', // confirm 버튼 텍스트 지정
+            // cancelButtonText: '취소', // cancel 버튼 텍스트 지정
+            // reverseButtons: true, // 버튼 순서 거꾸로
+          }).then((result) => {
+           
+            if (result.value) {
+               navigate('/')
+            }
+          });
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',  
+            text:  res.data.detail,
+            // showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
+            // confirmButtonColor: '#3085d6', // confrim 버튼 색깔 지정
+            // cancelButtonColor: '#d33', // cancel 버튼 색깔 지정
+            // confirmButtonText: '승인', // confirm 버튼 텍스트 지정
+            // cancelButtonText: '취소', // cancel 버튼 텍스트 지정
+            // reverseButtons: true, // 버튼 순서 거꾸로
+          }).then((result) => {
+            console.log(result);
+            if (result.value) {
+               navigate('/')
+            }
+          });
+         
         
         }
       })

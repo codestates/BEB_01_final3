@@ -721,6 +721,7 @@ module.exports = {
 					tx,
 					serverPrivateKey
 				);
+				console.log("---------- start videoUpload / createRoom tranction ------");
 				const hash = await web3.eth.sendSignedTransaction(
 					signedTx.rawTransaction
 				);
@@ -733,9 +734,12 @@ module.exports = {
 				);
 				console.log(JSON.stringify(decodedParameters));
 				const num = decodedParameters.num;
-
-				console.log(title, subTitle, num, serialNo);
+             
+				const video = await Video.find({ title: rawTitle }).exec();
+				console.log(video);
+				console.log(video[0]._id);
 				const batting = new Batting({
+					videoId : video[0]._id,
 					contentsName: title,
 					subTitle: subTitle,
 					contentsNum: num,
