@@ -1,13 +1,9 @@
 
-import React, { useEffect, useState } from 'react'
-import axios from 'axios';
-// import { Facoad } from 'react-icons/fa'
+import React, { useState } from 'react'
 import {Card,Button} from 'react-bootstrap'
-import { useNavigate, useParams } from 'react-router-dom';
-import {HeartOutlined, HeartFilled} from '@ant-design/icons'; 
+import { useNavigate} from 'react-router-dom';
 import LikeDisLike from './LikeDisLike';
-import Form from 'antd/lib/form/Form';
-
+import DetailAuction from './AuctionButton/DetailAuction'
 
 
 function NFTauction({ nftlist }) {
@@ -15,55 +11,27 @@ function NFTauction({ nftlist }) {
     const navigate = useNavigate();
     const [buyer,setBuyer] = useState('');
     const [check, setCheck] = useState(false);
-    const [sell, setSell] = useState(false);
-    const [userbids, setuserbids] = useState("");
-    const [tokenId, settokenId] = useState("");
-    const nftId = useParams().nftId;
-    console.log(nftlist);
+    const [modalShow, setModalShow] = useState(false);
+    const [nftdata, setnftdata] = useState("");
 
     const onClick = () => {
       console.log('좋아요?');
       check ? setCheck(false) : setCheck(true);
     }
     
-    const onUserBids = (e) => {
-        setuserbids(e.currentTarget.value)
-    }
-    const onTokenId = (e) => {
-        settokenId(e.currentTarget.value)
-    }
 
-//    function Bid(tokenId) {
-//        axios.post('/api/contract/bid', {tokenId:tokenId})
-//        .then((res) => {
-//         if(res.data.failed === false){
-//           alert('구매가 되지 않았습니다. 확인해주세요!!!, reason :'+res.data.reason)
-//         }else if(res.data.success){
-//           alert('구매가 완료되었습니다. 구매자의 mypage로 이동하겠습니다.')
-//           navigate('/user/myPage')
-//         }
-//      });
-//    }
-
-   const onSubmit = (e) => {
-    e.preventDefault() //새로고침방지
-    const variables = {
-        bids: userbids,
-        tokenId: e.target.value
+   function Auction(nftdata) {
+   
+    if (modalShow) {
+      setModalShow(false);
+    } else {
+      setModalShow(true);
     }
-    console.log(variables)
-    axios.post('/api/contract/bid', variables)
-       .then((res) => {
-        if(res.data.failed === false){
-          alert('입찰에 실패하였습니다. 확인해주세요!, reason :'+res.data.reason)
-        }else if(res.data.success){
-          alert('입찰이 완료되었습니다.')
-          navigate('/nft/auctionlist')
-        }
-     });
-   }
-
+     setnftdata(nftdata);
+    }
     
+  console.log(nftdata)
+  
   return (
 
 
@@ -91,26 +59,13 @@ function NFTauction({ nftlist }) {
                   </Card.Text>
                 </Card.Body>
                    <Card.Body style={{ display: "flex", marginLeft: '-3%', marginRight: '-9%' }}>
+                    
+                       <Button variant="warning" onClick={() => Auction(el)}>
+                         입찰 
+                       </Button>
 
-                       <Form onSubmit={onSubmit}>
+                       {modalShow === true ? <DetailAuction show={Auction} nftdata = {nftdata}/> : null}
 
-                           <input onChange={onUserBids} style={{ width: '200px'}}
-                           value={userbids}
-                           >
-
-                           </input>
-                    <div>
-                      <Button 
-                      variant="warning" 
-                      style={{fontWeight:"bold"}}
-                      value={el.tokenId} 
-                      onClick={onSubmit} >
-                      {/* onClick={()=>{Bid(el.tokenId)}} > */}
-                          입찰
-                    </Button>
-                    </div> 
-                    </Form>
-                 
                   <div style={{width:"55%"}}></div>
                   <LikeDisLike userId={localStorage.getItem('userId')} nftId={ el._id } />
                 </Card.Body>

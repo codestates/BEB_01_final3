@@ -362,15 +362,17 @@ module.exports = {
 			  gasLimit: 5000000,
 			  data: data,
 		  };
+		console.log("----- auction function start ----");
 		  try {
 			  const signedTx = await web3.eth.accounts.signTransaction(
 				  tx,
 				  serverPrivateKey
 			  );
+	    console.log("----- sign end -----");
 			 const hash = 
 			  await web3.eth.sendSignedTransaction(signedTx.rawTransaction)
 			  console.log(hash)
-
+		console.log("----- sign send end -----");
 			  if(hash) {
 				  if(privateKey !== undefined ) {
 				Nft.findOneAndUpdate(
@@ -418,18 +420,14 @@ module.exports = {
 
 	  bids: async(req, res) => {
 
-		const loginServer = req.user.publicKey;
-		serverAddress = await changeAuther(serverAddress, loginServer);
-		if (serverAddress === loginServer) {
-			serverPrivateKey = req.user.privateKey;
-		}
+		
 		const tokenId = req.body.tokenId;
 		const email = req.user.email;
 		const userInfo = await User.findOne({ email: email }).exec();
 		const buyer = userInfo.publicKey;
 		const bids = req.body.bids
 		const owner = await nftContract.methods.ownerOf(tokenId).call();
-	
+		console.log(bids, tokenId, buyer)
 		if (owner === buyer) {
 			console.log("owner is not buy");
 			res.json({ failed: false, reason: 'owner is not buy ' });
@@ -441,9 +439,9 @@ module.exports = {
 		.approveToken(buyer,process.env.NFTTOKENCA)
 		.encodeABI();
 		const nonce = await web3.eth.getTransactionCount(
-		serverAddress,
-		'latest'
-	);
+					serverAddress,
+					'latest'
+				);
 		const gasprice = await web3.eth.getGasPrice();
 		const gasPrice = Math.round(Number(gasprice) + Number(gasprice / 10));
 		const tx = {
@@ -458,7 +456,7 @@ module.exports = {
 			tx,
 			serverPrivateKey
 		);
-		console.log("----- purchaseToken function start ----");
+		console.log("----- bids function start ----");
 		const approveHash = await web3.eth.sendSignedTransaction(
 			signedTx.rawTransaction
 		);
@@ -488,11 +486,11 @@ module.exports = {
 						serverPrivateKey
 					);
 				
-					console.log("----- sign end ----");
+					console.log("----- sign end -----");
 					const sellHash = await web3.eth.sendSignedTransaction(
 						signedTx.rawTransaction
 					);
-					console.log("----- sign send end ----");
+					console.log("----- sign send end -----");
 					if(sellHash) {
 						Nft.findOneAndUpdate(
 							{ tokenId: tokenId },
@@ -512,6 +510,174 @@ module.exports = {
 	}catch (e) {
 		console.log(e);
 		res.json({ failed: false });
+	}
+	},
+
+	withdraw: async(req, res) => {
+		const tokenId = req.body.tokenId;
+		const email = req.user.email;
+		const userInfo = await User.findOne({ email: email }).exec();
+		const withdrawer = userInfo.publicKey;
+		
+		console.log(tokenId, withdrawer)
+		const data = await nwtContract.methods
+		.approveToken(process.env.NFTTOKENCA, process.env.NFTTOKENCA)
+		.encodeABI();
+		const nonce = await web3.eth.getTransactionCount(
+					serverAddress,
+					'latest'
+				);
+		const gasprice = await web3.eth.getGasPrice();
+		const gasPrice = Math.round(Number(gasprice) + Number(gasprice / 10));
+		const tx = {
+			from: serverAddress,
+			to: process.env.NWTTOKENCA,
+			nonce: nonce,
+			gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
+			gasLimit: 5000000,
+			data: data,
+		};
+		const signedTx = await web3.eth.accounts.signTransaction(
+			tx,
+			serverPrivateKey
+		);
+		console.log("----- withdraw function start ----");
+		const approveHash = await web3.eth.sendSignedTransaction(
+			signedTx.rawTransaction
+		);
+			if (approveHash) {
+					const data = await nftContract.methods
+						.withdraw(withdrawer, tokenId)
+						.encodeABI();
+					const nonce = await web3.eth.getTransactionCount(
+						serverAddress,
+						'latest'
+						);
+					const gasprice = await web3.eth.getGasPrice();
+					const gasPrice = Math.round(Number(gasprice) + Number(gasprice / 10));
+					const tx = {
+							from: serverAddress,
+							to: process.env.NFTTOKENCA,
+							nonce: nonce,
+							gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
+							gasLimit: 5000000,
+							data: data,
+						};
+				
+					const signedTx = await web3.eth.accounts.signTransaction(
+						tx,
+						serverPrivateKey
+					);
+				
+					console.log("----- sign end ----");
+					const sellHash = await web3.eth.sendSignedTransaction(
+						signedTx.rawTransaction
+					);
+					console.log(sellHash)
+					console.log("----- sign send end ----");
+			}
+	},
+	endauction: async(req, res) => {
+		const tokenId = req.body.tokenId;
+		const email = req.user.email;
+		const userInfo = await User.findOne({ email: email }).exec();
+		console.log(tokenId, userInfo)
+		const data = await nwtContract.methods
+		.approveToken(process.env.NFTTOKENCA, process.env.NFTTOKENCA)
+		.encodeABI();
+		const nonce = await web3.eth.getTransactionCount(
+					serverAddress,
+					'latest'
+				);
+		const gasprice = await web3.eth.getGasPrice();
+		const gasPrice = Math.round(Number(gasprice) + Number(gasprice / 10));
+		const tx = {
+			from: serverAddress,
+			to: process.env.NWTTOKENCA,
+			nonce: nonce,
+			gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
+			gasLimit: 5000000,
+			data: data,
+		};
+		const signedTx = await web3.eth.accounts.signTransaction(
+			tx,
+			serverPrivateKey
+		);
+		console.log("----- purchaseToken function start ----");
+		const approveHash = await web3.eth.sendSignedTransaction(
+			signedTx.rawTransaction
+		);
+			if (approveHash) {
+					const data = await nftContract.methods
+					.approveSale(process.env.NFTTOKENCA)
+					.encodeABI();
+					const nonce = await web3.eth.getTransactionCount(
+								serverAddress,
+								'latest'
+							);
+					const gasprice = await web3.eth.getGasPrice();
+					const gasPrice = Math.round(Number(gasprice) + Number(gasprice / 10));
+					const tx = {
+						from: serverAddress,
+						to: process.env.NFTTOKENCA,
+						nonce: nonce,
+						gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
+						gasLimit: 5000000,
+						data: data,
+					};
+					const signedTx = await web3.eth.accounts.signTransaction(
+						tx,
+						serverPrivateKey
+					);
+					console.log("----- EndAuction function start ----");
+					const endHash = await web3.eth.sendSignedTransaction(
+						signedTx.rawTransaction
+					);
+						if (endHash) {
+								const data = await nftContract.methods
+									.end(tokenId)
+									.encodeABI();
+								const nonce = await web3.eth.getTransactionCount(
+									serverAddress,
+									'latest'
+									);
+								const gasprice = await web3.eth.getGasPrice();
+								const gasPrice = Math.round(Number(gasprice) + Number(gasprice / 10));
+								const tx = {
+										from: serverAddress,
+										to: process.env.NFTTOKENCA,
+										nonce: nonce,
+										gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
+										gasLimit: 5000000,
+										data: data,
+									};
+							
+								const signedTx = await web3.eth.accounts.signTransaction(
+									tx,
+									serverPrivateKey
+								);
+							
+								console.log("----- sign end ----");
+								const sellHash = await web3.eth.sendSignedTransaction(
+									signedTx.rawTransaction
+								);
+								console.log(sellHash)
+								console.log("----- sign send end ----");
+								if(sellHash) {
+									Nft.findOneAndUpdate(
+										{ tokenId: tokenId },
+										{ sale: false },
+										(err, result) => {
+											console.log('DB success');
+											res.json({
+												success: true,
+												detail: 'success auction end',
+											});
+											if (err) console.log(err);
+										}
+									)
+								}
+						}
 	}
 	},
 
