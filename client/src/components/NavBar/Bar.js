@@ -18,6 +18,7 @@ import {
   logoutUser,
   searchNFT,
   searchContent,
+  Channel,
 } from "../../actions/user_action";
 import { BankOutlined } from "@ant-design/icons";
 import axios from "axios";
@@ -91,6 +92,27 @@ function Bar({ isLogin }) {
 			})
 		}
 
+    else if(searchOption === "CHANNEL"){
+      console.log("체널임?");
+
+      dispatch(Channel(search))
+				.then(response => {
+					console.log(response);
+				// setMessage(response.payload.message);
+				if(response.payload.success === true) {
+						console.log('bar.content', response);
+						navigate('/channel');
+				}
+				else if(response.payload.success === false) {
+						navigate('/SearchFail')
+						alert("실패");
+
+				}
+				
+				
+			})
+    }
+
     // navigate('/SearchNft');
     // window.location.replace('/Search');
   };
@@ -142,6 +164,15 @@ function Bar({ isLogin }) {
                   }}
                 >
                   CONTENT
+                </Dropdown.Item>
+                <Dropdown.Item
+                  type="option"
+                  // value={option}
+                  onClick={(e) => {
+                    setSearchOption("CHANNEL");
+                  }}
+                >
+                  CHANNEL
                 </Dropdown.Item>
               </DropdownButton>
               <FormControl

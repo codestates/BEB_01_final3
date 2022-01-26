@@ -7,7 +7,8 @@ import {
     LOGOUT_USER,
     MYPAGE,
     SEARCH_NFT,
-    SEARCH_CONTENT
+    SEARCH_CONTENT,
+    CHANNEL,
 } from './types';
 
 
@@ -100,4 +101,14 @@ export function myPageCheck(dataToSubmit) {
     type: MYPAGE,
     payload: request,
   };
+}
+
+export function Channel(dataToSubmit){
+    console.log("??", dataToSubmit);
+    const request = axios.post("/api/channel", dataToSubmit)
+    .then(response => response.data)
+    return {
+        type: CHANNEL,
+        payload: request,
+      };
 }

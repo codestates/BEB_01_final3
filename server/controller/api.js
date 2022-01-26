@@ -1200,4 +1200,49 @@ module.exports = {
 			});
 		}
 	},
+
+	searchChannelPage: async (req, res) => {
+		console.log("???", req.body);
+
+		const user = await User.find().find({
+			name: { $regex: req.body.name , $options: 'i' },
+		});
+
+		console.log("user?", user[0]._id);
+
+		Video.find({ writer: user[0]._id },(err, content) => {
+			const contentInfo = content;
+			if (contentInfo[0]) {
+				res.status(201).json({
+					success: true,
+					data: contentInfo,
+					type: 'Content',
+				});
+			} else {
+				res.json({ success: false });
+			}
+			console.log("????", contentInfo);
+		});
+
+		
+		
+
+			
+			// Video.find({writer: user[0]._id}), (err, video) => {
+			// 	console.log("video", video);
+			// 	if (video[0]) {
+			// 		res.status(201).json({
+			// 			success: true,
+			// 			videodata: video,
+			// 			userdata: user,
+			// 		});
+					
+			// 	} else {
+			// 		res.json({ success: false });
+			// 	}
+			// }
+
+			
+		
+	},
 };
