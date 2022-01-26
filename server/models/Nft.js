@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
 // tokenId, nftName, imgUrl, description, 발행자:(주식회사Watto), tokenUrl
 // 좋아요, 즐겨찾기 칼럼 추가하기
 const nftSchema = mongoose.Schema({
