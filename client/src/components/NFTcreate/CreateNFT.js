@@ -84,7 +84,7 @@ const { Title, Text } = Typography
               
             if(res.data.success){
                 setLoading(false)
-                navigate('/nft/list');
+                navigate('/user/myPage');
             }else if(res.data.failed === false){
                 setLoading(false)   
                 alert(res.data.reason)
@@ -145,7 +145,7 @@ const { Title, Text } = Typography
                     <div style={{backgroundColor:"black", marginTop:"3%"}}>
                     <label style={{fontSize:"3rem",fontFamily:"fantasy",color:"red"}}>Content Title </label>
                     </div>
-                    <Input onChange={(e)=>{setContentTitle(e.target.value)}} style={{color:"white",backgroundColor:"black",borderBottom:"1px dashed red"}} />
+                    <Input onChange={(e)=>{setContentTitle(e.target.value)}} style={{color:"white",backgroundColor:"black"}} />
                     <div style={{backgroundColor:"black", marginTop:"3%"}}>
                     <label style={{fontSize:"3rem",fontFamily:"fantasy",color:"red"}}>NFT NAME </label>
                     </div>

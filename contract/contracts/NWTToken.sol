@@ -15,7 +15,7 @@ contract NWTToken is ERC20, Ownable {
         // owner2 = serverAddress;
     }
     
-    function mintToken(address to, uint256 amount, address contractAddress1, address contractAddress2) public onlyOwner returns (bool) {  // NFT 구매할 FT 토큰
+    function mintToken(address to, uint256 amount) public onlyAuthorized returns (bool) {  // NFT 구매할 FT 토큰
         require(to != address(0x0));
         require(amount > 0);
         _mint(to, amount);
@@ -31,7 +31,7 @@ contract NWTToken is ERC20, Ownable {
         _approve(owner,spender,amount);
     }
 
-    function multiMintToken(address[] calldata toArr, uint256[] calldata amountArr) public onlyOwner returns (bool) {
+    function multiMintToken(address[] calldata toArr, uint256[] calldata amountArr) public onlyAuthorized returns (bool) {
         require(toArr.length == amountArr.length);
         for (uint256 i=0; i<toArr.length; i++) {
             require(toArr[i] != address(0x0));

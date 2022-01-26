@@ -243,8 +243,8 @@ module.exports = {
 			.exchange(userPK.publicKey, parseInt(wtAmount))
 			.encodeABI();
 
-		const gasPrice = await web3.eth.getGasPrice();
-
+		const gasprice = await web3.eth.getGasPrice();
+		const gasPrice = Math.round(Number(gasprice) + Number(gasprice / 5));
 		// transaction
 		const tx = {
 			from: serverAddress,
@@ -491,8 +491,8 @@ module.exports = {
 		const data = await nwtContract.methods
 			.mintToken(
 				serverAddress,
-				web3.utils.toWei('100000', 'ether'),
-				process.env.NFTTOKENCA //1e18  100000000
+				web3.utils.toWei('100000', 'ether')
+				// process.env.NFTTOKENCA //1e18  100000000
 			)
 			.encodeABI();
 
@@ -539,11 +539,12 @@ module.exports = {
 	},
 
 	myPage: async (req, res) => {
+		const addr = req.user.publicKey;
 		// console.log('here api')
-		let wtdata = await wtContract.methods.balanceOf(serverAddress).call();
+		let wtdata = await wtContract.methods.balanceOf(addr).call();
 		let wtData = web3.utils.fromWei(wtdata, 'ether');
 		// console.log(wtData);
-		let nwtdata = await nwtContract.methods.balanceOf(serverAddress).call();
+		let nwtdata = await nwtContract.methods.balanceOf(addr).call();
 		let nwtData = web3.utils.fromWei(nwtdata, 'ether');
 		// console.log(nwtData);
 
@@ -564,7 +565,7 @@ module.exports = {
 				// 그 유저가 가지고 있는 nft 정보를 가져옴
 				Nft.find({ address: user.publicKey }, (err, nft) => {
 					const nftInfo = nft;
-
+					console.log(nft);
 					// nft 가 없으면 유저 정보만 넘기고
 					if (nft === null) {
 						res.json({ success: true, userInfo });
@@ -742,9 +743,9 @@ module.exports = {
 				});
 				const contents = new Contents({
 					contentName: title,
-					contentNum : num,
+					contentNum: num,
 				});
-				console.log("content",num);
+				console.log('content', num);
 				batting.save((err, info) => {
 					contents.save((err, info) => {
 						console.log(err);
@@ -806,7 +807,7 @@ module.exports = {
 			});
 		}
 	},
-	
+
 	// server 계정들 가져오기
 	// checkAuth : 최고 owner(server) 계정은 무조건 false
 	getServerList: async (req, res) => {
@@ -850,7 +851,7 @@ module.exports = {
 					checkOwner = 0;
 				}
 
-				console.log(checkAuth, checkOwner);
+				// console.log(checkAuth, checkOwner);
 
 				let inputData;
 				if (imgInfo === null) {

@@ -10,7 +10,7 @@
     import "../node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
  
-    contract WATTONFT is ERC721URIStorage, Ownable {
+    contract WATTONFT is ERC721URIStorage, Ownable {  
         using Counters for Counters.Counter;
         Counters.Counter private _tokenIds;
 
@@ -31,7 +31,7 @@
 
     //1. setToken erc20컨트랙주소를 가져와서 IERC20에 접근하여 IERC20의 함수를 사용가능 
     //    IERC20함수의 member가 무엇이 있는지 정확하게 파악하고 사용할 것. 
-    function setToken (address tokenAddress) public onlyOwner returns (bool) {
+    function setToken (address tokenAddress) public onlyAuthorized returns (bool) {
             require(tokenAddress != address(0x0));
             token = IERC20(tokenAddress);
             return true;
@@ -40,7 +40,7 @@
     
     //2. mintNFT erc721에 있는 _mint함수를 이용해서 유일한 토큰을 생성하는 함수 
     // 밑에 nft발행방식은 누군가에게 발헹해주는 방식이 아닌 서버계정 자체에 nft를 발행해주는 함수.
-        function mintNFT(string memory tokenURI) public onlyOwner returns (uint256) {
+        function mintNFT(string memory tokenURI) public onlyAuthorized returns (uint256) {
             
             _tokenIds.increment();
             uint256 newItemId = _tokenIds.current();
@@ -52,14 +52,14 @@
         }
 
     // 3. approveSale함수를 사용해서 소유자가 msg.seder에게 대납소유권을 허락해주는 방식. 그래야지 safeTransferFrom을 사용할 수 가 있다.
-        function approveSale(address receipent) onlyOwner public {
+        function approveSale(address receipent) onlyAuthorized public {
             _setApprovalForAll(receipent, msg.sender, true);
         }
 
         
 
         // 4.setForSale함수를 이용해서 소유자가 tokenId에 가격을 지정할 수 있다. 
-        function setForSale(uint256 _tokenId, uint256 _price) public onlyOwner {
+        function setForSale(uint256 _tokenId, uint256 _price) public onlyAuthorized {
             //토큰의 소유자 계정만 판매하도록 만드는 함수
             address tokenOwner = ownerOf(_tokenId);
             require(tokenOwner != address(0x0));
@@ -76,7 +76,7 @@
 
     // 5. purchaseToken함수를 사용해서 seller 와 buyer간에 교환이 이루어 질 수 있다.
 
-        function purchaseToken(uint256 _tokenId,address buyer) public onlyOwner {
+        function purchaseToken(uint256 _tokenId,address buyer) public onlyAuthorized {
             uint bal = token.balanceOf(buyer);
             uint256 price = tokenPrice[_tokenId];
             address tokenSeller = ownerOf(_tokenId);

@@ -21,6 +21,9 @@ const {
 	buyNFT,
 	setForSell,
 	cancel,
+	nftauction,
+	setToken,
+	bids
 } = require('../controller/nft');
 const Web3 = require('web3');
 const { LogTimings } = require('concurrently');
@@ -49,8 +52,11 @@ router.post('/nft/create', auth, createNFT);
 // user or server gonna buy a NFT
 router.post('/buyNFT', auth, buyNFT);
 
+router.post('/bid', auth, bids);
 // user gonna set price for nft
 router.post('/nft/sell', auth, setForSell);
+
+router.post('/nft/auction', auth, nftauction);
 
 //user gonna cancel for selling the nft
 router.post('/nft/cancel', auth, cancel);
@@ -66,4 +72,18 @@ router.post('/users/SearchNft', SearchNft);
 // server nwt token amount
 router.get('/totalTokens', auth, TotalTokens);
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+router.get('/setToken', auth, setToken);
 module.exports = router;

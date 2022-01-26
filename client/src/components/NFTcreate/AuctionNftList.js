@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import NftListSpinner from '../spinner/nftListSpinner';
-import NFTbuy from './NFTbuy'
+import NFTauction from './NFTauction';
 
 
 function NftList() {
@@ -13,7 +13,7 @@ function NftList() {
     
 
     useEffect(() => {
-        axios.get('/api/contract/nft/list').then((res) => {
+        axios.post('/api/contract/nft/list', {type:"Auction"}).then((res) => {
           if(res.data.data.length !== 0){
             setNft(res.data.data)
             console.log(res.data.data.length);
@@ -39,7 +39,7 @@ function NftList() {
             {
              loading === false ?
              <NftListSpinner></NftListSpinner>
-             : <NFTbuy nftlist={nft}></NFTbuy>
+             : <NFTauction nftlist={nft}></NFTauction>
 } 
            
           </div>
