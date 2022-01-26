@@ -131,50 +131,9 @@ function MyPage() {
   
 
  
-  function sellNFT(tokenId, imgUri) {
-    // console.log(userInfo.privateKey);
-    // console.log(userInfo.image === imgUri);
-    
-    if (userInfo.image === imgUri) {
-      setProfile(wtImg);
-      axios 
-        .post("/api/contract/nft/sell", {
-          tokenId,
-          sellPrice,
-          privateKey:userInfo.privateKey
-        })
-        .then((res) => {
-          if (res.data.success) {
-            window.location.reload();
-          }
-        });
-    } else {
-      axios
-        .post("/api/contract/nft/sell", {
-          tokenId,
-          sellPrice,
-        })
-        .then((res) => {
-          if (res.data.success) {
-            window.location.reload();
-          }
-        });
-    }
-    
-   
-  }
+  
 
-  function cancel(tokenId) {
-    console.log(tokenId);
-
-    axios
-      .post("/api/contract/nft/cancel", { tokenId })
-      .then((res) => {
-        if (res.data.success) {
-          window.location.reload();
-        }
-      });
-  }
+  
   
   function pfp(a) {
    

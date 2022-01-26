@@ -3,8 +3,10 @@ const router = express.Router();
 // const { Video } = require("../models/Video");
 const multer = require("multer");
 const ffmpeg = require("fluent-ffmpeg");
-const {Video} = require("../models/Video");
-const { SearchContent,videoUpload } = require('../controller/api');
+const { Video } = require("../models/Video");
+const { Batting } = require('../models/batting');
+const { SearchContent, videoUpload } = require('../controller/api');
+const { closeSerial } = require('../controller/batting')
 
 
 let storage = multer.diskStorage({
@@ -110,13 +112,15 @@ router.post("/thumbnail", (req, res) => {
     });
 });
 
-router.post("/getVideoDetail", (req, res) => {
+router.post("/getVideoDetail", async (req, res) => {
+  const closeInfo = await Batting.find({ videoId: req.body.videoId }).exec();
+  const close = {contentsName : closeInfo[0].contentsName, serial : closeInfo[0].serial}
   console.log('detail',req.body);
   Video.findOne({ _id: req.body.videoId })
     .populate("writer")
     .exec((err, videoDetail) => {
       if (err) return res.status(400).send(err);
-      return res.status(200).json({ success: true, videoDetail });
+      return res.status(200).json({ success: true, videoDetail, close });
     });
 });
 
@@ -144,6 +148,9 @@ router.post('/image', (req, res) => {
   })
 
 })
+
+
+router.post('/closeSerial', closeSerial);
 
 
 module.exports = router;
