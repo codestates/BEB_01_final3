@@ -59,11 +59,12 @@ function MyNft () {
     // console.log(userInfo.privateKey);
     // console.log(userInfo.image === imgUri);
     if (userInfo.image === imgUri) {
+      console.log("이미지가 똑같네?");
       axios 
         .post("/api/contract/nft/sell", {
           tokenId,
           sellPrice,
-          privateKey: userInfo.privateKey
+          privateKey : userInfo.privateKey
         })
         .then((res) => {
           if (res.data.success) {
