@@ -16,7 +16,7 @@ function VideoDetailPage(props) {
 	const [VideoDetail, setVideoDetail] = useState([]);
 	const [Comments, setComments] = useState([]);
 
-	console.log(variable);
+	console.log(videoId);
 
 	useEffect(() => {
 		axios.post('/api/video/getVideoDetail', variable).then((response) => {
