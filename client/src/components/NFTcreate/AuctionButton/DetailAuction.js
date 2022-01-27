@@ -6,22 +6,44 @@ import styled from "styled-components";
 import Swal from "sweetalert2";
 import { ShakeOutlined , RiseOutlined, AlignLeftOutlined, ContainerOutlined, RedditSquareFilled} from '@ant-design/icons';
 const ContainerDiv = styled.div`
+
 display: flex;
 flex-direction: column;
 justify-content: center;
 `
 const BasicDiv = styled.div`
+height: 100%;
 display: flex;
 flex-wrap: wrap;
 justify-content: center;
- 
+margin: auto;
 `;
+const BottomDiv = styled.div`
+display: flex;
+flex-wrap: wrap;
+flex-direction: column;
+justify-content: center;
+`;
+
+const SideDiv = styled.div`
+  /* max-width: 100%;
+  min-height: 40rem; */
+  width: 25rem;
+  /* background: #fffffe; */
+  display: flex;
+  flex-direction: column  ;
+  justify-content: baseline;
+  align-items: center;
+  margin: 10px;
+  border-radius: 1em;
+`;
+
 const ImgDiv = styled.div`
-  max-width: 100%;
-  min-height: 40rem;
+  width: 40rem;
+  height: 25rem;
   background: #fffffe;
   display: flex;
-  justify-content: baseline;
+  justify-content: center;
   align-items: center;
   margin: 10px;
   border: 2px solid #e2dede;
@@ -39,7 +61,7 @@ const TitleDiv = styled.div`
   font-size: 1cm;
   font-weight: bolder;
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
-  margin-left: 50px;
+  margin-left: 20px;
 `;
 
 const SubTitleDiv = styled.div`
@@ -69,8 +91,8 @@ const ContentDiv = styled.div`
 `;
 
 const TopBoxDiv = styled.div`
-  max-width: 100%;
-  min-height: 3rem;
+  width: 100%;
+  height: 6rem;
   display: flex;
   border: 2px solid #e2dede;
   border-bottom: none;
@@ -78,15 +100,21 @@ const TopBoxDiv = styled.div`
   border-top-right-radius: 1em;
 `;
 const MiddleTitleDiv = styled.div`
-  max-width: 100%;
-  min-height: 4rem;
+  width: 100%;
+  height: 4 rem;
   display: flex;
   border: 2px solid #e2dede;
   border-bottom: none;
 `;
+const OfferDiv = styled.div`
+  width: 90%;
+  height: 4rem;
+  display: flex;  
+  border-bottom: none;
+`;
 const MiddleBoxDiv = styled.div`
-  max-width: 100%;
-  min-height: 4rem;
+ width: 100%;
+  height: 6rem;
   display: flex;
   border: 2px solid #e2dede;
   border-top: none;
@@ -94,8 +122,8 @@ const MiddleBoxDiv = styled.div`
 `;
 
 const MiddleRightBoxDiv = styled.div`
-  max-width: 100%;
-  min-height: 4rem;
+  width: 100%;
+  height: 4rem;
   display: flex;
   border: 2px solid #e2dede;
   border-top: none;
@@ -117,8 +145,9 @@ const BidFirst = styled.div`
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  background-color: gray;
   justify-content: space-between;
-  border-bottom: 2px dashed black;
+  border: 1px solid #e2dede;
 `
 const BidSecond = styled.div`
   display: flex;
@@ -129,13 +158,13 @@ const BidSecond = styled.div`
 const BidsDiv = styled.div`
   width: 30%;
   display: flex;
-  background-color:#eee;
+  background-color: gray;
   align-items: center;
 `;
 const BidIcon = styled.p`
    text-align: center;
    width: 100%;
-   background-color: white;
+   background-color: gray;
    color: black;
    margin: 0;
 `
@@ -153,16 +182,16 @@ function DetailAuction(props) {
   
 
   useEffect(() => {
-   
+    setTopPrice(props.nftdata.price); 
     const beforeData = props.nftdata.bids;
     if (beforeData[0] !== undefined) {
       setTopPrice(beforeData[beforeData.length - 1].bid);
     } else {
-      setTopPrice(props.nftdata.price);
-    }
-  
+     
+    }  
     
   },[])
+
 
   const onUserBids = (e) => {
     setuserbids(e.currentTarget.value);
@@ -242,13 +271,13 @@ function DetailAuction(props) {
           "입찰 종료가 실패하였습니다 확인해주세요!, reason :" + res.data.reason
         );
       } else if (res.data.success) {
-        alert("입찰 종료가 성공적으로 진행되었습니다");
+        alert("입찰 종료가 성공적으로 진행되었습니다.");
         navigate("/nft/auctionlist");
       }
     });
   };
   return (
-    <Modal {...props} size="xl" aria-labelledby="contained-modal-title-vcenter">
+    <Modal {...props}  size="xl " aria-labelledby="contained-modal-title-vcenter">
       <Modal.Body className="show-grid">
         <ContainerDiv>
         <TitleDiv>{props.nftdata.contentTitle}</TitleDiv>
@@ -257,15 +286,14 @@ function DetailAuction(props) {
                 <Card.Img
                   variant="top"
                   src={props.nftdata.imgUri}
-                  style={{ height: "100%", width: "100%" }}
+                  style={{ height: "70%", width: "70%" }}
                 />
-              </ImgDiv>
-            
-              </BasicDiv>
-            
+            </ImgDiv>
+            <SideDiv>
 
-            
-
+            <TopBoxDiv>
+                <SubTitleDiv><AlignLeftOutlined style={{marginRight: '6px'}}/>Desctiption</SubTitleDiv>
+              </TopBoxDiv>
               <MiddleBoxDiv>
                 <ContentDiv>{props.nftdata.description}</ContentDiv>
               </MiddleBoxDiv>
@@ -276,7 +304,6 @@ function DetailAuction(props) {
               <MiddleBoxDiv>
                 <TitleDiv>{topPrice} NWT</TitleDiv>
               </MiddleBoxDiv>
-
               <MiddleRightBoxDiv>
                 <input
                   onChange={onUserBids}
@@ -289,7 +316,7 @@ function DetailAuction(props) {
                     marginRight: '10px',
                   }}
                   value={userbids}
-                  placeholder="                                                       NWT"
+                  placeholder="NWT"
                 ></input>
 
                 <Button
@@ -302,12 +329,15 @@ function DetailAuction(props) {
                     Bid
                 </Button>
               </MiddleRightBoxDiv>
-
-              <MiddleBoxDiv>
+             </SideDiv>
+            
+          </BasicDiv>
+            <BottomDiv>
+              <OfferDiv>
                 <SubTitleDiv>
                   <ContainerOutlined style={{ margin: '6px' }} />Offer
                 </SubTitleDiv>
-              </MiddleBoxDiv>
+              </OfferDiv>
               <BottomBoxDiv>
                 <BidFirst>
                 <BidsDiv>
@@ -328,7 +358,7 @@ function DetailAuction(props) {
                           <BidIcon>{el.bidAddress}</BidIcon>
                         </BidsDiv>
                         <BidsDiv>
-                      <BidIcon>el.bidAddress</BidIcon>
+                      <BidIcon>{el.bidAddress}</BidIcon>
                         </BidsDiv>
                         <BidsDiv>
                           <BidIcon>{el.bid}</BidIcon>
@@ -337,24 +367,16 @@ function DetailAuction(props) {
                     )
                   })}
                 </BidSecond>
-              </BottomBoxDiv>
-       
-
-         
-              <Button onClick={onClick}>Bid Cancle</Button>
-            
-
-          
-              <Button>Transaction</Button>
-           
-           
-            <Button variant="danger" onClick={EndAuction}>
-                입찰 종료
-            </Button>
-         
-        </ContainerDiv>
+            </BottomBoxDiv>
+            </BottomDiv>
+              </ContainerDiv>
       </Modal.Body>
       <Modal.Footer>
+      <Button onClick={onClick}>Bid Cancle</Button> 
+            <Button>Transaction</Button>
+          <Button variant="danger" onClick={EndAuction}>
+              입찰 종료
+          </Button>
         <Button onClick={props.show}>Close</Button>
       </Modal.Footer>
     </Modal>
