@@ -38,26 +38,13 @@ const nftSchema = mongoose.Schema({
 		type: String,
 		default: '',
 	},
+	spender: {
+		type: String,
+		default:'',
+	},
 	bids: {
-		ownerAddress: {
-			type: String,
-		},
-		bidAdress: {
-			type: Schema.Types.ObjectId,
-			ref: 'User',
-		},
-		bid: {
-			type: Number,
-		},
-		biddest: {
-			type: Boolean,
-		},
-		bidding: {
-			type: Boolean,
-		},
-		tx: {
-			type: String,
-		},
+		type : Array,
+		default:[],
 	},
 });
 

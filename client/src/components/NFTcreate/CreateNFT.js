@@ -18,7 +18,7 @@ import Swal from "sweetalert2";
 const FirstDiv = styled.div`
 max-width: 100%;
 min-height: 50rem;
-background:#eee;
+background: rgb(40,40,40);
 display: flex;
 justify-content: center;
 align-items: center;
@@ -47,8 +47,8 @@ align-items: center;
 const ImgDiv = styled.div`
 width: 90%;
 height: 35rem;
-background: url(https://ipfs.io/ipfs/QmXH3pqhUy2U82oN1XMeP4oqtqvh8Vt44opaDnLrye3mgd) no-repeat center;
-background-size: 50% 15rem;
+background: url(https://media.discordapp.net/attachments/927789146494369835/936276516264874094/WNT-logo.png?width=628&height=611) no-repeat center;
+background-size: 50% 20rem;
 outline: none;
 cursor: pointer;
 border-radius: 5%;
@@ -124,7 +124,7 @@ const CreateNFT = (props) => {
     
     
     const onHandleChange = (event) => {
-        console.log(contentTitle);
+ 
         event.preventDefault();
         setFiles(event.target.files[0]);
         let fileReader = new FileReader();
@@ -194,12 +194,7 @@ const CreateNFT = (props) => {
                 Swal.fire({
                   icon: 'error',
                   title: res.data.reason ,  
-                  // showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
-                  // confirmButtonColor: '#3085d6', // confrim 버튼 색깔 지정
-                  // cancelButtonColor: '#d33', // cancel 버튼 색깔 지정
-                  // confirmButtonText: '승인', // confirm 버튼 텍스트 지정
-                  // cancelButtonText: '취소', // cancel 버튼 텍스트 지정
-                  // reverseButtons: true, // 버튼 순서 거꾸로
+
                 }).then(res => {
                   setLoading(false)   
                   return;

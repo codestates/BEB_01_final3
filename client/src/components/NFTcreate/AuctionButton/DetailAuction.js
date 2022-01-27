@@ -1,10 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Col, Row, Modal, Button, Container, Card } from "react-bootstrap";
 import styled from "styled-components";
-import { ShakeOutlined , RiseOutlined, AlignLeftOutlined, ContainerOutlined} from '@ant-design/icons';
-
+import Swal from "sweetalert2";
+import { ShakeOutlined , RiseOutlined, AlignLeftOutlined, ContainerOutlined, RedditSquareFilled} from '@ant-design/icons';
+const ContainerDiv = styled.div`
+display: flex;
+flex-direction: column;
+justify-content: center;
+`
+const BasicDiv = styled.div`
+display: flex;
+flex-wrap: wrap;
+justify-content: center;
+ 
+`;
 const ImgDiv = styled.div`
   max-width: 100%;
   min-height: 40rem;
@@ -23,6 +34,7 @@ const TitleDiv = styled.div`
   background: #fffffe;
   display: flex;
   justify-content: baseline;
+  border-bottom: 2px solid #e2dede; 
   align-items: center;
   font-size: 1cm;
   font-weight: bolder;
@@ -95,37 +107,107 @@ const BottomBoxDiv = styled.div`
   max-width: 100%;
   min-height: 17rem;
   display: flex;
-  border: 2px solid #e2dede;
+  flex-wrap: wrap;
+  flex-direction: column;
   border-top: none;
   border-bottom-left-radius: 1em;
   border-bottom-right-radius: 1em;
 `;
+const BidFirst = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px dashed black;
+`
+const BidSecond = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+`
+const BidsDiv = styled.div`
+  width: 30%;
+  display: flex;
+  background-color:#eee;
+  align-items: center;
+`;
+const BidIcon = styled.p`
+   text-align: center;
+   width: 100%;
+   background-color: white;
+   color: black;
+   margin: 0;
+`
+
 
 function DetailAuction(props) {
-  console.log(props.nftdata);
+  
+  
 
   const navigate = useNavigate();
   const [userbids, setuserbids] = useState("");
+  const [topPrice, setTopPrice] = useState('');
+
+ 
+  
+
+  useEffect(() => {
+   
+    const beforeData = props.nftdata.bids;
+    if (beforeData[0] !== undefined) {
+      setTopPrice(beforeData[beforeData.length - 1].bid);
+    } else {
+      setTopPrice(props.nftdata.price);
+    }
+  
+    
+  },[])
 
   const onUserBids = (e) => {
     setuserbids(e.currentTarget.value);
   };
 
+
   const onSubmit = (e) => {
     e.preventDefault(); //새로고침방지
+   
+
+    const beforeData = props.nftdata.bids;
+    let beforeBuyer;
+    let beforePrice = props.nftdata.price;
+    if (beforeData[0] !== undefined) {
+      beforeBuyer = beforeData[beforeData.length - 1].bidAddress;
+      beforePrice = beforeData[beforeData.length - 1].bid
+    }
+
+    setTopPrice(beforePrice);
+    
     const variables = {
       bids: userbids,
       tokenId: props.nftdata.tokenId,
+      beforeBuyer,
+      beforePrice
     };
-    console.log(variables);
+   
     axios.post("/api/contract/bid", variables).then((res) => {
-      if (res.data.failed === false) {
-        alert(
-          "입찰에 실패하였습니다. 확인해주세요!, reason :" + res.data.reason
-        );
+  
+      if (res.data.success === false) {
+        Swal.fire({
+          icon: 'error',
+          title: res.data.detail,
+        }).then(res => {
+          return
+        })
       } else if (res.data.success) {
-        alert("입찰이 완료되었습니다.");
-        navigate("/nft/auctionlist");
+        Swal.fire({
+          icon: 'success',
+          title: '입찰에 성공했습니다.',
+        }).then(res => {
+          navigate("/nft/auctionlist");
+          return
+        })
+    
       }
     });
   };
@@ -135,7 +217,7 @@ function DetailAuction(props) {
     const variables = {
       tokenId: props.nftdata.tokenId,
     };
-    console.log(props.nftdata.tokenId);
+   
     axios.post("/api/contract/withdraw", variables).then((res) => {
       if (res.data.faild === false) {
         alert(
@@ -153,14 +235,14 @@ function DetailAuction(props) {
     const variables = {
       tokenId: props.nftdata.tokenId,
     };
-    console.log(props.nftdata.tokenId);
+  
     axios.post("/api/contract/endauction", variables).then((res) => {
       if (res.data.faild === false) {
         alert(
           "입찰 종료가 실패하였습니다 확인해주세요!, reason :" + res.data.reason
         );
       } else if (res.data.success) {
-        alert("입찰 종료가 성공적으로 진행되었습니다.");
+        alert("입찰 종료가 성공적으로 진행되었습니다");
         navigate("/nft/auctionlist");
       }
     });
@@ -168,9 +250,9 @@ function DetailAuction(props) {
   return (
     <Modal {...props} size="xl" aria-labelledby="contained-modal-title-vcenter">
       <Modal.Body className="show-grid">
-        <Container>
-          <Row>
-            <Col xs={12} md={8}>
+        <ContainerDiv>
+        <TitleDiv>{props.nftdata.contentTitle}</TitleDiv>
+          <BasicDiv>
               <ImgDiv>
                 <Card.Img
                   variant="top"
@@ -178,13 +260,11 @@ function DetailAuction(props) {
                   style={{ height: "100%", width: "100%" }}
                 />
               </ImgDiv>
-            </Col>
-            <Col xs={6} md={4}>
-              <TitleDiv>{props.nftdata.contentTitle}</TitleDiv>
+            
+              </BasicDiv>
+            
 
-              <TopBoxDiv>
-                <SubTitleDiv><AlignLeftOutlined style={{marginRight: '6px'}}/>Desctiption</SubTitleDiv>
-              </TopBoxDiv>
+            
 
               <MiddleBoxDiv>
                 <ContentDiv>{props.nftdata.description}</ContentDiv>
@@ -194,7 +274,7 @@ function DetailAuction(props) {
                 <SubTitleDiv><RiseOutlined style={{margin: '6px'}}/>Top Bid</SubTitleDiv>
               </MiddleTitleDiv>
               <MiddleBoxDiv>
-                <TitleDiv>{props.nftdata.price} NWT</TitleDiv>
+                <TitleDiv>{topPrice} NWT</TitleDiv>
               </MiddleBoxDiv>
 
               <MiddleRightBoxDiv>
@@ -224,29 +304,55 @@ function DetailAuction(props) {
               </MiddleRightBoxDiv>
 
               <MiddleBoxDiv>
-                <SubTitleDiv><ContainerOutlined style={{margin: '6px'}}/>Offer</SubTitleDiv>
+                <SubTitleDiv>
+                  <ContainerOutlined style={{ margin: '6px' }} />Offer
+                </SubTitleDiv>
               </MiddleBoxDiv>
               <BottomBoxDiv>
-                <ContentDiv> 구현 예정</ContentDiv>
+                <BidFirst>
+                <BidsDiv>
+                  <BidIcon>사람</BidIcon>
+                  </BidsDiv>               
+                <BidsDiv>
+                  <BidIcon>주소</BidIcon>
+                  </BidsDiv>
+                <BidsDiv>
+                  <BidIcon>금액</BidIcon>
+                  </BidsDiv>
+                </BidFirst>
+                <BidSecond>
+                  {props.nftdata.bids.map(el => {
+                    return (
+                      <>
+                         <BidsDiv>
+                          <BidIcon>{el.bidAddress}</BidIcon>
+                        </BidsDiv>
+                        <BidsDiv>
+                      <BidIcon>el.bidAddress</BidIcon>
+                        </BidsDiv>
+                        <BidsDiv>
+                          <BidIcon>{el.bid}</BidIcon>
+                  </BidsDiv>
+                        </>
+                    )
+                  })}
+                </BidSecond>
               </BottomBoxDiv>
-            </Col>
-          </Row>
+       
 
-          <Row>
-            <Col xs={20} md={4}>
+         
               <Button onClick={onClick}>Bid Cancle</Button>
-            </Col>
+            
 
-            <Col xs={20} md={4}>
+          
               <Button>Transaction</Button>
-            </Col>
-            <Col xs={20} md={4}>
+           
+           
             <Button variant="danger" onClick={EndAuction}>
                 입찰 종료
             </Button>
-            </Col>
-          </Row>
-        </Container>
+         
+        </ContainerDiv>
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={props.show}>Close</Button>
