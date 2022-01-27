@@ -6,6 +6,8 @@ import axios from "axios";
 import FixedModal  from './FixedModal';
 import AuctionModal  from './AuctionModal';
 import LikeDisLike from "../NFTcreate/LikeDisLike";
+import Swal from "sweetalert2";
+
 
 function MyNft () {
     const [nftInfo, setNftInfo] = useState([]);
@@ -67,9 +69,18 @@ function MyNft () {
           privateKey : userInfo.privateKey
         })
         .then((res) => {
-          if (res.data.success) { 
+       
+          if (res.data.success) {
             setProfile(wtImg);
             window.location.reload();
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'price need to number' ,  
+            }).then(res => {
+              setFixed(false);
+              return
+            })
           }
         });
     } else {
@@ -79,8 +90,17 @@ function MyNft () {
           sellPrice,
         })
         .then((res) => {
+          console.log(res);
           if (res.data.success) {
             window.location.reload();
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'price need to number',  
+            }).then(res => {
+              setFixed(false);
+              return;
+            })
           }
         });
     }

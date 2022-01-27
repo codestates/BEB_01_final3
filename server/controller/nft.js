@@ -57,9 +57,8 @@ module.exports = {
 		if (serverAddress === loginServer) {
 			serverPrivateKey = req.user.privateKey;
 		}
-		console.log(serverAddress);
-		console.log(req.body);
-		// console.log(loginServer, serverAddress);
+		
+	
 		//===================  server 계정 변환 테스트
 		const { contentTitle, nftName, nftDescription, imgURI, tokenURI } =
 			req.body.result;
@@ -75,8 +74,7 @@ module.exports = {
 			const gasPrice = Math.round(
 				Number(gasprice) + Number(gasprice / 10)
 			);
-           console.log(gasprice);
-           console.log(gasPrice);
+        
 			const tx = {
 				from: serverAddress,
 				to: process.env.NFTTOKENCA,
@@ -232,11 +230,12 @@ module.exports = {
 		//가격에 숫자이외의 문자가 들어오지 않게 하기위한 정규식
 		var regexp = /^[0-9]*$/;
 		if (!regexp.test(sellPrice)) {
-			console.log(1);
+			console.log('숫자만입력해주세욧');
 			res.json({
-				fail: false,
+				fail : false,
 				detail: '정확한 가격을 작성해주세요!!',
 			});
+			return
 		}
 
 		if (owner !== dbOwner[0].address) {
