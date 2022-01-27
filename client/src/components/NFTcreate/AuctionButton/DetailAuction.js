@@ -242,7 +242,7 @@ function DetailAuction(props) {
           "입찰 종료가 실패하였습니다 확인해주세요!, reason :" + res.data.reason
         );
       } else if (res.data.success) {
-        alert("입찰 종료가 성공적으로 진행되었습니다.");
+        alert("입찰 종료가 성공적으로 진행되었습니다");
         navigate("/nft/auctionlist");
       }
     });
