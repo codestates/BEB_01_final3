@@ -36,10 +36,13 @@ function NFTauction({ nftlist }) {
 
 
     <>
+
     {
              nftlist.map((el)=>{
                return(
-                <Card style={{ width: '19rem', margin:"1.5%", cursor:"pointer"}} bg='black' text='white' border='white'>
+                // <a href={`/nft/${el.tokenId}`} style={{textDecoration: 'none'}}  >
+              
+                <Card style={{ width: '19rem', margin:"1.5%", cursor:"pointer"}} bg='black' text='white' border='white' >
                 <Card.Img variant="top" src={el.imgUri} style={{height:'100%', width:'100%', }} />
                 <Card.Body style={{marginBottom: '0px', borderBottom: '1px solid #DCDCDC'}}>
                   <Card.Title style={{textAlign:'left', marginTop: '3%', marginLeft:'-3%'}}>
@@ -72,11 +75,13 @@ function NFTauction({ nftlist }) {
                   
                 
               </Card>
-            
+             
                )
+              
              })
              
            }
+      
     </>
   )
 
