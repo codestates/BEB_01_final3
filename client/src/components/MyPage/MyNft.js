@@ -15,6 +15,7 @@ import Swal from "sweetalert2";
 const Div = styled.div`
 margin: 2%;
 border-radius: 4%;
+
 box-shadow: 4px 12px 30px 6px rgb(0 0 0 / 9%);
 transition: all 0.2s ease-in-out;
 &:hover {
