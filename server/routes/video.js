@@ -113,9 +113,9 @@ router.post("/thumbnail", (req, res) => {
 });
 
 router.post("/getVideoDetail", async (req, res) => {
-  const closeInfo = await Batting.find({ videoId: req.body.videoId }).exec();
-  const close = {contentsName : closeInfo[0].contentsName, serial : closeInfo[0].serial}
-  console.log('detail',req.body);
+  // const closeInfo = await Batting.find({ videoId: req.body.videoId }).exec();
+  // const close = {contentsName : closeInfo[0].contentsName, serial : closeInfo[0].serial}
+  // console.log('detail',req.body);
   Video.findOne({ _id: req.body.videoId })
     .populate("writer")
     .exec((err, videoDetail) => {

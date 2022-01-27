@@ -130,6 +130,7 @@ const UploadPage = (props) => {
                 // margin: '2rem auto',
                 paddingTop: "100px",
                 marginLeft: '33%',
+                paddingBottom: "20px"
             }}
         >
             <div

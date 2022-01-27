@@ -28,10 +28,16 @@ const ButtonDiv = styled.div`
 
 display: flex;
 flex-wrap: wrap;
-justify-content: center;
+/* justify-content: center; */
+margin-top: -20px;
 
 `
 
+const TBody = styled.div`
+    display: flex;
+    /* justify-content: left; */
+    text-align: left;
+    `
 
 
 function MyNft () {
@@ -213,22 +219,27 @@ function MyNft () {
              <Div>
             <Card bg='black' text='white' border='white' style={{ width:'25rem', borderRadius:'4%', margin:"auto",borderRadius:'4%' }}>
                 <Card.Img variant="top" src={el.imgUri} style={{ width: '100%', height:'25rem', borderTopLeftRadius:'4%',borderTopRightRadius:"4%" }} />
+                <TBody>
                 <Card.Body>
                 <Card.Title>
                     Content : {el.contentTitle}
                 </Card.Title>
-                <Card.Title>
-                    Name : {el.nftName}
-                </Card.Title>
-                { sale === el.sale ?  <Card.Title>
-                    Price : {el.price}
-                  </Card.Title> : null }
+                <Card.Text>
+                    Name : {el.nftName}<br />
+                    desription : {el.description}
+                  </Card.Text>
+                
             </Card.Body>
             <Card.Body>
-                <Card.Text>
-                    desription : {el.description}
-                </Card.Text>
+                <Card.Title>
+                  { sale === el.sale ?  <Card.Title>
+                    Price : {el.price}
+                  </Card.Title> : <Card.Title>
+                    판매중이 아닙니다
+                  </Card.Title> }
+                </Card.Title>
             </Card.Body>
+            </TBody>
               <Card.Body>
                 <ButtonDiv>
             {
@@ -245,7 +256,7 @@ function MyNft () {
                     <span style={{ marginRight: "8%" }}><Button variant="warning" style={{ fontWeight: "bold" }} onClick={() => { Fixed({tokenId:el.tokenId,imgUri:el.imgUri}) }} >Fixed</Button></span>
                     <span><Button variant="warning" style={{ fontWeight: "bold" }}  onClick={() => { Auction({tokenId:el.tokenId,imgUri:el.imgUri}) }} >Auction</Button></span>
                   </div>
-                    <div style={{ width: "30%" }}></div>
+                    <div style={{ width: "40%" }}></div>
                     </>
                      }
                   <LikeDisLike userId={localStorage.getItem('userId')} nftId={el._id} />
