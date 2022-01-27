@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
 // tokenId, nftName, imgUrl, description, 발행자:(주식회사Watto), tokenUrl
 // 좋아요, 즐겨찾기 칼럼 추가하기
 const nftSchema = mongoose.Schema({
@@ -30,22 +32,37 @@ const nftSchema = mongoose.Schema({
 	},
 	sale: {
 		type: Boolean,
-		default:false
+		default: false,
 	},
 	type: {
 		type: String,
-		default:""
-	}
+		default: '',
+	},
+	bids: {
+		ownerAddress: {
+			type: String,
+		},
+		bidAdress: {
+			type: Schema.Types.ObjectId,
+			ref: 'User',
+		},
+		bid: {
+			type: Number,
+		},
+		biddest: {
+			type: Boolean,
+		},
+		bidding: {
+			type: Boolean,
+		},
+		tx: {
+			type: String,
+		},
+	},
 });
 
 const Nft = mongoose.model('Nft', nftSchema);
 
-module.exports = {Nft};
-
+module.exports = { Nft };
 
 //
-
-
-
-
-

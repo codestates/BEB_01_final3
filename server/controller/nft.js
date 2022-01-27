@@ -57,6 +57,8 @@ module.exports = {
 		if (serverAddress === loginServer) {
 			serverPrivateKey = req.user.privateKey;
 		}
+		console.log(serverAddress);
+		console.log(req.body);
 		// console.log(loginServer, serverAddress);
 		//===================  server 계정 변환 테스트
 		const { contentTitle, nftName, nftDescription, imgURI, tokenURI } =
@@ -71,15 +73,16 @@ module.exports = {
 			);
 			const gasprice = await web3.eth.getGasPrice();
 			const gasPrice = Math.round(
-				Number(gasprice) + Number(gasprice / 5)
+				Number(gasprice) + Number(gasprice / 10)
 			);
-
+           console.log(gasprice);
+           console.log(gasPrice);
 			const tx = {
 				from: serverAddress,
 				to: process.env.NFTTOKENCA,
 				nonce: nonce,
 				gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
-				gasLimit: 500000,
+				gasLimit: 5000000,
 				data: data,
 			};
 
@@ -120,6 +123,7 @@ module.exports = {
 		}
 	},
 	buyNFT: async (req, res) => {
+		
 		const tokenId = req.body.tokenId;
 		const email = req.user.email;
 		const userInfo = await User.findOne({ email: email }).exec();

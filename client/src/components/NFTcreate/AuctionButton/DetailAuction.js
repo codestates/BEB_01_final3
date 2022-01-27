@@ -234,17 +234,21 @@ function DetailAuction(props) {
 
           <Row>
             <Col xs={20} md={4}>
-              <Button onClick={onClick}>입찰 취소</Button>
+              <Button onClick={onClick}>Bid Cancle</Button>
             </Col>
 
-            <Col xs={20} md={4}></Col>
+            <Col xs={20} md={4}>
+              <Button>Transaction</Button>
+            </Col>
+            <Col xs={20} md={4}>
+            <Button variant="danger" onClick={EndAuction}>
+                입찰 종료
+            </Button>
+            </Col>
           </Row>
         </Container>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="danger" onClick={EndAuction}>
-          입찰 종료
-        </Button>
         <Button onClick={props.show}>Close</Button>
       </Modal.Footer>
     </Modal>

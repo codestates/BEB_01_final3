@@ -1,7 +1,8 @@
 /* eslint-disable */
 
 import React, { useState } from 'react'
-import { Typography, Button, Form, Input, message } from 'antd';
+import { Typography, Button, Form, message } from 'antd';
+import Icon from '@ant-design/icons/lib/components/Icon';
 import Dropzone from 'react-dropzone';
 import { PlusOutlined } from '@ant-design/icons/lib/icons';
 import axios from 'axios';
@@ -10,13 +11,96 @@ import { useNavigate } from 'react-router-dom';
 import { create } from 'ipfs-http-client';
 import background from '../img/wtimg.png';
 import Spinner from '../spinner/spinner';
+import styled from "styled-components";
+import Swal from "sweetalert2";
 
+// syled-Component 
+const FirstDiv = styled.div`
+max-width: 100%;
+min-height: 50rem;
+background:#780206;
+background:-webkit-linear-gradient(to bottom, #114357,#F29492);
+background:linear-gradient(to left, #780206,#061161);
+display: flex;
+justify-content: center;
+align-items: center;
 
+`;
+const SeDiv = styled.div`
+width: 90%;
+height: 40rem;
+display: flex;
+justify-content: space-evenly;
+align-items: center;
+
+`;
+const Div = styled.div`
+width: 90%;
+height: 35rem;
+border: 1px solid #eee;
+border-radius: 5%;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+
+`;
+const ImgDiv = styled.div`
+width: 90%;
+height: 35rem;
+background: url(https://ipfs.io/ipfs/QmXH3pqhUy2U82oN1XMeP4oqtqvh8Vt44opaDnLrye3mgd) no-repeat center;
+background-size: 50% 15rem;
+border: 1px solid #eee;
+outline: none;
+cursor: pointer;
+border-radius: 5%;
+&:hover {
+  background-color: gray;
+  box-shadow: 1px 4px 0 rgb(0,0,0,0.5);
+  opacity: 50%;
+}
+`;
+const Lable = styled.label`
+display:block;
+width: 100%;
+cursor: pointer;
+`
+const ImgInput = styled.input`
+visibility: hidden;
+`;
+const Input = styled.input`
+width: 70%;
+background-color: transparent;
+border: 1px dashed gray;
+color: white;
+font-size: 1.5rem;
+border-radius: 5%;
+margin-bottom: 4%;
+`;
+
+const Img = styled.img`
+width: 70%;
+height: 70%;
+border: 1px dashed #eee;
+border-radius: 5%;
+margin-bottom: 4%;
+
+`;
+const TextArea = styled.textarea`
+width: 70%;
+height: 50%;
+border: 1px dashed gray;
+background-color: transparent;
+font-size: 1.5rem;
+border-radius: 5%;
+color: white;
+outline-style: none;
+`;
+
+// syled-Component 
 
 const CreateNFT = (props) => {
     
-const { TextArea } = Input
-const { Title, Text } = Typography
 
 
     const ipfs = create({
@@ -37,8 +121,11 @@ const { Title, Text } = Typography
     const [nftDescription, setNftDescription] = useState('')
     const [price, setPrice] = useState('')
     const [loading, setLoading] = useState(false)
+
+    
     
     const onHandleChange = (event) => {
+        console.log(contentTitle);
         event.preventDefault();
         setFiles(event.target.files[0]);
         let fileReader = new FileReader();
@@ -55,6 +142,24 @@ const { Title, Text } = Typography
     const onSubmit = async (e) => {
         e.preventDefault() //새로고침방지
         setLoading(true)
+       
+    
+        if (contentTitle === '' || nftDescription === '' || nftName === '' || files === '') {
+            Swal.fire({
+                icon: 'error',
+                title: 'check your blank' ,  
+                // showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
+                // confirmButtonColor: '#3085d6', // confrim 버튼 색깔 지정
+                // cancelButtonColor: '#d33', // cancel 버튼 색깔 지정
+                // confirmButtonText: '승인', // confirm 버튼 텍스트 지정
+                // cancelButtonText: '취소', // cancel 버튼 텍스트 지정
+                // reverseButtons: true, // 버튼 순서 거꾸로
+              }).then(res => {
+                return;
+              })
+        } 
+        setLoading(true)
+
         //ipfs로 imgURI를 먼저 얻는다. 
         const imgHash = await ipfs.add(files);
       
@@ -86,96 +191,75 @@ const { Title, Text } = Typography
                 setLoading(false)
                 navigate('/user/myPage');
             }else if(res.data.failed === false){
-                setLoading(false)   
-                alert(res.data.reason)
+                
+                Swal.fire({
+                  icon: 'error',
+                  title: res.data.reason ,  
+                  // showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
+                  // confirmButtonColor: '#3085d6', // confrim 버튼 색깔 지정
+                  // cancelButtonColor: '#d33', // cancel 버튼 색깔 지정
+                  // confirmButtonText: '승인', // confirm 버튼 텍스트 지정
+                  // cancelButtonText: '취소', // cancel 버튼 텍스트 지정
+                  // reverseButtons: true, // 버튼 순서 거꾸로
+                }).then(res => {
+                  setLoading(false)   
+                  return;
+                })
             }   
           })
-      }
-
+       }
+      
+    
+   
+    
     return (
 
         
-
-        
-        <div style={{
-            maxWidth: '100%',
-            minHeight: "50rem",
-            backgroundColor:'black'
-        }}>
-            {
-                loading === true ?   <Spinner></Spinner>
-                : <div
-                style={{
-                    maxWidth: '700px',
-                    margin: 'auto',
-                }}
-            >   
-                <div
-                    style={{
-                        textAlign: 'center',
-                        marginBottom: '2rem',
-                    }}
-                >
-                    <Title level={1} >
-                        <Text style={{fontSize:"3rem",fontFamily:"fantasy",color:"red"}}>NFT MINT</Text>
-                    </Title>
-                </div>
-                 
-                <Form onSubmit={onSubmit}>
-                    <div style={{width:"100%",height: "500px"}}> 
-                    {imgSrc == '' ?
-                     <label style={{cursor:"pointer"}}>
-                    <div style={{
-                         width :  "100%",
-                         height: "500px",   
-                         background : `url(${background}) no-repeat center center`,backgroundSize:"100% auto ",
-                         }}>
-                         <input type="file" style={{visibility:"hidden"}}  onChange={onHandleChange}></input>
-                    </div>
-                    </label> :
-                     <>
-                     <button style={{ backgroundColor: 'black', color: "red" }} onClick={() => {setImgSrc('')} }>X</button>
-                     <img src={imgSrc} style={{width:"100%",height:"100%"}}></img>
-                     </>
+        <>
+           
+            <FirstDiv>
+            {loading === true ? <Spinner /> : 
+                <SeDiv>
+                     {/* 이미지 미리보기 chagne 부분 */}
+                    {imgSrc === '' ?
+                        <Lable>
+                        <ImgDiv>
+                                <ImgInput type="file" onChange={onHandleChange} />
+                               
+                        </ImgDiv>
+                        </Lable> :
+                        <Lable>
+                        <Div>
+                                <Img src={imgSrc} onClick={() => {setImgSrc(''), setFiles('')}} />
+                                <Input type="text" placeholder="HERE! You Write NFT NAME" onChange={(e)=>{setNftName(e.target.value)}} />
+                        </Div>
+                        </Lable>
                     }
-                    </div>
-                    <div style={{
-                        marginTop:"5%"
-                    }}>
-                    <div style={{backgroundColor:"black", marginTop:"3%"}}>
-                    <label style={{fontSize:"3rem",fontFamily:"fantasy",color:"red"}}>Content Title </label>
-                    </div>
-                    <Input onChange={(e)=>{setContentTitle(e.target.value)}} style={{color:"white",backgroundColor:"black"}} />
-                    <div style={{backgroundColor:"black", marginTop:"3%"}}>
-                    <label style={{fontSize:"3rem",fontFamily:"fantasy",color:"red"}}>NFT NAME </label>
-                    </div>
-                    <Input  onChange={(e)=>{setNftName(e.target.value)}} style={{color:"white",backgroundColor:"black"}} />
-                    <div style={{backgroundColor:"black",  marginTop:"3%" }}>
-                    <label style={{fontSize:"3rem",fontFamily:"fantasy",color:"red"}}>Content Description </label>
-                    </div>
-                    <TextArea  onChange={(e)=>{setNftDescription (e.target.value)}}   style={{color:"white",backgroundColor:"black"}}/>
-                    </div>
-    
-                    {/* <div style={{backgroundColor:"black"}}>
-                    <label style={{fontSize:"3rem",fontFamily:"fantasy",color:"red"}}>PRICE (NWT)</label>
-                    </div>
-                    <Input  onChange={(e)=>{setPrice(e.target.value)}} style={{color:"white",backgroundColor:"black"}} />
-                    <br />
-                    <br /> */}
-                   
-                            <Button variant="warning" size="large" onClick={onSubmit} style={{ margin:"3%"}}>
+                    <Lable>
+                        <Div>
+                            <Input type="text" placeholder="What is the CONTENT TITLE??" onChange={(e)=>{ setContentTitle(e.target.value)}} />
+                                <TextArea placeholder="whatever you want Description!!" onChange={(e) => { setNftDescription(e.target.value) }} />
+                                <Button variant="warning" onClick={onSubmit} style={{ fontSize:'1.3rem', margin:"3%", borderRadius: '5%', width:'7rem',height:'3rem',backgroundColor:'transparent'}}>
                         Submit
                     </Button>
-                </Form>
-               
-            </div>
-            }
+                        </Div>
+                    </Lable>                    
+                </SeDiv>
+      
+                }
+                   
+
+                </FirstDiv>
           
+            </>
        
-        </div>
+         
+        
+        
         
     )
 }
 
 
 export default CreateNFT
+

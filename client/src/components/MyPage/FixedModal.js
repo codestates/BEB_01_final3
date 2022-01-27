@@ -14,8 +14,8 @@ const FixedModal = ({ check, modalInfo, sellNFT }) => {
     
 
     function sell(tokenId, imgUri) {
-       
-        sellNFT(tokenId, imgUri,sellPrice)
+       console.log(imgUri);
+        sellNFT(tokenId, imgUri, sellPrice)
         return;
     }
     //  console.log("a",this.img);
