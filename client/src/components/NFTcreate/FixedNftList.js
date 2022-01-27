@@ -3,7 +3,19 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import NftListSpinner from '../spinner/nftListSpinner';
 import NFTbuy from './NFTbuy'
+import styled from "styled-components";
+import Swal from "sweetalert2";
 
+const Div = styled.div`
+margin: auto;
+width: 90%;
+height: 100vh;
+display: flex;
+flex-wrap: wrap;
+justify-content: space-between;
+align-items: center;
+
+`
 
 function NftList() {
 
@@ -26,15 +38,7 @@ function NftList() {
     }, []);
 
         return (
-          <div style={{
-            width:'100vw', 
-            height:'100vh',
-             display:'flex',
-            flexWrap:'wrap',
-            justifyContent: 'center',
-             alignContent: 'center',
-            backgroundColor:'black'
-          }}>
+         <Div>
 
             {
              loading === false ?
@@ -42,7 +46,7 @@ function NftList() {
              : <NFTbuy nftlist={nft}></NFTbuy>
 } 
            
-          </div>
+          </Div>
         );
 
 }

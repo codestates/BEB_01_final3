@@ -104,10 +104,8 @@ module.exports = {
 			nft.tokenUrl = tokenURI;
 			nft.save((err, userInfo) => {
 				if (!err) {
-					console.log(2);
 					res.json({ success: true });
-				} else {
-					console.log(3);
+				} else {	
 					res.json({
 						failed: false,
 						reason: '블록체인에는 올라갔지만 DB에 문제가 생겼습니다.',
@@ -116,7 +114,6 @@ module.exports = {
 			});
 		} catch (e) {
 			console.log('err' + e);
-			console.log(4);
 			res.json({ failed: false, reason: '블록체인에 문제가있습니다' });
 		}
 	},
@@ -230,7 +227,7 @@ module.exports = {
 		//가격에 숫자이외의 문자가 들어오지 않게 하기위한 정규식
 		var regexp = /^[0-9]*$/;
 		if (!regexp.test(sellPrice)) {
-			console.log('숫자만입력해주세욧');
+		
 			res.json({
 				fail : false,
 				detail: '정확한 가격을 작성해주세요!!',
@@ -239,7 +236,7 @@ module.exports = {
 		}
 
 		if (owner !== dbOwner[0].address) {
-			console.log('소유자가 다르다 오류났다.');
+		
 			res.json({
 				fail: false,
 				detail: '소유자가 다르다, 확인바람',
@@ -380,7 +377,7 @@ module.exports = {
 				  if(privateKey !== undefined ) {
 				Nft.findOneAndUpdate(
 					{ tokenId: tokenId },
-					{ address: process.env.NFTTOKENCA , sale: true, price: Auctionsell, type : "Auction"},
+					{ spender : process.env.NFTTOKENCA , sale: true, price: Auctionsell, type : "Auction"},
 					(err, result) => {
 						console.log('DB success');
 						res.json({
@@ -393,7 +390,7 @@ module.exports = {
 				  else {
 					Nft.findOneAndUpdate(
 						{ tokenId: tokenId },
-						{ address: process.env.NFTTOKENCA , sale: true, price: Auctionsell, type : "Auction"},
+						{ spender : process.env.NFTTOKENCA , sale: true, price: Auctionsell, type : "Auction"},
 						(err, result) => {
 							console.log('DB success');
 							User.findOneAndUpdate(
@@ -421,20 +418,45 @@ module.exports = {
 		  }
 	  },
 
-	  bids: async(req, res) => {
+	bids: async (req, res) => {
 
-		
+        	// ----- 구매자 정보  ------- //
+		const buyerInfo = await User.findOne({ _id: req.user._id }).exec();
+		const buyer = buyerInfo.publicKey;
+		// ----- auction info  ------- //
 		const tokenId = req.body.tokenId;
-		const email = req.user.email;
-		const userInfo = await User.findOne({ email: email }).exec();
-		const buyer = userInfo.publicKey;
-		const bids = req.body.bids
-		const owner = await nftContract.methods.ownerOf(tokenId).call();
-		console.log(bids, tokenId, buyer)
+		const ownerInfo = await Nft.findOne({ tokenId: tokenId }).exec();
+		const owner = ownerInfo.address
+		const spender = ownerInfo.spender;
+		const Bowner = await nftContract.methods.ownerOf(tokenId).call();
+		const bidPrice = req.body.bids
+		const beforeBuyer = req.body.beforeBuyer;
+		const beforePrice = req.body.beforePrice;
+	
+	
+	
+	
+		if (spender !== Bowner) {
+			console.log('auction 함수에 이상이 생겼습니다.');
+			return res.status(500).json({ success: false });
+		} else if (bidPrice < beforePrice) {
+			console.log('제시금액이 너무 적다. 다시 측정해주라!');
+			return res.json({ success: false, detail:" Your Price is to Low" });
+		}
+		const bidInfo = (owner,bidAddress,bid,biddest,bidding,Tx) => {
+			return {owner,bidAddress,bid,biddest,bidding,Tx}
+		}
+        
+		
+
+	    //전에 배팅했던 인원에 대해서 정보를 변경시켜준다. 
+		
+		
+
 		if (owner === buyer) {
 			console.log("owner is not buy");
-			res.json({ failed: false, reason: 'owner is not buy ' });
-			return;
+			return res.json({ success: false, detail:"Owner is not buy" });
+			
 		}
 		try {
 		//approveToken 함수 작성 
@@ -467,7 +489,7 @@ module.exports = {
 				//approveToken 함수 작성 끝
 	
 					const data = await nftContract.methods
-						.bid(tokenId, buyer,  web3.utils.toWei(bids, 'ether'))
+						.bid(tokenId, buyer,web3.utils.toWei(bidPrice, 'ether'))
 						.encodeABI();
 					const nonce = await web3.eth.getTransactionCount(
 						serverAddress,
@@ -495,18 +517,19 @@ module.exports = {
 					);
 					console.log("----- sign send end -----");
 					if(sellHash) {
-						Nft.findOneAndUpdate(
-							{ tokenId: tokenId },
-							{ price: bids },
+						const bid = bidInfo(owner, buyer, bidPrice, true, true, sellHash.logs[0].transactionHash);
+						await Nft.updateOne({ tokenId, "bids.bidAddress": beforeBuyer }, { $set: { "bids.$.biddest": false } }).exec();
+                        Nft.findOneAndUpdate(
+		              	{ tokenId : tokenId },		
+			            { $push: { bids:bid}},
 							(err, result) => {
-								console.log('DB success');
+								console.log('autcion is normal, Do not Worry');
 								res.json({
 									success: true,
 									detail: 'success set highstbid',
 								});
 								if (err) console.log(err);
-							}
-						)
+							})
 					}
 				}
 			
@@ -514,6 +537,7 @@ module.exports = {
 		console.log(e);
 		res.json({ failed: false });
 	}
+
 	},
 
 	withdraw: async(req, res) => {
@@ -522,7 +546,7 @@ module.exports = {
 		const userInfo = await User.findOne({ email: email }).exec();
 		const withdrawer = userInfo.publicKey;
 		
-		console.log(tokenId, withdrawer)
+	
 		const data = await nwtContract.methods
 		.approveToken(process.env.NFTTOKENCA, process.env.NFTTOKENCA)
 		.encodeABI();
@@ -584,7 +608,7 @@ module.exports = {
 		const tokenId = req.body.tokenId;
 		const email = req.user.email;
 		const userInfo = await User.findOne({ email: email }).exec();
-		console.log(tokenId, userInfo)
+	
 		const data = await nwtContract.methods
 		.approveToken(process.env.NFTTOKENCA, process.env.NFTTOKENCA)
 		.encodeABI();
@@ -664,7 +688,7 @@ module.exports = {
 								const sellHash = await web3.eth.sendSignedTransaction(
 									signedTx.rawTransaction
 								);
-								console.log(sellHash)
+						
 								console.log("----- sign send end ----");
 								if(sellHash) {
 									Nft.findOneAndUpdate(
