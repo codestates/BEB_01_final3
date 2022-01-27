@@ -23,7 +23,8 @@ function MyNft () {
     const [sellPrice, setSellPrice] = useState("");
     const [fixed, setFixed] = useState(false);
     const [auction, setAuction] = useState(false);
-    const [modalInfo, setModalInfo] = useState({});
+  const [modalInfo, setModalInfo] = useState({});
+  const [sale, setSale] = useState(true);
 
     const navigate = useNavigate();
 
@@ -72,7 +73,13 @@ function MyNft () {
        
           if (res.data.success) {
             setProfile(wtImg);
-            window.location.reload();
+            Swal.fire({
+              icon: 'success',
+              title: `${sellPrice}NWT 가격이 설정되었습니다.` ,  
+            }).then(res => {
+              setFixed(false);
+              return
+            })
           } else {
             Swal.fire({
               icon: 'error',
@@ -90,9 +97,14 @@ function MyNft () {
           sellPrice,
         })
         .then((res) => {
-          console.log(res);
           if (res.data.success) {
-            window.location.reload();
+            Swal.fire({
+              icon: 'success',
+              title: `${sellPrice}NWT 가격이 설정되었습니다.` ,  
+            }).then(res => {
+              setFixed(false);
+              return
+            })
           } else {
             Swal.fire({
               icon: 'error',
@@ -104,8 +116,6 @@ function MyNft () {
           }
         });
     }
-    
-   
   }
 
   function cancel(tokenId) {
@@ -192,7 +202,7 @@ function MyNft () {
                 <Card.Title style={{textAlign:'left', marginTop: '5%', marginLeft:'-3%'}}>
                     Name : {el.nftName}
                 </Card.Title>
-                { el.sale === true ?  <Card.Title style={{textAlign:'left', marginTop: '5%', marginLeft:'-3%'}}>
+                { sale === el.sale ?  <Card.Title style={{textAlign:'left', marginTop: '5%', marginLeft:'-3%'}}>
                     Price : {el.price}
                   </Card.Title> : null }
             </Card.Body>
