@@ -56,7 +56,8 @@ function LandingPage() {
     var seconds = Math.floor(video.duration - minutes * 60);
     // console.log(video._id)
     return (
-      <Col lg={7} md={10} xs={24} key={index}>
+      <Col >
+      {/* lg={7} md={10} xs={24} key={index} */}
         {/*lg:가장클때 6그리드를쓰겠다. md:중간크기일때 8그리드를 쓰겠다. 
             xs:가장작은 크기일때는 24그리드를 쓰겠다. 총24그리드 */}
         <div style={{ position: "relative" }}>
@@ -77,7 +78,7 @@ function LandingPage() {
                 color: "#fff",
                 backgroundColor: "rgba(17, 17, 17, 0.8)",
                 opacity: 0.8,
-                padding: "2px 4px",
+                padding: "2px 6px",
                 borderRadius: "2px",
                 letterSpacing: "0.5px",
                 fontSize: "12px",
@@ -95,10 +96,12 @@ function LandingPage() {
         <Meta
           // avatar={<Avatar src={video.writer.image} />}
           title={video.title}
+          style={{marginBottom: "-8%", marginTop: "-6%"}}
         />
         {/* <span>{video.writer.name} </span> */}
         <br />
-        <span style={{ marginLeft: "3rem" }}> {video.views}</span>-
+        {/* style={{ marginLeft: "3rem" }} */}
+        <span >조회수 {video.views}회</span><br />
         <span> {moment(video.createdAt).format("MMM Do YY")} </span>
       </Col>
     );
@@ -159,14 +162,14 @@ function LandingPage() {
 
   return (
 
-    <Layout>
+    <Layout style={{paddingTop: "70px", }}>
       <Layout>
-        <Sider width={300} className="site-layout-background">
+        <Sider width={300} className="site-layout-background" style={{ position: "fixed", transform: "none"}} >
           <Menu
             mode="inline"
             defaultSelectedKeys={["1"]}
             defaultOpenKeys={["sub1"]}
-            style={{ height: "100%", borderRight: 0 }}
+            style={{ height: "100%", borderRight: 0 ,  }}
           >
             <SubMenu key="sub1" icon={<LaptopOutlined />} title="NFT">
               <Menu.Item key="1">
@@ -202,8 +205,9 @@ function LandingPage() {
             <div
               style={{
                 width: "70%",
-                margin: "3rem auto",
-                marginRight: "250px",
+                margin: "10px 0px 0px 20%",
+                // marginRight: "200px",
+                
               }}
             >
               <Title level={0}>Survivals</Title>

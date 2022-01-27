@@ -74,7 +74,7 @@ const Channel = (props) => {
       <Col lg={7} md={10} xs={24} key={index}>
         {/*lg:가장클때 6그리드를쓰겠다. md:중간크기일때 8그리드를 쓰겠다. 
             xs:가장작은 크기일때는 24그리드를 쓰겠다. 총24그리드 */}
-        <div style={{ position: "relative" }}>
+        <div style={{ position: "relative",  }}>
           <a href={`/video/${video._id}/counterpage`}>
             <img
               style={{ width: "100%" }}
@@ -141,6 +141,7 @@ const Channel = (props) => {
         // display: "flex",
         // justifyContent: "center",
         flexWrap: "wrap",
+        paddingTop: "200px"
       }}
     >
       {/* {modalShow === true ? <Modals show={modalShow} pfp={pfp}off={() => { setModalShow(false)}} img={nftInfo}></Modals> : null} */}
@@ -192,7 +193,7 @@ const Channel = (props) => {
         
       </div>
       
-      <div style={{ padding: "1%", width:"100%", background: "black"}}>
+      <div style={{ padding: "1%", width:"100%", background: "black",}}>
           
       { {videos} ? <Row gutter={16}>{videos}</Row> : <div>없습니다</div>} 
         </div>

@@ -67,7 +67,7 @@ function Minting() {
 	};
 	return (
 		<Layout>
-			<Layout width={300} className='ant-layout-has-sider'>
+			<Layout width={300} className='ant-layout-has-sider' style={{paddingLeft: "350px"}}>
 				<Layout>
 					<Content>
 						<form

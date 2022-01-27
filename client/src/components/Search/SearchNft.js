@@ -19,7 +19,7 @@ const SearchNft = (props) => {
   }
 
   return (
-    <div>
+    <div style={{paddingTop: "100px", display: "flex", justifyContent: "center"}}>
       { flag ? user.searchNft.data.map((el) => {
     return (
       <Card style={{ width: "18rem", margin: "1%", cursor: "pointer" }}>

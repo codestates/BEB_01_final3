@@ -93,7 +93,7 @@ function Batting() {
 	return (
 		
 		
-		<Layout style={{display:'flex',justifyContent:'center',alignItems:'center', backgroundColor:"gray"}}>
+		<Layout style={{display:'flex',justifyContent:'center',alignItems:'center', backgroundColor:"gray", paddingLeft: "300px"}}>
 		
 			<Contents>
 		
@@ -101,11 +101,11 @@ function Batting() {
 				
 						return (
 							<>
-								<Content onClick={() => { Name(el.contentNum) }}>
+								<Content>
 								<Card bg='black' text='danger'>
                                <Card.Body>
                               <Card.Title>
-                               Content : {el.contentName}
+                               <a onClick={() => { Name(el.contentNum) }}>Content : {el.contentName}</a>
                                </Card.Title>
                               <span>
 							<Button variant="black" style={{ border: "1px dashed gray" }} onClick={() => { closeContent(el) }} >Game Close</Button>

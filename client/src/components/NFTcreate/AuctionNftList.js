@@ -33,7 +33,8 @@ function NftList() {
             flexWrap:'wrap',
             justifyContent: 'center',
              alignContent: 'center',
-            backgroundColor:'black'
+            backgroundColor:'black',
+            paddingTop: "50px"
           }}>
 
             {

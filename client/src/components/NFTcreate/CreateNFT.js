@@ -18,13 +18,12 @@ import Swal from "sweetalert2";
 const FirstDiv = styled.div`
 max-width: 100%;
 min-height: 50rem;
-background:#780206;
-background:-webkit-linear-gradient(to bottom, #114357,#F29492);
-background:linear-gradient(to left, #780206,#061161);
+background:#eee;
 display: flex;
 justify-content: center;
 align-items: center;
-
+padding-left: 400px;
+margin-top: -50px;
 `;
 const SeDiv = styled.div`
 width: 90%;
@@ -50,14 +49,16 @@ width: 90%;
 height: 35rem;
 background: url(https://ipfs.io/ipfs/QmXH3pqhUy2U82oN1XMeP4oqtqvh8Vt44opaDnLrye3mgd) no-repeat center;
 background-size: 50% 15rem;
-border: 1px solid #eee;
 outline: none;
 cursor: pointer;
 border-radius: 5%;
+box-shadow: 4px 12px 30px 6px rgb(0 0 0 / 9%);
+transition: all 0.2s ease-in-out;
 &:hover {
-  background-color: gray;
-  box-shadow: 1px 4px 0 rgb(0,0,0,0.5);
-  opacity: 50%;
+
+  box-shadow: 4px 12px 20px 6px rgb(0 0 0 / 18%);
+  transform: translateY(5px);
+
 }
 `;
 const Lable = styled.label`
@@ -101,8 +102,6 @@ outline-style: none;
 
 const CreateNFT = (props) => {
     
-
-
     const ipfs = create({
         host: 'ipfs.infura.io',
         port: 5001,
@@ -217,7 +216,7 @@ const CreateNFT = (props) => {
         
         <>
            
-            <FirstDiv>
+            <FirstDiv >
             {loading === true ? <Spinner /> : 
                 <SeDiv>
                      {/* 이미지 미리보기 chagne 부분 */}

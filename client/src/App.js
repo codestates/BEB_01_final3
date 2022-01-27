@@ -24,6 +24,7 @@ import Batting from "./components/batting/Batting"
 import UserUpload from './components/UploadPage/UserUpload'
 import UserVideoDetailPage from './components/VideoDetailPage/UserVideoDetailPage'
 import channel from "./components/Channel/Channel";
+import AuctionDetailPage from "./components/NFTcreate/AuctionDetailPage/AuctionDetailPage";
 
 // const express = require("express");
 // const app = express();
@@ -71,14 +72,15 @@ function App(props) {
 
           <Route exact path="/video/upload" element={Auth(UploadPage, true, true)} />
           <Route exact path="/video/userupload" element={Auth(UserUpload, true)} />
-
+          
           <Route exact path="/video/:videoId" element={Auth(VideoDetailPage, null)} />
           <Route exact path="/videos/:videoId" element={Auth(UserVideoDetailPage, null)} />
-
+          
           <Route exact path="/nft/create" element={Auth(CreateNFT, true, true)} />
           <Route exact path="/Developer" element={Auth(DeveloperPage, true, true)} />
           <Route exact path="/nft/fixedlist" element={Auth(FixedNftList, null)} />
           <Route exact path="/nft/auctionlist" element={Auth(AuctionNftList, null)} />
+          <Route exact path="/nft/:tokenId" element={Auth(AuctionDetailPage, null)} />
           <Route exact path="/user/mypage" element={Auth(MyPage, true)} />
           <Route exact path="/exchange" element={Auth(ExchangePage, true)} />
           <Route exact path='/SearchNft' element={Auth(SearchNft, null)} />

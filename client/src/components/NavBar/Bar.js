@@ -133,9 +133,9 @@ function Bar({ isLogin }) {
   };
 
   return (
-    <Navbar bg="black" expand="lg">
+    <Navbar bg="black" expand="lg" style={{position: "fixed", width: "100%", height: "70px" , zIndex: 100}}>
       <Navbar.Brand href="/" al>
-        <img src={watto} width="250" />
+        <img src={watto} width="140" />
       </Navbar.Brand>
 
       <Container fluid>
@@ -185,14 +185,14 @@ function Bar({ isLogin }) {
                   setSearchValue(e.target.value);
                 }}
               />
-              <Button variant="light" method="get" onClick={onSubmit}>
+              <Button variant="light" method="get" onClick={onSubmit} style={{marginLeft: "-25px",}}>
                 Search
               </Button>
             </Form>
           </Navbar.Collapse>
 
           <Nav>
-            <div className="mb-2">
+            <div className="">
               {isAdmin ? (
                 <Button
                   variant="warning"
@@ -208,7 +208,7 @@ function Bar({ isLogin }) {
 
               {isAuth ? (
                 <Button
-                  variant="dark"
+                  variant="light"
                   href="/exchange"
                   size="md"
                   className="me-1"
