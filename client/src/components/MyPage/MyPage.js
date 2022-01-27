@@ -12,7 +12,16 @@ import LikeConTent from './Like/LikeConTent';
 import MyNft from "./MyNft";
 import MyConTent from "./MyConTent";
 import copyimg from "./copy.png";
+import styled from "styled-components";
+import Swal from "sweetalert2";
+const Div = styled.div`
+display: flex;
+flex-wrap: wrap;
+justify-content: space-between;
+align-items: center;
+margin:0;
 
+`
 
 
 
@@ -292,7 +301,7 @@ function MyPage() {
           <Button className="" variant="light" onClick={()=>{likeResult(user._id, "MYCONTENT")}} >My ConTent</Button>
 
         </div>
-        <div style={{width: "100%", background:"black", display:"flex", justifyContent: "center",}}>{obj[likeOption]}</div>
+       <Div>{obj[likeOption]}</Div>
     </div>
   );
 }

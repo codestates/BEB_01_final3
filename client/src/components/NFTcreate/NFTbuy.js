@@ -6,16 +6,23 @@ import {Card,Button} from 'react-bootstrap'
 import { useNavigate, useParams } from 'react-router-dom';
 import {HeartOutlined, HeartFilled} from '@ant-design/icons'; 
 import LikeDisLike from './LikeDisLike';
+import styled from "styled-components";
+import Swal from "sweetalert2";
 
+const Div = styled.div`
+width: 25%;
+border-radius: 4%;
+box-shadow: 4px 12px 30px 6px rgb(0 0 0 / 9%);
+transition: all 0.2s ease-in-out;
+&:hover {
 
+  box-shadow: 4px 12px 20px 6px rgb(0 0 0 / 18%);
+  transform: translateY(5px);
 
+}
 
+`
 function NFTbuy({ nftlist }) {
-  
-
-  console.log(1);
-
-   
     const navigate = useNavigate();
     const [buyer,setBuyer] = useState('');
 
@@ -29,8 +36,6 @@ function NFTbuy({ nftlist }) {
       console.log('좋아요?');
       check ? setCheck(false) : setCheck(true);
     }
-    
-
   function BuyNFT(tokenId) {
      console.log(tokenId);
     axios.post('/api/contract/buyNFT',{tokenId:tokenId})
@@ -51,47 +56,50 @@ function NFTbuy({ nftlist }) {
     
   return (
 
-
-    <>
+<>
+  
     {
+     
              nftlist.map((el)=>{
-               return(
-                <Card style={{ width: '19rem', margin:"1.5%", cursor:"pointer"}} bg='black' text='white' border='white'>
-                <Card.Img variant="top" src={el.imgUri} style={{height:'100%', width:'100%', }} />
-                <Card.Body style={{marginBottom: '0px', borderBottom: '1px solid #DCDCDC'}}>
-                  <Card.Title style={{textAlign:'left', marginTop: '3%', marginLeft:'-3%'}}>
+               return (
+                <Div>
+                 <Card bg='black' text='white' border='white' style={{borderRadius:'4%'}}>
+                   <Card.Img variant="top" src={el.imgUri} style={{ width: '25 rem', height:'25rem',borderRadius:'4%' }}/>
+                <Card.Body>
+                  <Card.Title>
                     Content : {el.contentTitle}
                   </Card.Title>
-                  <Card.Title style={{textAlign:'left', marginTop: '5%', marginLeft:'-3%'}}>
+                  <Card.Title>
                     Name : {el.nftName}
                      </Card.Title>
-                  <Card.Title style={{textAlign:'left', marginTop: '5%', marginLeft:'-3%'}}>
+                  <Card.Title>
                     Price : {el.price}
                   </Card.Title> 
                  
                 </Card.Body>
-                <Card.Body style={{marginBottom: '0px', borderBottom: '1px solid #DCDCDC'}}>
-                  <Card.Text style={{textAlign:'left', marginLeft:'-3%', fontSize:'20px'}}>
+                <Card.Body>
+                  <Card.Text>
                     desription : {el.description}
                   </Card.Text>
                 </Card.Body>
-                   <Card.Body style={{ display: "flex", marginLeft: '-3%', marginRight: '-9%' }}>
+                   <Card.Body>
                     <div>
                       <Button variant="warning" style={{fontWeight:"bold"}}  onClick={()=>{BuyNFT(el.tokenId)}} >구매하기</Button>
                     </div> 
-                 
                   <div style={{width:"55%"}}></div>
                   <LikeDisLike userId={localStorage.getItem('userId')} nftId={ el._id } />
                 </Card.Body>
                   
                 
-              </Card>
+                   </Card>
+                   </Div>
             
                )
              })
              
            }
-    </>
+      
+      </>
   )
 
   
