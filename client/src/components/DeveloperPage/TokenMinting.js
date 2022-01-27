@@ -8,6 +8,7 @@ import wtImg from '../img/wtimg.png';
 import axios from 'axios';
 import { default as Spinner } from './Spinner';
 import { Form, Col, Row } from 'antd';
+import WNTlogo from '../img/wtimg.png';
 
 function Minting() {
 	const [totalWT, setTotalWT] = useState(0);

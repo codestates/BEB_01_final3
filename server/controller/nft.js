@@ -290,7 +290,7 @@ module.exports = {
 				} else {
 					Nft.findOneAndUpdate(
 						{ tokenId: tokenId },
-						{ sale: true, price: sellPrice },
+						{ sale: true, price: sellPrice, type: 'fixed'},
 						(err, result) => {
 							console.log(privateKey);
 							User.findOneAndUpdate(

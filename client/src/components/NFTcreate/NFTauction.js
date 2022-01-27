@@ -4,7 +4,26 @@ import {Card,Button} from 'react-bootstrap'
 import { useNavigate} from 'react-router-dom';
 import LikeDisLike from './LikeDisLike';
 import DetailAuction from './AuctionButton/DetailAuction'
+import styled from "styled-components";
 
+const Div = styled.div`
+width: 17%;
+height: 65%;
+border-radius: 4%;
+box-shadow: 4px 12px 30px 6px rgb(0 0 0 / 9%);
+transition: all 0.2s ease-in-out;
+margin-left: 20px;
+margin-right: 15px;
+display: flex;
+justify-content: center;
+&:hover {
+
+  box-shadow: 4px 12px 20px 6px rgb(0 0 0 / 18%);
+  transform: translateY(5px);
+
+}
+
+`
 
 function NFTauction({ nftlist }) {
   
@@ -14,10 +33,6 @@ function NFTauction({ nftlist }) {
     const [modalShow, setModalShow] = useState(false);
     const [nftdata, setnftdata] = useState("");
 
-    const onClick = () => {
-      console.log('좋아요?');
-      check ? setCheck(false) : setCheck(true);
-    }
     
 
    function Auction(nftdata) {
@@ -41,27 +56,27 @@ function NFTauction({ nftlist }) {
              nftlist.map((el)=>{
                return(
                 // <a href={`/nft/${el.tokenId}`} style={{textDecoration: 'none'}}  >
-              
-                <Card style={{ width: '19rem', margin:"1.5%", cursor:"pointer"}} bg='black' text='white' border='white' >
-                <Card.Img variant="top" src={el.imgUri} style={{height:'100%', width:'100%', }} />
-                <Card.Body style={{marginBottom: '0px', borderBottom: '1px solid #DCDCDC'}}>
-                  <Card.Title style={{textAlign:'left', marginTop: '3%', marginLeft:'-3%'}}>
+               <Div>
+                <Card bg='black' text='white' border='white' style={{borderRadius:'4%'}} >
+                <Card.Img variant="top" src={el.imgUri}  style={{ width: '25 rem', height:'25rem',borderRadius:'4%' }} />
+                <Card.Body >
+                  <Card.Title >
                     Content : {el.contentTitle}
                   </Card.Title>
-                  <Card.Title style={{textAlign:'left', marginTop: '5%', marginLeft:'-3%'}}>
+                  <Card.Title>
                     Name : {el.nftName}
                      </Card.Title>
-                  <Card.Title style={{textAlign:'left', marginTop: '5%', marginLeft:'-3%'}}>
+                  <Card.Title >
                     최고가 : {el.price}
                   </Card.Title> 
                  
                 </Card.Body>
-                <Card.Body style={{marginBottom: '0px', borderBottom: '1px solid #DCDCDC'}}>
-                  <Card.Text style={{textAlign:'left', marginLeft:'-3%', fontSize:'20px'}}>
+                <Card.Body >
+                  <Card.Text >
                     desription : {el.description}
                   </Card.Text>
                 </Card.Body>
-                   <Card.Body style={{ display: "flex", marginLeft: '-3%', marginRight: '-9%' }}>
+                   <Card.Body >
                     
                        <Button variant="warning" onClick={() => Auction(el)}>
                          입찰 
@@ -75,7 +90,7 @@ function NFTauction({ nftlist }) {
                   
                 
               </Card>
-             
+              </Div>
                )
               
              })
