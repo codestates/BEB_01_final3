@@ -11,7 +11,7 @@ const SearchNft = (props) => {
   const dispatch = useDispatch();
   const [searchValue, setSearchValue] = useState("");
   const user = useSelector((state) => state.user);
-
+  console.log(props);
   let flag = false;
 
   if(user.searchNft.success === true) {

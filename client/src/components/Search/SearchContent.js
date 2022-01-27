@@ -22,9 +22,10 @@ const SearchContent = (props) => {
     const [Limit, setLimit] = useState(8)
     const user = useSelector(state=> state.user)
     // console.log('user', user)
+    console.log(props);
 
     const content = useSelector(state=> state.user)
-    console.log('content',content.searchContent);
+    // console.log('content',content.searchContent);
 
     let flag = false;
 

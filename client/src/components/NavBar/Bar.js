@@ -40,8 +40,8 @@ function Bar({ isLogin }) {
     // console.log(res.payload);
     setIsAuth(res.payload.isAuth);
     setIsAdmin(res.payload.isAdmin);
-    console.log("SA", res.payload.isAuth);
-    console.log("SD", res.payload.isAdmin);
+    // console.log("SA", res.payload.isAuth);
+    // console.log("SD", res.payload.isAdmin);
   });
 
   const onSubmit = (e) => {

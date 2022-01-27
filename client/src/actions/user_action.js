@@ -74,7 +74,7 @@ export function searchContent(dataToSubmit) {
 
     const request = axios.post('/api/video/SearchVideos', dataToSubmit)
         .then(response => response.data)
-    // console.log('action',dataToSubmit)
+    // console.log('action',request)
     return {
         type: SEARCH_CONTENT,
         payload: request
@@ -95,7 +95,7 @@ export function myPageCheck(dataToSubmit) {
   const request = axios
     .post("/api/contract/myPage", dataToSubmit)
     .then((response) => response.data);
-  // console.log('dataTosumit', request);
+//   console.log('dataTosumit', request);
 
   return {
     type: MYPAGE,
@@ -104,11 +104,12 @@ export function myPageCheck(dataToSubmit) {
 }
 
 export function Channel(dataToSubmit){
-    console.log("??", dataToSubmit);
+    // console.log("??", dataToSubmit);
     const request = axios.post("/api/channel", dataToSubmit)
     .then(response => response.data)
+    console.log("??", request);
     return {
         type: CHANNEL,
-        payload: request,
+        payload: request
       };
 }
