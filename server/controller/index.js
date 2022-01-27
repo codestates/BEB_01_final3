@@ -3,6 +3,7 @@ const Web3 = require('web3');
 require('dotenv').config();
 const { User } = require('../models/User');
 const fs = require('fs');
+const cron = require('node-cron');
 
 // .env 파일, 디비 서버 publickey, privatekey, 네크워크
 
@@ -14,8 +15,8 @@ const web3 = new Web3(
 // const web3 = new Web3(new Web3.providers.HttpProvider('HTTP://127.0.0.1:7545'));
 
 //계정부분
-const serverAddress = process.env.SERVERADDRESS;
-const serverPrivateKey = process.env.SERVERPRIVATEKEY;
+let serverAddress = process.env.SERVERADDRESS;
+let serverPrivateKey = process.env.SERVERPRIVATEKEY;
 // auth 권한 부여받은 계정(contract 이용가능 => msg.sender : owner)
 const subManagerAddress = '';
 
@@ -93,63 +94,108 @@ const changeAuther = async (highPrivilege, loginServer) => {
 	}
 };
 
-// changeAuther(
-// 	'0x31e39BBAFB77c4B0411CBfe43875D15AA7697A5c',
-// 	'0xFb63340661D504fbC389bA9015D05aEF00a94cd0'
-// );
-
 // 경우 2 : 유저들이 wt, nwt 토큰을 발행,
-// 경우 3 :
+// 1순위 : 서버 root 계정, 2순위 : 관리자 권한을 받은 서버 계정, 3순위 : 전체 관리자 계정에서 토큰 갯수와 이더양이 가장 많은 계정
+// 크론을 1분마다 돌려서 서버계정을 확인해서 바꿔주는 함수
+const targetServerAddress = async (serverAddress) => {
+	// console.log('크론으로 돌리는 중');
+	const wtContract = newContract(web3, wtAbi, process.env.WTTOKENCA); // wt
+	const nwtContract = newContract(web3, nwtAbi, process.env.NWTTOKENCA); // nwt
+	const nftContract = newContract(web3, nftAbi, process.env.NFTTOKENCA); // nft
+
+	// 1순위 체크 : 서버 root 계정이 넉넉한 양의 토큰을 가지고 있는지, 이더를 보유하고 있는지 체크
+	const wtAmount = web3.utils.fromWei(
+		await wtContract.methods.balanceOf(serverAddress).call(),
+		'ether'
+	);
+	const nwtAmount = web3.utils.fromWei(
+		await nwtContract.methods.balanceOf(serverAddress).call(),
+		'ether'
+	);
+
+	const etherAmount = web3.utils.fromWei(
+		await web3.eth.getBalance(serverAddress),
+		'ether'
+	);
+
+	let serverList = [];
+
+	// 2순위 체크 : 관리자 권한을 받은 서버가 넉넉한 양의 토큰을 가지고 있는지, 이더를 보유하고 있는지 체크
+	// 3순위 체크 : 전체 관리자 계정에서 토큰 갯수와 이더양이 가장 많은 계정
+
+	const server = await User.find({ role: 1 }).exec();
+	for (value in server) {
+		// console.log(server[value].publicKey);
+		const serverCheckOwnerWT = await wtContract.methods
+			.checkAuth(server[value].publicKey)
+			.call();
+		const serverCheckOwnerNWT = await nwtContract.methods
+			.checkAuth(server[value].publicKey)
+			.call();
+		const serverCheckOwnerNFT = await nftContract.methods
+			.checkAuth(server[value].publicKey)
+			.call();
+		if (serverCheckOwnerWT && serverCheckOwnerNWT && serverCheckOwnerNFT) {
+			serverList.push(server[value].publicKey);
+		}
+	}
+
+	if (
+		parseInt(wtAmount) >= 10000 &&
+		parseInt(nwtAmount) >= 1000 &&
+		parseFloat(etherAmount) >= 0.01
+	) {
+		return serverAddress;
+	} else {
+		// wt, nwt, ether 비교
+		let wtAmount = 0,
+			nwtAmount = 0,
+			etherAmount = 0,
+			maxIndex = '';
+		for (addr in serverList) {
+			let wt = web3.utils.fromWei(
+				await wtContract.methods.balanceOf(serverList[addr]).call(),
+				'ether'
+			);
+			let nwt = web3.utils.fromWei(
+				await nwtContract.methods.balanceOf(serverList[addr]).call(),
+				'ether'
+			);
+			let eth = web3.utils.fromWei(
+				await web3.eth.getBalance(serverList[addr]),
+				'ether'
+			);
+			if (
+				wtAmount <= parseInt(wt) &&
+				nwtAmount <= parseInt(nwt) &&
+				etherAmount <= parseFloat(eth)
+			) {
+				wtAmount = wt;
+				nwtAmount = nwt;
+				etherAmount = eth;
+				maxIndex = serverList[addr];
+			}
+		}
+		return maxIndex;
+	}
+};
+
+// server 키를 알아서 비밀키에 넣어줌
+const targetAddrPK = async (addr) => {
+	const auth = await User.findOne({ publicKey: addr }).exec();
+	return auth.privateKey;
+};
 
 // 로그인한 서버가 자신의 이더를 사용 => 컨트랙트 실행
 // 로그인한 서버가 아직은 최고 관리자의 이더를 사용 => 컨트랙트 실행
 // 1순위 : 최고관리자, 2순위 : 현재 로그인한 서버계정, 3순위 : 서버계정중 가장 많은 양의 이더를 가진 계정
 // 파라미터 값은 최고 관리자 서버계정
 // 현재 로그인 되어 있는 { _id: req.user._id }
-const targetServerAddress = async (address) => {
-	try {
-		const ownerList = await User.findOne({
-			role: 1,
-			// _id: req.user._id,
-		}).exec();
-		console.log(ownerList);
-	} catch (err) {
-		console.log(err);
-		console.log('로그인한 유저가 서버계정이 아님');
-	}
-	return 'aaaa';
+
+module.exports = {
+	infuraWeb3Provider,
+	newContract,
+	changeAuther,
+	targetServerAddress,
+	targetAddrPK,
 };
-
-// nft 민팅 : 권한을 받은 서버계정이 먼저 1순위
-
-// targetServerAddress(process.env.SERVERADDRESS);
-
-// 서버가 가지고 있는 wt, nwt 토큰 양이 적으면 서버 교체해주는 함수 (수정중)
-const changeAuther1 = async () => {
-	// 필터링 : role : 1 이면서 checkOwner 이 true 인 계정이 authoer 계정
-	const server = await User.find({ role: 1 }).exec();
-	const wtContract = newContract(web3, wtAbi, process.env.WTTOKENCA); // wt
-	const nwtContract = newContract(web3, nwtAbi, process.env.NWTTOKENCA); // nwt
-	const nftContract = newContract(web3, nftAbi, process.env.NFTTOKENCA); // nft
-	let userList = [];
-
-	const serverEther = await web3.eth.getBalance(serverAddress);
-	console.log(web3.utils.fromWei(serverEther, 'ether'));
-
-	for (value in server) {
-		// console.log(server[value].publicKey);
-		const serverCheckOwner = await wtContract.methods
-			.checkAuth(server[value].publicKey)
-			.call();
-		console.log(serverCheckOwner);
-		if (serverCheckOwner === true) {
-			userList.push(server[value].publicKey);
-		}
-	}
-	console.log(userList);
-	// const serverCheckOwner = await wtContract.methods.checkOwner()
-};
-
-// changeAuther();
-
-module.exports = { infuraWeb3Provider, newContract, changeAuther };

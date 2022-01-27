@@ -9,12 +9,15 @@ import axios from 'axios';
 import styled from "styled-components";
 // import { default as Spinner } from './Spinner';
 import { Form, Col, Row } from 'antd';
+import Swal from "sweetalert2";
+
 
 
 function BattingList({contentName,check}) {
 
 
 	const [list, setList] = useState([]);
+	
 
 	useEffect(() => {
 	
@@ -27,7 +30,44 @@ function BattingList({contentName,check}) {
 					setList(res.data.info);
 				}
 			})
-	},[])
+	}, [])
+	
+	function closeSerial(contentsName, serial) {
+		
+    // 이제 방을 닫는 트랜잭션을 보내봅시다. 
+	axios.post("/api/bat/closeSerial", {contentsName,serial})
+	.then(res => {
+	    if (res.data.success) {
+			Swal.fire({
+			  icon: 'success',
+			  title: 'Wow.....' ,  
+			  text: res.data.detail,
+			  // showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
+			  // confirmButtonColor: '#3085d6', // confrim 버튼 색깔 지정
+			  // cancelButtonColor: '#d33', // cancel 버튼 색깔 지정
+			  // confirmButtonText: '승인', // confirm 버튼 텍스트 지정
+			  // cancelButtonText: '취소', // cancel 버튼 텍스트 지정
+			  // reverseButtons: true, // 버튼 순서 거꾸로
+			}).then(res => {
+				window.location.reload();
+			})
+		  } else {
+			Swal.fire({
+			  icon: 'error',
+			  title: 'Oops...',  
+			  text:res.data.detail,
+			  // showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
+			  // confirmButtonColor: '#3085d6', // confrim 버튼 색깔 지정
+			  // cancelButtonColor: '#d33', // cancel 버튼 색깔 지정
+			  // confirmButtonText: '승인', // confirm 버튼 텍스트 지정
+			  // cancelButtonText: '취소', // cancel 버튼 텍스트 지정
+			  // reverseButtons: true, // 버튼 순서 거꾸로
+			})
+		  }
+		
+	})
+		
+	}
 
 	const Contents = styled.div`
 	display: flex;
@@ -41,6 +81,8 @@ function BattingList({contentName,check}) {
 	const Content = styled.div`
 	 width:100%;
 	`;
+
+	
 	
 	
 	return (
@@ -55,13 +97,23 @@ function BattingList({contentName,check}) {
 						<Card bg='white' text='black' style={{margin:'1%'}}>
                                <Card.Body>
                               <Card.Title>
-                               Title : {[el.contentsName] + el.subTitle + 'Ep.' + el.serial}
+									Title : {[el.contentsName] + el.subTitle + 'Ep.' + el.serial}
 									</Card.Title>
 									<Card.Title>
                                contentNum : {el.contentsNum}
-                               </Card.Title>
+								</Card.Title>
+								{ el.status === true ?
+								 <Card.Title>
+                                status : [진행중]
+								</Card.Title> :
+									<Card.Title>
+									status : [종료]
+									</Card.Title>
+							    }
                                <span>
-							   <Button variant="black" style={{border:"1px dashed gray", color:'red	'}}>Game Close</Button>
+									<Button variant="black" style={{ border: "1px dashed gray", color: 'red	' }} onClick={() => { closeSerial(el.contentsName,el.serial)}}>
+										Game Close
+									</Button>
 							   </span>
                             </Card.Body>
 						</Card>

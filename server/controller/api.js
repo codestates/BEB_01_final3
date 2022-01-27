@@ -6,6 +6,8 @@ const { Batting } = require('../models/batting');
 const { Contents } = require('../models/Contents');
 const { Vote } = require('../models/Vote');
 const Subscriber = require("../models/Subscriber");
+const cron = require('node-cron');
+
 const Web3 = require('web3');
 const web3 = new Web3(
 	new Web3.providers.HttpProvider(
@@ -16,13 +18,21 @@ const web3 = new Web3(
 const fs = require('fs');
 
 // const { newContract, infuraWeb3Provider } = require('./index');
-const { newContract } = require('./index');
+const { newContract, targetServerAddress, targetAddrPK } = require('./index');
 const { json } = require('body-parser');
 
 //계정부분
-const serverAddress = process.env.SERVERADDRESS;
-const serverPrivateKey = process.env.SERVERPRIVATEKEY;
+let serverAddress = process.env.SERVERADDRESS;
+let serverPrivateKey = process.env.SERVERPRIVATEKEY;
 // auth 권한 부여받은 계정(contract 이용가능 => msg.sender : owner)
+
+cron.schedule('*/5 * * * *', async function () {
+	// 5분마다 최고 관리자 주소 토큰양 확인해서 바꿔주기
+	serverAddress = await targetServerAddress(process.env.SERVERADDRESS);
+	serverPrivateKey = await targetAddrPK(serverAddress);
+	// console.log(serverAddress, serverPrivateKey);
+});
+
 const subManagerAddress = '';
 
 // abi json
@@ -279,7 +289,7 @@ module.exports = {
 
 	// WT <-> NWT
 	exchange_NWTToken: async (req, res) => {
-		console.log('aaaaa');
+		console.log('------ WT <-> NWT ------');
 		const nwtAmount = req.body.nwtToken;
 		const nwt = parseInt(nwtAmount) / 5;
 
@@ -326,6 +336,7 @@ module.exports = {
 			.sendSignedTransaction(signedTx1.rawTransaction)
 			.on('receipt', async (txHash) => {
 				// console.log(txHash);
+				console.log('유저 approve 성공');
 				try {
 					const nonce2 = await web3.eth.getTransactionCount(
 						// user.publicKey,
@@ -721,6 +732,7 @@ module.exports = {
 					tx,
 					serverPrivateKey
 				);
+				console.log("---------- start videoUpload / createRoom tranction ------");
 				const hash = await web3.eth.sendSignedTransaction(
 					signedTx.rawTransaction
 				);
@@ -733,9 +745,12 @@ module.exports = {
 				);
 				console.log(JSON.stringify(decodedParameters));
 				const num = decodedParameters.num;
-
-				console.log(title, subTitle, num, serialNo);
+             
+				const video = await Video.find({ title: rawTitle }).exec();
+				console.log(video);
+				console.log(video[0]._id);
 				const batting = new Batting({
+					videoId : video[0]._id,
 					contentsName: title,
 					subTitle: subTitle,
 					contentsNum: num,

@@ -75,8 +75,18 @@ function Batting() {
 	}
 	
 
-	const butclick = (e) => {
-		console.log(e);
+	const closeContent = (info) => {
+		axios.post("/api/bat/closeContent", { contentNum: info.contentNum })
+			.then(res => {
+				console.log(res);
+			})
+	}
+	const payOut = (info) => {
+		axios.post("/api/bat/payOut", { contentNum: info.contentNum,answer:'ㅁㄹㅇ'})
+			.then(res => {
+				console.log(1);
+				console.log(res);
+			})
 	}
 
 	console.log(contentsName);
@@ -98,7 +108,8 @@ function Batting() {
                                Content : {el.contentName}
                                </Card.Title>
                               <span>
-							<Button variant="black" style={{border:"1px dashed gray"}} onClick={() => {butclick("hello")}} >Game Close</Button>
+							<Button variant="black" style={{ border: "1px dashed gray" }} onClick={() => { closeContent(el) }} >Game Close</Button>
+							<Button variant="black" style={{border:"1px dashed gray"}} onClick={() => { payOut(el) }} >정산하기</Button>
                               </span> 
                             </Card.Body>
 									</Card>

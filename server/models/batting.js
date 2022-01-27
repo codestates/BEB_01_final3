@@ -3,6 +3,9 @@ const Schema = mongoose.Schema;
 
 const battingSchema = mongoose.Schema(
   {
+    videoId : {
+      type: String,
+    },
     contentsName: {
       type: String,
     },
