@@ -436,12 +436,12 @@ module.exports = {
 		const beforePrice = req.body.beforePrice;
 	
 	
-	
-	
+	    
+
 		if (spender !== Bowner) {
 			console.log('auction 함수에 이상이 생겼습니다.');
 			return res.status(500).json({ success: false });
-		} else if (bidPrice < beforePrice) {
+		} else if (bidPrice <= beforePrice) {
 			console.log('제시금액이 너무 적다. 다시 측정해주라!');
 			return res.json({ success: false, detail:" Your Price is to Low" });
 		}

@@ -18,7 +18,7 @@ import Swal from "sweetalert2";
 const FirstDiv = styled.div`
 max-width: 100%;
 min-height: 50rem;
-background: rgb(40,40,40);
+background: white;
 display: flex;
 justify-content: center;
 align-items: center;
@@ -42,7 +42,7 @@ display: flex;
 flex-direction: column;
 justify-content: center;
 align-items: center;
-
+background:rgb(125,231,166);
 `;
 const ImgDiv = styled.div`
 width: 90%;
@@ -54,6 +54,7 @@ cursor: pointer;
 border-radius: 5%;
 box-shadow: 4px 12px 30px 6px rgb(0 0 0 / 9%);
 transition: all 0.2s ease-in-out;
+background:rgb(125,231,166);
 &:hover {
 
   box-shadow: 4px 12px 20px 6px rgb(0 0 0 / 18%);
