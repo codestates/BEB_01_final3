@@ -93,7 +93,7 @@ function MyConTent () {
 
     return (
 
-            <div>
+            <div style={{width: "100%"}}>
                 <div style={{
                     fontSize: "50px",
                     // marginBottom:"2%"

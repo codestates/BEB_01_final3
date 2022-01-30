@@ -31,10 +31,10 @@ function NftList() {
             height:'100vh',
              display:'flex',
             flexWrap:'wrap',
-            justifyContent: 'center',
              alignContent: 'center',
-            backgroundColor:'black',
-            paddingTop: "50px"
+            // backgroundColor:'black',
+            paddingTop: "50px",
+            backgroundColor:'tranparent'
           }}>
 
             {
