@@ -4,9 +4,10 @@ import Dropzone from 'react-dropzone'
 import axios from 'axios';
 import { PlusOutlined } from '@ant-design/icons/lib/icons';
 import styled from "styled-components";
+import { Row, Col } from 'react-bootstrap'
 
 const ImgDiv = styled.div`
-width: 43%;
+width: 103%;
 height: 15rem;
 background:  no-repeat center;
 background-size: 50% 20rem;
@@ -24,7 +25,7 @@ transition: all 0.2s ease-in-out;
 }
 `;
 const ImgDiv2 = styled.div`
-width: 50%;
+width: 410px;
 height: 15rem;
 background:  no-repeat center;
 background-size: 50% 20rem;
@@ -34,6 +35,7 @@ border: 1px solid #7DE7A6;
 border-radius: 5%;
 box-shadow: 4px 12px 30px 6px rgb(0 0 0 / 9%);
 transition: all 0.2s ease-in-out;
+margin-left: 20px;
 &:hover {
 
   box-shadow: 4px 12px 20px 6px rgb(0 0 0 / 18%);
@@ -75,13 +77,18 @@ function UserImg(props) {
     }
 
     return (
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        // <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Row style={{marginLeft: '70px'}}>
+            
+            <br />
+            <br />
+            <Col xs ={5}>
             <ImgDiv>
             <Dropzone onDrop={dropHandler}>
                 {({ getRootProps, getInputProps }) => (
                     <div
                         style={{
-                            width: 300, height: 240, 
+                            width: 410, height: 240, 
                             display: 'flex', alignItems: 'center', justifyContent: 'center'
                         }}
                         {...getRootProps()}>
@@ -92,8 +99,12 @@ function UserImg(props) {
                 )}
             </Dropzone>
             </ImgDiv>
+            <br />
+            <label>후보자 이미지</label>
+            </Col>
+            <Col xs ={5} style={{marginRight : '40px'}}>
             <ImgDiv2>
-            <div style={{ display: 'flex', width: '350px', height: '240px', overflowX: 'scroll' }}>
+            <div style={{ display: 'flex', width: '410px', height: '240px', overflowX: 'scroll' }}>
 
                 {Images.map((image, index) => (
                     <div onClick={() => deleteHandler(image)} key={index}>
@@ -104,7 +115,9 @@ function UserImg(props) {
                 ))}
             </div>
             </ImgDiv2>
-        </div>
+            </Col>
+        {/* </div> */}
+        </Row>
     )
 }
 

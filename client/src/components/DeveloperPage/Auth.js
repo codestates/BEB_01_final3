@@ -7,7 +7,17 @@ import { Form, Col, Row } from 'antd';
 import wtImg from './basic.png';
 import BootstrapSwitchButton from 'bootstrap-switch-button-react';
 import { default as Spinner } from './Spinner';
-// import Toggle from 'react-bootstrap-toggle';
+import styled from 'styled-components';
+
+const Box = styled.div`
+box-shadow: 4px 12px 30px 6px rgb(0 0 0 / 25%);
+margin: 20px;
+margin-Top: 40px;
+display: flex;
+justify-content: center;
+border-radius: 10px;
+/* margin-left: 150px; */
+`;
 
 function Auth() {
 	const [addOwner, setAddOwner] = useState(false);
@@ -118,38 +128,34 @@ function Auth() {
 						{list.map((data) => {
 							if (data.name !== '') {
 								return (
+								<Box>
 									<Card
 										// key={idx}
 										style={{
 											width: '18rem',
 											height: '27rem',
-											// flexWrap: 'wrap',
-											margin: '1%',
+											// margin: '1%',
 										}}>
 										{data.img === undefined ? (
 											<Card.Img
-												// size={100}
-
 												variant='top'
 												src={wtImg}
 												alt
 												style={{
-													margin: '1px',
-													width: '15vw',
+													// margin: '1px',
+													width: '18rem',
 													height: '15.5vh',
 													justifyContent: 'center',
 												}}
 											/>
 										) : (
 											<Card.Img
-												// size={100}
-
 												variant='top'
 												src={data.img}
 												alt
 												style={{
-													margin: '1px',
-													width: '15vw',
+													// margin: '1px',
+													width: '18rem',
 													height: '15.5vh',
 													justifyContent: 'center',
 												}}
@@ -172,9 +178,6 @@ function Auth() {
 											</ListGroupItem>
 										</ListGroup>
 										<Card.Body>
-											{/* <Button variant='primary'>
-											Add Ownership
-										</Button> */}
 											{data.checkOwner === 1 ? (
 												'최고관리자'
 											) : (
@@ -182,8 +185,6 @@ function Auth() {
 													checked={data.checkAuth}
 													onstyle='dark'
 													size='lg'
-													// key={data.publicKey}
-													// onChange={toggleClick}
 													onChange={() => {
 														toggleClick({
 															publicKey:
@@ -192,13 +193,11 @@ function Auth() {
 																data.checkAuth,
 														});
 													}}
-													// onClick={toggleClick(
-													// 	data.publicKey
-													// )}
 												/>
 											)}
 										</Card.Body>
 									</Card>
+									</Box>
 								);
 							}
 						})}

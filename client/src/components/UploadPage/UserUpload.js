@@ -29,7 +29,7 @@ transition: all 0.2s ease-in-out;
 
 const Button = styled.button`
   border-radius: 5px;
-  border: 1px solid black;
+  border: 1px solid #71b852;
   padding: 5px;
   min-width: 120px;
   color: white;
@@ -42,8 +42,20 @@ const Button = styled.button`
   &:foucus {
     outline: none;
   }
-`;
+  transition: all 0.2s ease-in-out;
+&:hover {
 
+  box-shadow: 4px 12px 20px 6px rgb(0 0 0 / 20%);
+  transform: translateY(5px);
+
+}
+`;
+const AllBox = styled.div`
+ box-shadow: 4px 12px 20px 6px rgb(0 0 0 / 20%);
+ width: 105%;
+ border-radius: 3%;
+ height: 100%;
+`;
 
 const { TextArea } = Input;
 const { Title, Text } = Typography;
@@ -178,8 +190,9 @@ const UploadPage = (props) => {
       <Form onSubmit={onSubmit}>
         {/* <div style={{ display: "flex", justifyContent: "space-between" }}> */}
           {/* Drop zone 부분*/}
+        <AllBox>
       <Row style={{ display: "flex", justifyContent: "space-between" }}>
-        <Col xs={5}>
+        <Col xs={5} style={{ marginTop: '30px', marginLeft: '80px'}}>
         <ImgDiv>
           <Dropzone
             onDrop={onDrop}
@@ -213,7 +226,7 @@ const UploadPage = (props) => {
           )}
         {/* </div> */}
         </Col>
-        <Col xs = {5}>
+        <Col xs = {5} style={{ marginTop: '30px', marginRight: '80px'}}>
         <label>Title</label>
         <Input
           onChange={onTitleChange}
@@ -230,6 +243,10 @@ const UploadPage = (props) => {
         />
         </Col>
         </Row>
+        <br />
+        <br />
+
+        </AllBox>
         <br />
         <br />
         <select onChange={onPrivateChange}>
@@ -264,7 +281,7 @@ const UploadPage = (props) => {
         <Button type="primary" size="large" onClick={onSubmit}>
           Submit
         </Button>
-      
+        
       </Form>
     </div>
   );

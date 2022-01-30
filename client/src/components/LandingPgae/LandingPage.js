@@ -12,7 +12,27 @@ import {
   NotificationOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
+import styled from "styled-components";
 
+const ImgDiv = styled.div`
+/* width: 100%; */
+/* height: 20rem; */
+background:  no-repeat center;
+/* background-size: 50% 20rem; */
+outline: none;
+cursor: pointer;
+border: none;
+border-radius: 5%;
+box-shadow: 4px 12px 30px 6px rgb(0 0 0 / 25%);
+transition: all 0.2s ease-in-out;
+
+&:hover {
+
+  box-shadow: 4px 12px 20px 6px rgb(0 0 0 / 50%);
+  transform: translateY(5px);
+
+}
+`;
 
 const { SubMenu } = Menu;
 const { Content, Sider } = Layout;
@@ -110,12 +130,13 @@ function LandingPage() {
 //  console.log(video._id)
     return (
       <Col lg={7} md={10} xs={24} key={index}>
+        <ImgDiv>
         {/*lg:가장클때 6그리드를쓰겠다. md:중간크기일때 8그리드를 쓰겠다. 
             xs:가장작은 크기일때는 24그리드를 쓰겠다. 총24그리드 */}
         <div style={{ position: "relative" }}>
           <a href={`/videos/${video._id}`}>
             <img
-              style={{ width: "100%" }}
+              style={{ width: "100%", marginTop: '5px', borderRadius: '5px'}}
               alt="thumbnail"
               src={`http://localhost:5000/${video.thumbnail}`}
             />
@@ -153,6 +174,7 @@ function LandingPage() {
         <br />
         <span style={{ marginLeft: "3rem" }}> {video.views}</span>-
         <span> {moment(video.createdAt).format("MMM Do YY")} </span>
+        </ImgDiv>
       </Col>
     );
   });

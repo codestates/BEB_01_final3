@@ -1,12 +1,46 @@
 import React, { useState, useEffect } from 'react';
 // import auth from '../../actions/user_action';
 import { useNavigate } from 'react-router-dom';
-import { Typography, Button, Form, Input, Row, Col } from 'antd';
+import { Typography,  Form, Input, Row, Col } from 'antd';
 import axios from 'axios';
 import { SwapOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
 import { wtTokenExchange, nwtTokenExchange } from '../../actions/token_action';
 import { default as Spinner } from './Spinner';
+import styled from 'styled-components';
+
+const AllBox = styled.div`
+ box-shadow: 4px 12px 20px 6px rgb(0 0 0 / 20%);
+ width: 100%;
+ height: 25rem;
+ border-radius: 4%;
+ display: flex;
+ justify-content: center;
+`;
+
+const Button = styled.button`
+  border-radius: 5px;
+  border: 1px solid #71b852;
+  padding: 5px;
+  min-width: 120px;
+  color: white;
+  font-weight: 600;
+  -webkit-appearance: none;
+  background-color: #7DE7A6;
+  box-shadow: 4px 12px 30px 6px rgb(0 0 0 / 15%);
+  cursor: pointer;
+  &:active,
+  &:foucus {
+    outline: none;
+  }
+  transition: all 0.2s ease-in-out;
+&:hover {
+
+  box-shadow: 4px 12px 20px 6px rgb(0 0 0 / 40%);
+  transform: translateY(5px);
+
+}
+`;
 
 // const { TextArea } = Input;
 const { Title, Text } = Typography;
@@ -111,9 +145,10 @@ function ExchangePage() {
 	};
 
 	return (
+		
 		<div
 			style={{
-				maxWidth: '700px',
+				maxWidth: '1000px',
 				margin: '2rem auto',
 			}}>
 			<div
@@ -128,11 +163,13 @@ function ExchangePage() {
 			{isLoading ? (
 				<Spinner />
 			) : (
+				<AllBox>
 				<Form>
 					<div
 						style={{
 							display: 'flex',
 							justifyContent: 'space-between',
+							marginTop: '10px'
 						}}></div>
 					<label style={{ fontSize: 'x-large' }}>Token Balance</label>
 					<br />
@@ -206,8 +243,10 @@ function ExchangePage() {
 						</Row>
 					</Form.Item>
 				</Form>
+				</AllBox>
 			)}
 		</div>
+		
 	);
 }
 

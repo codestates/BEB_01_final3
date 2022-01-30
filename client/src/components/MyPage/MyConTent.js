@@ -6,8 +6,17 @@ import "antd/dist/antd.css";
 import { Layout, Menu } from "antd";
 import moment from "moment";
 import { UserAddOutlined } from "@ant-design/icons";
+import styled from "styled-components";
 
-
+const BigBox = styled.div`
+width:70%;
+display: flex;
+justify-content: center;
+border-radius: 8%;
+box-shadow: 4px 12px 30px 6px rgb(0 0 0 / 15%);
+flex-wrap: wrap;
+margin-left: 300px;
+`;
 function MyConTent () {
 
     const [Video, setVideo] = useState([]);
@@ -93,10 +102,9 @@ function MyConTent () {
 
     return (
 
-            <div>
+            <BigBox>
                 <div style={{
                     fontSize: "50px",
-                    // marginBottom:"2%"
                     color:"white",
                     marginBottom: "-2%"
                 }}>
@@ -106,14 +114,13 @@ function MyConTent () {
                   style={{
                     width: "100%",
                     margin: "3rem auto",
-                    // marginRight: "250px",
                   }}
                 >{renderCards.length === 0 ?  <div style={{ height: "40vh" }}><p style={{fontSize:"4rem"}}> 를 소유하고 있지 않습니다.</p></div>
                  : 
                  <Row gutter={16}>{renderCards}</Row>}
                   
                 </div>
-            </div>
+              </BigBox>
                 
 
       );

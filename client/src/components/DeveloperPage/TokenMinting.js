@@ -2,13 +2,46 @@ import React, { useEffect, useState } from 'react';
 import '../../App.css';
 import Sidebar from './DevComponent/Sidebar';
 import Layout, { Content } from 'antd/lib/layout/layout';
-import { Button, Card } from 'react-bootstrap';
+import { Card } from 'react-bootstrap';
 import Avatar from 'antd/lib/avatar/avatar';
 import wtImg from '../img/wtimg.png';
 import axios from 'axios';
 import { default as Spinner } from './Spinner';
 import { Form, Col, Row } from 'antd';
 import WNTlogo from '../img/wtimg.png';
+import styled from 'styled-components';
+
+const Box = styled.div`
+box-shadow: 4px 12px 30px 6px rgb(0 0 0 / 25%);
+margin: 20px;
+margin-Top: 40px;
+display: flex;
+justify-content: center;
+margin-left: 150px;
+`;
+const Button = styled.button`
+  border-radius: 5px;
+  border: 1px solid red;
+  padding: 5px;
+  min-width: 120px;
+  color: white;
+  font-weight: 600;
+  -webkit-appearance: none;
+  background-color: red;
+  box-shadow: 4px 12px 30px 6px rgb(0 0 0 / 9%);
+  cursor: pointer;
+  &:active,
+  &:foucus {
+    outline: none;
+  }
+  transition: all 0.2s ease-in-out;
+&:hover {
+
+  box-shadow: 4px 12px 20px 6px rgb(0 0 0 / 20%);
+  transform: translateY(5px);
+
+}
+`;
 
 function Minting() {
 	const [totalWT, setTotalWT] = useState(0);
@@ -74,14 +107,12 @@ function Minting() {
 						<form
 							style={{
 								display: 'flex',
-								// justifyContent: "center",
-								// marginLeft: "0"
 							}}>
+						<Box>
 							<Card
 								style={{
 									width: '22rem',
-									margin: '80px',
-									marginTop: '40px',
+								
 								}}>
 								<Card.Body>
 									<Card.Title>
@@ -98,6 +129,7 @@ function Minting() {
 									<Card.Text>명</Card.Text>
 								</Card.Body>
 							</Card>
+							</Box>
 							{isLoading ? (
 								<Spinner />
 							) : (
@@ -106,11 +138,10 @@ function Minting() {
 										display: 'flex',
 										justifyContent: 'center',
 									}}>
+									<Box>
 									<Card
 										style={{
-											width: '18rem',
-											margin: '40px',
-											marginTop: '40px',
+											width: '18rem'
 										}}>
 										<div>
 											<Avatar
@@ -144,12 +175,12 @@ function Minting() {
 											</Button>
 										</Card.Body>
 									</Card>
-
+									</Box>
+									<Box>
 									<Card
 										style={{
 											width: '18rem',
-											margin: '40px',
-											marginTop: '40px',
+										
 										}}>
 										<div>
 											<Avatar
@@ -183,6 +214,7 @@ function Minting() {
 											</Button>
 										</Card.Body>
 									</Card>
+									</Box>
 								</Form>
 							)}
 						</form>
