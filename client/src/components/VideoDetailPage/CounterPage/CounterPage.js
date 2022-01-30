@@ -41,10 +41,10 @@ function CounterPage() {
         .post("/api/video/getVideoDetail", variable)
         .then((response) => {
           if (response.data.success) {
-            console.log("close",response.data.close);
+            // console.log("close",response.data.close);
             console.log("getvideodata", response.data);
             console.log("Img", response.data.videoDetail.image);
-            setCloseInfo(response.data.success);
+            // setCloseInfo(response.data.success);
            setVideoName(response.data.videoDetail.title);
             const image = response.data.videoDetail.image;
             setVideoDetail(response.data.videoDetail);

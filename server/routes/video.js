@@ -120,7 +120,7 @@ router.post("/getVideoDetail", async (req, res) => {
     .populate("writer")
     .exec((err, videoDetail) => {
       if (err) return res.status(400).send(err);
-      return res.status(200).json({ success: true, videoDetail, close });
+      return res.status(200).json({ success: true, videoDetail });
     });
 });
 
