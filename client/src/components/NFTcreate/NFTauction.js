@@ -1,13 +1,12 @@
 
 import React, { useState } from 'react'
 import {Card,Button} from 'react-bootstrap'
-import { useNavigate} from 'react-router-dom';
 import LikeDisLike from './LikeDisLike';
 import DetailAuction from './AuctionButton/DetailAuction'
-import styled from "styled-components";
+import styled from 'styled-components';
 
 const Div = styled.div`
-width: 17%;
+width: 20%;
 height: 65%;
 border-radius: 4%;
 box-shadow: 4px 12px 30px 6px rgb(0 0 0 / 9%);
@@ -24,12 +23,23 @@ justify-content: center;
 }
 
 `
+// const Div = styled.div`
+// width: 25%;
+// border-radius: 4%;
+// box-shadow: 4px 12px 30px 6px rgb(0 0 0 / 9%);
+// transition: all 0.2s ease-in-out;
+// &:hover {
+
+//   box-shadow: 4px 12px 20px 6px rgb(0 0 0 / 18%);
+//   transform: translateY(5px);
+
+// }
+
+// `
 
 function NFTauction({ nftlist }) {
   
-    const navigate = useNavigate();
-    const [buyer,setBuyer] = useState('');
-    const [check, setCheck] = useState(false);
+  
     const [modalShow, setModalShow] = useState(false);
     const [nftdata, setnftdata] = useState("");
 
@@ -67,7 +77,7 @@ function NFTauction({ nftlist }) {
                     Name : {el.nftName}
                      </Card.Title>
                   <Card.Title >
-                    최고가 : {el.price}
+                    시작가 : {el.price}
                   </Card.Title> 
                  
                 </Card.Body>

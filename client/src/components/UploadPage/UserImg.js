@@ -3,7 +3,44 @@ import Icon from '@ant-design/icons/lib/components/Icon';
 import Dropzone from 'react-dropzone'
 import axios from 'axios';
 import { PlusOutlined } from '@ant-design/icons/lib/icons';
+import styled from "styled-components";
 
+const ImgDiv = styled.div`
+width: 43%;
+height: 15rem;
+background:  no-repeat center;
+background-size: 50% 20rem;
+outline: none;
+cursor: pointer;
+border: 1px solid #7DE7A6;
+border-radius: 5%;
+box-shadow: 4px 12px 30px 6px rgb(0 0 0 / 9%);
+transition: all 0.2s ease-in-out;
+&:hover {
+
+  box-shadow: 4px 12px 20px 6px rgb(0 0 0 / 18%);
+  transform: translateY(5px);
+
+}
+`;
+const ImgDiv2 = styled.div`
+width: 50%;
+height: 15rem;
+background:  no-repeat center;
+background-size: 50% 20rem;
+outline: none;
+cursor: pointer;
+border: 1px solid #7DE7A6;
+border-radius: 5%;
+box-shadow: 4px 12px 30px 6px rgb(0 0 0 / 9%);
+transition: all 0.2s ease-in-out;
+&:hover {
+
+  box-shadow: 4px 12px 20px 6px rgb(0 0 0 / 18%);
+  transform: translateY(5px);
+
+}
+`;
 
 function UserImg(props) {
 
@@ -39,11 +76,12 @@ function UserImg(props) {
 
     return (
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <ImgDiv>
             <Dropzone onDrop={dropHandler}>
                 {({ getRootProps, getInputProps }) => (
                     <div
                         style={{
-                            width: 300, height: 240, border: '1px solid lightgray',
+                            width: 300, height: 240, 
                             display: 'flex', alignItems: 'center', justifyContent: 'center'
                         }}
                         {...getRootProps()}>
@@ -53,7 +91,8 @@ function UserImg(props) {
                     </div>
                 )}
             </Dropzone>
-
+            </ImgDiv>
+            <ImgDiv2>
             <div style={{ display: 'flex', width: '350px', height: '240px', overflowX: 'scroll' }}>
 
                 {Images.map((image, index) => (
@@ -64,6 +103,7 @@ function UserImg(props) {
                     </div>
                 ))}
             </div>
+            </ImgDiv2>
         </div>
     )
 }

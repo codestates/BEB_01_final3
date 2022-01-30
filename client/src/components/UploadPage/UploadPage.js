@@ -6,6 +6,26 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import UserImg from './UserImg';
+import styled from "styled-components";
+
+const ImgDiv = styled.div`
+width: 43%;
+height: 15rem;
+background:  no-repeat center;
+background-size: 50% 20rem;
+outline: none;
+cursor: pointer;
+border: 1px solid #7DE7A6;
+border-radius: 5%;
+box-shadow: 4px 12px 30px 6px rgb(0 0 0 / 9%);
+transition: all 0.2s ease-in-out;
+&:hover {
+
+  box-shadow: 4px 12px 20px 6px rgb(0 0 0 / 18%);
+  transform: translateY(5px);
+
+}
+`;
 
 const { TextArea } = Input
 const { Title, Text } = Typography
@@ -144,7 +164,7 @@ const UploadPage = (props) => {
             <Form onSubmit={onSubmit}>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     {/* Drop zone 부분*/}
-
+                <ImgDiv>
                     <Dropzone
                         onDrop={onDrop}
                         multiple={false} //한번에 파일을 2개이상올릴껀지
@@ -155,7 +175,7 @@ const UploadPage = (props) => {
                                 style={{
                                     width: '300px',
                                     height: '240px',
-                                    border: '1px solid lightgray',
+                                    
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
@@ -167,6 +187,7 @@ const UploadPage = (props) => {
                             </div>
                         )}
                     </Dropzone>
+                    </ImgDiv>
                     {/* 썸네일부분 */}
                     {ThumbnailPath !== '' && (
                         <div>
@@ -175,7 +196,7 @@ const UploadPage = (props) => {
                     )}
                 </div>
                 <label>Title</label>
-                <Input onChange={onTitleChange} value={VideoTitle} placeholder='콘텐츠 제목' />
+                <Input onChange={onTitleChange} value={VideoTitle} placeholder='[기획명] 부제 Ep.01' />
                 <br />
                 <br />
                 <label>Description</label>
@@ -192,6 +213,7 @@ const UploadPage = (props) => {
                 <br />
                 <br />
                 <label>후보자 이미지</label>
+                
                 <UserImg refreshFunction={updateImages} />
                 <br />
                 <br />
