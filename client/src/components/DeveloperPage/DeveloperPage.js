@@ -33,8 +33,8 @@ function DeveloperPage() {
 	
 	return (
 		<div>
-			<Layout>
-			<Layout width={300} className='ant-layout-has-sider'>
+			<Layout style={{paddingTop: "70px"}}>
+			<Layout width={300} className='ant-layout-has-sider' >
 				<Sidebar  getNum={setNum} />
 				<div style={{width:"100%"}}>{obj[number]}</div>
 			</Layout>

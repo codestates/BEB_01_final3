@@ -22,7 +22,8 @@ background: white;
 display: flex;
 justify-content: center;
 align-items: center;
-
+padding-left: 400px;
+margin-top: -50px;
 `;
 const SeDiv = styled.div`
 width: 90%;
@@ -211,7 +212,7 @@ const CreateNFT = (props) => {
         
         <>
            
-            <FirstDiv>
+            <FirstDiv >
             {loading === true ? <Spinner /> : 
                 <SeDiv>
                      {/* 이미지 미리보기 chagne 부분 */}

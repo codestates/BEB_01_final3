@@ -18,6 +18,7 @@ import {
   logoutUser,
   searchNFT,
   searchContent,
+  Channel,
 } from "../../actions/user_action";
 import { BankOutlined } from "@ant-design/icons";
 import axios from "axios";
@@ -39,8 +40,8 @@ function Bar({ isLogin }) {
     // console.log(res.payload);
     setIsAuth(res.payload.isAuth);
     setIsAdmin(res.payload.isAdmin);
-    console.log("SA", res.payload.isAuth);
-    console.log("SD", res.payload.isAdmin);
+    // console.log("SA", res.payload.isAuth);
+    // console.log("SD", res.payload.isAdmin);
   });
 
   const onSubmit = (e) => {
@@ -91,6 +92,27 @@ function Bar({ isLogin }) {
 			})
 		}
 
+    else if(searchOption === "CHANNEL"){
+      console.log("체널임?");
+
+      dispatch(Channel(search))
+				.then(response => {
+					console.log(response);
+				// setMessage(response.payload.message);
+				if(response.payload.success === true) {
+						console.log('bar.content', response);
+						navigate('/channel');
+				}
+				else if(response.payload.success === false) {
+						navigate('/SearchFail')
+						alert("실패");
+
+				}
+				
+				
+			})
+    }
+
     // navigate('/SearchNft');
     // window.location.replace('/Search');
   };
@@ -111,9 +133,9 @@ function Bar({ isLogin }) {
   };
 
   return (
-    <Navbar bg="black" expand="lg">
+    <Navbar bg="black" expand="lg" style={{position: "fixed", width: "100%", height: "70px" , zIndex: 100}}>
       <Navbar.Brand href="/" al>
-        <img src={watto} width="250" />
+        <img src={watto} width="140" />
       </Navbar.Brand>
 
       <Container fluid>
@@ -143,6 +165,15 @@ function Bar({ isLogin }) {
                 >
                   CONTENT
                 </Dropdown.Item>
+                <Dropdown.Item
+                  type="option"
+                  // value={option}
+                  onClick={(e) => {
+                    setSearchOption("CHANNEL");
+                  }}
+                >
+                  CHANNEL
+                </Dropdown.Item>
               </DropdownButton>
               <FormControl
                 type="search"
@@ -154,14 +185,14 @@ function Bar({ isLogin }) {
                   setSearchValue(e.target.value);
                 }}
               />
-              <Button variant="light" method="get" onClick={onSubmit}>
+              <Button variant="light" method="get" onClick={onSubmit} style={{marginLeft: "-25px",}}>
                 Search
               </Button>
             </Form>
           </Navbar.Collapse>
 
           <Nav>
-            <div className="mb-2">
+            <div className="">
               {isAdmin ? (
                 <Button
                   variant="warning"
@@ -177,7 +208,7 @@ function Bar({ isLogin }) {
 
               {isAuth ? (
                 <Button
-                  variant="dark"
+                  variant="light"
                   href="/exchange"
                   size="md"
                   className="me-1"

@@ -5,9 +5,12 @@ import {Navbar} from "react-bootstrap";
 function SearchFail () {
 
     return (
-        <Navbar.Brand href="/" al>
+      <div style={{paddingTop: "100px"}}>
+        <Navbar.Brand href="/" al >
         <img src={nothing} width="600" />
       </Navbar.Brand>
+      </div>
+        
     )
 
 }

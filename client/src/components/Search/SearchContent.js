@@ -22,9 +22,10 @@ const SearchContent = (props) => {
     const [Limit, setLimit] = useState(8)
     const user = useSelector(state=> state.user)
     // console.log('user', user)
+    console.log(props);
 
     const content = useSelector(state=> state.user)
-    console.log('content',content.searchContent);
+    // console.log('content',content.searchContent);
 
     let flag = false;
 
@@ -33,10 +34,10 @@ const SearchContent = (props) => {
     }
 
     return (
-      <div>
+      <div style={{paddingTop: "100px", justifyContent: "center", display: "flex"}}>
         {flag ? content.searchContent.data.map((el)=>{
             return (
-                <Card style={{ width: '18rem', margin:"1%", cursor:"pointer"}}>
+                <Card style={{ width: '18rem', cursor:"pointer", marginRight: "3%"}}>
                   <Card.Link href = {`/video/${el._id}`}>
                     
                 <Card.Img variant="top" src={`http://localhost:5000/${el.thumbnail}`} style={{height:'220px'}} />

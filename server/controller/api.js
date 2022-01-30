@@ -5,6 +5,7 @@ const { Video } = require('../models/Video');
 const { Batting } = require('../models/batting');
 const { Contents } = require('../models/Contents');
 const { Vote } = require('../models/Vote');
+const Subscriber = require("../models/Subscriber");
 const cron = require('node-cron');
 
 const Web3 = require('web3');
@@ -1214,5 +1215,58 @@ module.exports = {
 				message: '권한 부여 실패',
 			});
 		}
+	},
+
+	searchChannelPage: async (req, res) => {
+		console.log("???", req.body);
+
+		const userInfo = await User.find().find({
+			name: { $regex: req.body.name , $options: 'i' },
+		});
+		
+		console.log("user?", userInfo[0]._id);
+
+		Video.find({ writer: userInfo[0]._id },(err, content) => {
+			const contentInfo = content;
+
+			Subscriber.find({ userTo: userInfo[0]._id }).exec((err, subscribe) => {
+				if (contentInfo[0] !== null) {
+					res.status(201).json({
+						success: true,
+						contentdata: contentInfo,
+						userdata: userInfo,
+						subscribeNumber: subscribe.length,
+						type: 'result'
+					});
+				} else {
+					res.json({ success: false });
+				}
+			  });
+
+			
+			// console.log("????", contentInfo);
+			// console.log("?", userInfo);
+		});
+
+		
+		
+
+			
+			// Video.find({writer: user[0]._id}), (err, video) => {
+			// 	console.log("video", video);
+			// 	if (video[0]) {
+			// 		res.status(201).json({
+			// 			success: true,
+			// 			videodata: video,
+			// 			userdata: user,
+			// 		});
+					
+			// 	} else {
+			// 		res.json({ success: false });
+			// 	}
+			// }
+
+			
+		
 	},
 };

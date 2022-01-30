@@ -9,19 +9,8 @@ import LikeDisLike from './LikeDisLike';
 import styled from "styled-components";
 import Swal from "sweetalert2";
 
-const Div = styled.div`
-width: 25%;
-border-radius: 4%;
-box-shadow: 4px 12px 30px 6px rgb(0 0 0 / 9%);
-transition: all 0.2s ease-in-out;
-&:hover {
 
-  box-shadow: 4px 12px 20px 6px rgb(0 0 0 / 18%);
-  transform: translateY(5px);
 
-}
-
-`
 function NFTbuy({ nftlist }) {
     const navigate = useNavigate();
     const [buyer,setBuyer] = useState('');
@@ -31,6 +20,37 @@ function NFTbuy({ nftlist }) {
 
     const nftId = useParams().nftId;
     console.log(nftId);
+
+    const [fixed, setFixed] = useState(false);
+    const [auction, setAuction] = useState(false);
+    const [modalInfo, setModalInfo] = useState({});
+
+    const Div = styled.div`
+    width: 25%;
+    border-radius: 4%;
+    box-shadow: 4px 12px 30px 6px rgb(0 0 0 / 9%);
+    transition: all 0.2s ease-in-out;
+    &:hover {
+
+      box-shadow: 4px 12px 20px 6px rgb(0 0 0 / 18%);
+      transform: translateY(5px);
+
+    }
+    `
+
+    const ButtonDiv = styled.div`
+
+    display: flex;
+    flex-wrap: wrap;
+    /* justify-content: none; */
+    margin-top: -20px;
+    `
+    const TBody = styled.div`
+    display: flex;
+    /* justify-content: left; */
+    text-align: left;
+    `
+    
 
     const onClick = () => {
       console.log('좋아요?');
@@ -53,7 +73,38 @@ function NFTbuy({ nftlist }) {
         });
    }
 
-    
+  function Fixed(info) {
+   
+    if (fixed) {
+      setFixed(false);
+    } else {
+      setFixed(true);
+    }
+    setModalInfo(info);
+  }
+
+  function Auction(info) {
+  
+    if (auction) {
+      setAuction(false);
+    } else {
+      setAuction(true);
+    }
+    setModalInfo(info);
+  }
+
+  function cancel(tokenId) {
+
+    axios
+      .post("/api/contract/nft/cancel", { tokenId })
+      .then((res) => {
+        if (res.data.success) {
+          window.location.reload();
+        }
+      });
+  }
+
+
   return (
 
 <>
@@ -65,29 +116,43 @@ function NFTbuy({ nftlist }) {
                 <Div>
                  <Card bg='black' text='white' border='white' style={{borderRadius:'4%'}}>
                    <Card.Img variant="top" src={el.imgUri} style={{ width: '25 rem', height:'25rem',borderRadius:'4%' }}/>
+                <TBody>
                 <Card.Body>
                   <Card.Title>
                     Content : {el.contentTitle}
                   </Card.Title>
-                  <Card.Title>
-                    Name : {el.nftName}
-                     </Card.Title>
-                  <Card.Title>
-                    Price : {el.price}
-                  </Card.Title> 
-                 
-                </Card.Body>
-                <Card.Body>
                   <Card.Text>
+                    Name : {el.nftName}<br />
                     desription : {el.description}
                   </Card.Text>
                 </Card.Body>
+                <Card.Body>
+                  <Card.Title>
+                    Price : {el.price}
+                  </Card.Title>
+                </Card.Body>
+                </TBody>
                    <Card.Body>
-                    <div>
-                      <Button variant="warning" style={{fontWeight:"bold"}}  onClick={()=>{BuyNFT(el.tokenId)}} >구매하기</Button>
-                    </div> 
-                  <div style={{width:"55%"}}></div>
-                  <LikeDisLike userId={localStorage.getItem('userId')} nftId={ el._id } />
+                   <ButtonDiv>
+            {
+                el.sale === true ?
+                  <>
+                  <div style={{justifyContent: "left"}}>
+                      <Button variant="warning" style={{fontWeight:"bold"}}  onClick={()=>{cancel(el.tokenId)}} >판매취소</Button>
+                  </div>
+                    <div style={{ width: "55%",  }}></div>
+                    </>
+                  :
+                  <>
+                  <div style={{ display: 'flex' }}>
+                    <span style={{ marginRight: "8%" }}><Button variant="warning" style={{ fontWeight: "bold" }} onClick={() => { Fixed({tokenId:el.tokenId,imgUri:el.imgUri}) }} >Fixed</Button></span>
+                    <span><Button variant="warning" style={{ fontWeight: "bold" }}  onClick={() => { Auction({tokenId:el.tokenId,imgUri:el.imgUri}) }} >Auction</Button></span>
+                  </div>
+                    <div style={{ width: "40%" }}></div>
+                    </>
+                     }
+                  <LikeDisLike userId={localStorage.getItem('userId')} nftId={el._id}  />
+                  </ButtonDiv>
                 </Card.Body>
                   
                 

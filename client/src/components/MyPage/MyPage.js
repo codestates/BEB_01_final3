@@ -184,6 +184,7 @@ function MyPage() {
         // display: "flex",
         // justifyContent: "center",
         flexWrap: "wrap",
+        paddingTop: "70px"
       }}
     >
       {modalShow === true ? <Modals show={modalShow} pfp={pfp}off={() => { setModalShow(false)}} img={nftInfo}></Modals> : null}

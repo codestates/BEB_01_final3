@@ -5,7 +5,8 @@ import {
     AUTH_USER,
     SEARCH_NFT,
     MYPAGE,
-    SEARCH_CONTENT
+    SEARCH_CONTENT,
+    CHANNEL
 } from '../actions/types';
 
 
@@ -35,6 +36,9 @@ export default function (state = {}, action) {
 
         case MYPAGE:
              return {...state, userInfo: action.payload}    
+
+        case CHANNEL:
+            return {...state, data: action.payload}
         default:
             return state;
     }

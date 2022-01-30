@@ -12,7 +12,7 @@ import {
   NotificationOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-
+import SideBar from "../NavBar/SideMainBar";
 
 const { SubMenu } = Menu;
 const { Content, Sider } = Layout;
@@ -56,7 +56,8 @@ function LandingPage() {
     var seconds = Math.floor(video.duration - minutes * 60);
     // console.log(video._id)
     return (
-      <Col lg={7} md={10} xs={24} key={index}>
+      <Col >
+      {/* lg={7} md={10} xs={24} key={index} */}
         {/*lg:가장클때 6그리드를쓰겠다. md:중간크기일때 8그리드를 쓰겠다. 
             xs:가장작은 크기일때는 24그리드를 쓰겠다. 총24그리드 */}
         <div style={{ position: "relative" }}>
@@ -77,7 +78,7 @@ function LandingPage() {
                 color: "#fff",
                 backgroundColor: "rgba(17, 17, 17, 0.8)",
                 opacity: 0.8,
-                padding: "2px 4px",
+                padding: "2px 6px",
                 borderRadius: "2px",
                 letterSpacing: "0.5px",
                 fontSize: "12px",
@@ -95,10 +96,12 @@ function LandingPage() {
         <Meta
           // avatar={<Avatar src={video.writer.image} />}
           title={video.title}
+          style={{marginBottom: "-8%", marginTop: "-6%"}}
         />
         {/* <span>{video.writer.name} </span> */}
         <br />
-        <span style={{ marginLeft: "3rem" }}> {video.views}</span>-
+        {/* style={{ marginLeft: "3rem" }} */}
+        <span >조회수 {video.views}회</span><br />
         <span> {moment(video.createdAt).format("MMM Do YY")} </span>
       </Col>
     );
@@ -159,51 +162,18 @@ function LandingPage() {
 
   return (
 
-    <Layout>
+    <Layout style={{paddingTop: "70px", }}>
       <Layout>
-        <Sider width={300} className="site-layout-background">
-          <Menu
-            mode="inline"
-            defaultSelectedKeys={["1"]}
-            defaultOpenKeys={["sub1"]}
-            style={{ height: "100%", borderRight: 0 }}
-          >
-            <SubMenu key="sub1" icon={<LaptopOutlined />} title="NFT">
-              <Menu.Item key="1">
-                <Link to="/nft/fixedlist" className="nav-text">NFT LIST(Fixed)</Link>
-              </Menu.Item>
-              <Menu.Item key="2">
-                <Link to="/nft/auctionlist" className="nav-text">NFT LIST(Auction)</Link>
-              </Menu.Item>
-              <Menu.Item key="3">NFT Ranking</Menu.Item>
-              <Menu.Item key="4">option4</Menu.Item>
-            </SubMenu>
-            <SubMenu key="sub2" icon={<LaptopOutlined />} title="비고">
-              <Menu.Item key="5">option5</Menu.Item>
-              <Menu.Item key="6">option6</Menu.Item>
-              <Menu.Item key="7">option7</Menu.Item>
-              <Menu.Item key="8">option8</Menu.Item>
-            </SubMenu>
-            <SubMenu
-              key="sub3"
-              icon={<NotificationOutlined />}
-              title="비고"
-            >
-              <Menu.Item key="9">option9</Menu.Item>
-              <Menu.Item key="10">option10</Menu.Item>
-              <Menu.Item key="11">option11</Menu.Item>
-              <Menu.Item key="12">option12</Menu.Item>
-            </SubMenu>
-          </Menu>
-        </Sider>
-
+        
+        <SideBar width={300} />
         <Layout>
           <Content>
             <div
               style={{
                 width: "70%",
-                margin: "3rem auto",
-                marginRight: "250px",
+                margin: "10px 0px 0px 20%",
+                // marginRight: "200px",
+                
               }}
             >
               <Title level={0}>Survivals</Title>

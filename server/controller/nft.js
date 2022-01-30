@@ -46,7 +46,9 @@ const swapContract = newContract(web3, swapAbi, process.env.SWAPCA); // swap
 
 module.exports = {
 	NFTlist: (req, res) => {
+		// console.log("??", req);
 		Nft.find({ sale: true, type: req.body.type }, (err, result) => {
+			console.log(result);
 			res.json({ data: result });
 		});
 	},
@@ -290,7 +292,7 @@ module.exports = {
 				} else {
 					Nft.findOneAndUpdate(
 						{ tokenId: tokenId },
-						{ sale: true, price: sellPrice },
+						{ sale: true, price: sellPrice, type: "fixed" },
 						(err, result) => {
 							console.log(privateKey);
 							User.findOneAndUpdate(
