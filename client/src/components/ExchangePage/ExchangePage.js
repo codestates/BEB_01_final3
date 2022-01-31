@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 // import auth from '../../actions/user_action';
 import { useNavigate } from 'react-router-dom';
-import { Typography,  Form, Input, Row, Col } from 'antd';
+import { Typography, Form, Input, Row, Col } from 'antd';
 import axios from 'axios';
 import { SwapOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
@@ -10,36 +10,34 @@ import { default as Spinner } from './Spinner';
 import styled from 'styled-components';
 
 const AllBox = styled.div`
- box-shadow: 4px 12px 20px 6px rgb(0 0 0 / 20%);
- width: 100%;
- height: 25rem;
- border-radius: 4%;
- display: flex;
- justify-content: center;
+	box-shadow: 4px 12px 20px 6px rgb(0 0 0 / 20%);
+	width: 100%;
+	height: 25rem;
+	border-radius: 4%;
+	display: flex;
+	justify-content: center;
 `;
 
 const Button = styled.button`
-  border-radius: 5px;
-  border: 1px solid #71b852;
-  padding: 5px;
-  min-width: 120px;
-  color: white;
-  font-weight: 600;
-  -webkit-appearance: none;
-  background-color: #7DE7A6;
-  box-shadow: 4px 12px 30px 6px rgb(0 0 0 / 15%);
-  cursor: pointer;
-  &:active,
-  &:foucus {
-    outline: none;
-  }
-  transition: all 0.2s ease-in-out;
-&:hover {
-
-  box-shadow: 4px 12px 20px 6px rgb(0 0 0 / 40%);
-  transform: translateY(5px);
-
-}
+	border-radius: 5px;
+	border: 1px solid #71b852;
+	padding: 5px;
+	min-width: 120px;
+	color: white;
+	font-weight: 600;
+	-webkit-appearance: none;
+	background-color: #7de7a6;
+	box-shadow: 4px 12px 30px 6px rgb(0 0 0 / 15%);
+	cursor: pointer;
+	&:active,
+	&:foucus {
+		outline: none;
+	}
+	transition: all 0.2s ease-in-out;
+	&:hover {
+		box-shadow: 4px 12px 20px 6px rgb(0 0 0 / 40%);
+		transform: translateY(5px);
+	}
 `;
 
 // const { TextArea } = Input;
@@ -145,11 +143,10 @@ function ExchangePage() {
 	};
 
 	return (
-		
 		<div
 			style={{
 				maxWidth: '1000px',
-				margin: '2rem auto',
+				margin: '7rem auto',
 			}}>
 			<div
 				style={{
@@ -164,89 +161,94 @@ function ExchangePage() {
 				<Spinner />
 			) : (
 				<AllBox>
-				<Form>
-					<div
-						style={{
-							display: 'flex',
-							justifyContent: 'space-between',
-							marginTop: '10px'
-						}}></div>
-					<label style={{ fontSize: 'x-large' }}>Token Balance</label>
-					<br />
-					<strong style={{ fontSize: 'large' }}>
-						{myWTTokens} WT
-					</strong>
-					<br />
-					<strong style={{ fontSize: 'large' }}>
-						{myNWTTokens} NWT
-					</strong>
-					<br />
-					<br />
-					<Form.Item>
-						<Row gutter={[50, 24]}>
-							<Col span={12}>
-								<label style={{ fontSize: 'large' }}>
-									Payment
-								</label>
-								<Input
-									onChange={onPaymentChange}
-									value={Price}
-								/>{' '}
-								원
-								<div>
-									<strong style={{ fontSize: 'large' }}>
-										{Price === ''
-											? 0
-											: parseInt(Price) / 1000}{' '}
-										WT
-									</strong>
-								</div>
+					<Form>
+						<div
+							style={{
+								display: 'flex',
+								justifyContent: 'space-between',
+								marginTop: '10px',
+							}}></div>
+						<label style={{ fontSize: 'x-large' }}>
+							Token Balance
+						</label>
+						<br />
+						<strong style={{ fontSize: 'large' }}>
+							{myWTTokens} WT
+						</strong>
+						<br />
+						<strong style={{ fontSize: 'large' }}>
+							{myNWTTokens} NWT
+						</strong>
+						<br />
+						<br />
+						<Form.Item>
+							<Row gutter={[50, 24]}>
+								<Col span={12}>
+									<label style={{ fontSize: 'large' }}>
+										Payment
+									</label>
+									<Input
+										onChange={onPaymentChange}
+										value={Price}
+									/>{' '}
+									원
+									<div>
+										<strong style={{ fontSize: 'large' }}>
+											{Price === ''
+												? 0
+												: parseInt(Price) / 1000}{' '}
+											WT
+										</strong>
+									</div>
+									<br />
+									<SwapOutlined
+										style={{ fontSize: '60px' }}
+									/>
+									<br />
+									<Button
+										type='primary'
+										size='middle'
+										onClick={onSubmit1}>
+										exchange WT
+									</Button>
+								</Col>
 								<br />
-								<SwapOutlined style={{ fontSize: '60px' }} />
 								<br />
-								<Button
-									type='primary'
-									size='middle'
-									onClick={onSubmit1}>
-									exchange WT
-								</Button>
-							</Col>
-							<br />
-							<br />
-							<Col span={12}>
-								<label style={{ fontSize: 'large' }}>
-									Exchange NWT
-								</label>
-								<Input
-									onChange={onWTBalanceChange}
-									value={WTBalance}
-								/>{' '}
-								WT
-								<div>
-									<strong style={{ fontSize: 'large' }}>
-										{WTBalance === ''
-											? 0
-											: parseInt(WTBalance) / 5}{' '}
-										NWT
-									</strong>
-								</div>
-								<br />
-								<SwapOutlined style={{ fontSize: '60px' }} />
-								<br />
-								<Button
-									type='primary'
-									size='middle'
-									onClick={onSubmit2}>
-									exchange NWT
-								</Button>
-							</Col>
-						</Row>
-					</Form.Item>
-				</Form>
+								<Col span={12}>
+									<label style={{ fontSize: 'large' }}>
+										Exchange NWT
+									</label>
+									<Input
+										onChange={onWTBalanceChange}
+										value={WTBalance}
+									/>{' '}
+									WT
+									<div>
+										<strong style={{ fontSize: 'large' }}>
+											{WTBalance === ''
+												? 0
+												: parseInt(WTBalance) / 5}{' '}
+											NWT
+										</strong>
+									</div>
+									<br />
+									<SwapOutlined
+										style={{ fontSize: '60px' }}
+									/>
+									<br />
+									<Button
+										type='primary'
+										size='middle'
+										onClick={onSubmit2}>
+										exchange NWT
+									</Button>
+								</Col>
+							</Row>
+						</Form.Item>
+					</Form>
 				</AllBox>
 			)}
 		</div>
-		
 	);
 }
 
