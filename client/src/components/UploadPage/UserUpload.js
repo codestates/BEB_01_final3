@@ -174,7 +174,7 @@ const UploadPage = (props) => {
 		<div
 			style={{
 				maxWidth: '900px',
-				margin: '7rem auto',
+				margin: '3rem auto',
 			}}>
 			<div
 				style={{

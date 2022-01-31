@@ -25,6 +25,7 @@ import UserUpload from './components/UploadPage/UserUpload'
 import UserVideoDetailPage from './components/VideoDetailPage/UserVideoDetailPage'
 import channel from "./components/Channel/Channel";
 import AuctionDetailPage from "./components/NFTcreate/AuctionDetailPage/AuctionDetailPage";
+import Footer from './components/Footer/Footer'
 
 // const express = require("express");
 // const app = express();
@@ -57,6 +58,7 @@ function App(props) {
     <BrowserRouter>
       <div className="App">
         <Bar isLogin={isLogin} />
+        <div className="content-wrap">
         {/*
         A <Switch> looks through all its children <Route>
         elements and renders the first one whose path
@@ -94,6 +96,8 @@ function App(props) {
           <Route exact path="/channel" element={Auth(channel, null)} />
 
         </Routes>
+        </div>
+        <Footer />
       </div>
     </BrowserRouter>
   );

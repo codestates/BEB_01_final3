@@ -1,17 +1,11 @@
 import React, { useState } from 'react';
 import '../../App.css';
-import Sidebar from './DevComponent/Sidebar';
 import Layout, { Content } from 'antd/lib/layout/layout';
-import { Button, Card } from 'react-bootstrap';
-import Avatar from 'antd/lib/avatar/avatar';
-import wtImg from '../img/wtimg.png';
-import axios from 'axios';
-import { default as Spinner } from './Spinner';
-import { Form, Col, Row } from 'antd';
 import TokenMinting from './TokenMinting';
 import Batting from '../batting/Batting';
 import Auth from "./Auth"
 import NftMinting from '../NFTcreate/CreateNFT'
+import SideMainBar from './DevComponent/SideMainBar';
 
 function DeveloperPage() {
 	
@@ -33,9 +27,10 @@ function DeveloperPage() {
 	
 	return (
 		<div>
+			
 			<Layout style={{paddingTop: "70px"}}>
 			<Layout width={300} className='ant-layout-has-sider' >
-				<Sidebar  getNum={setNum} />
+			<SideMainBar width={300} getNum={setNum}></SideMainBar>
 				<div style={{width:"100%"}}>{obj[number]}</div>
 			</Layout>
 		</Layout>
