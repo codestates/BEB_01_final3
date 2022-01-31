@@ -1,6 +1,11 @@
 @import '~antd/dist/antd.css';
 .App {
   text-align: center;
+
+  display: flex;
+  flex-direction: column;
+  min-height: 50vh;
+  
 }
 
 .App-logo {
@@ -80,4 +85,8 @@
 .ripple-button > .content {
   position: relative;
   z-index: 2;
+}
+
+.content-wrap{
+  flex: 1;
 }

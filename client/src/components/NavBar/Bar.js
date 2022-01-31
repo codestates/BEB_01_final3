@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Navbar,
   Nav,
@@ -71,96 +71,80 @@ cursor: pointer;
 
 
 function Bar({ isLogin }) {
-  const [show, setShow] = useState(false);
-  const [isAuth, setIsAuth] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [searchValue, setSearchValue] = useState(false);
-  const [searchOption, setSearchOption] = useState("");
+	const [show, setShow] = useState(false);
+	const [isAuth, setIsAuth] = useState(false);
+	const [isAdmin, setIsAdmin] = useState(false);
+	const [searchValue, setSearchValue] = useState(false);
+	const [searchOption, setSearchOption] = useState('');
 
-  const navigate = useNavigate();
+	const navigate = useNavigate();
 
-  const dispatch = useDispatch();
+	const dispatch = useDispatch();
 
-  dispatch(auth()).then((res) => {
-    // console.log(res.payload);
-    setIsAuth(res.payload.isAuth);
-    setIsAdmin(res.payload.isAdmin);
-    // console.log("SA", res.payload.isAuth);
-    // console.log("SD", res.payload.isAdmin);
-  });
+	dispatch(auth()).then((res) => {
+		// console.log(res.payload);
+		setIsAuth(res.payload.isAuth);
+		setIsAdmin(res.payload.isAdmin);
+		// console.log("SA", res.payload.isAuth);
+		// console.log("SD", res.payload.isAdmin);
+	});
 
-  const onSubmit = (e) => {
-    console.log("value", searchValue);
-    console.log("option", searchOption);
+	const onSubmit = (e) => {
+		console.log('value', searchValue);
+		console.log('option', searchOption);
 
-    e.preventDefault();
+		e.preventDefault();
 
-    let search = { name: searchValue };
+		let search = { name: searchValue };
 
-    if(searchOption === "NFT"){
-			console.log("NFT 컨텐츠에 들어왔구나");
+		if (searchOption === 'NFT') {
+			console.log('NFT 컨텐츠에 들어왔구나');
 
-			dispatch(searchNFT(search))
-				.then(response => {
+			dispatch(searchNFT(search)).then((response) => {
 				// setMessage(response.payload.message);
-				if(response.payload.success === true) {
-
+				if (response.payload.success === true) {
 					console.log('bar.nft', response);
 					navigate('/SearchNft');
-									
+				} else if (response.payload.success === false) {
+					navigate('/SearchFail');
+					alert('실패');
 				}
-				else if(response.payload.success === false) {
-					navigate('/SearchFail')
-					alert("실패");
-				}
-			})
-		}
-		else if(searchOption === "CONTENT"){
-			console.log("옵션 컨텐츠에 들어왔구나");
+			});
+		} else if (searchOption === 'CONTENT') {
+			console.log('옵션 컨텐츠에 들어왔구나');
 			console.log('c.t', search);
 
-			dispatch(searchContent(search))
-				.then(response => {
-					console.log(response);
+			dispatch(searchContent(search)).then((response) => {
+				console.log(response);
 				// setMessage(response.payload.message);
-				if(response.payload.success === true) {
-						console.log('bar.content', response);
-						navigate('/SearchContent');
+				if (response.payload.success === true) {
+					console.log('bar.content', response);
+					navigate('/SearchContent');
+				} else if (response.payload.success === false) {
+					navigate('/SearchFail');
+					alert('실패');
 				}
-				else if(response.payload.success === false) {
-						navigate('/SearchFail')
-						alert("실패");
+			});
+		} else if (searchOption === 'CHANNEL') {
+			console.log('체널임?');
 
+			dispatch(Channel(search)).then((response) => {
+				console.log(response);
+				// setMessage(response.payload.message);
+				if (response.payload.success === true) {
+					console.log('bar.content', response);
+					navigate('/channel');
+				} else if (response.payload.success === false) {
+					navigate('/SearchFail');
+					alert('실패');
 				}
-				
-				
-			})
+			});
 		}
 
-    else if(searchOption === "CHANNEL"){
-      console.log("체널임?");
+		// navigate('/SearchNft');
+		// window.location.replace('/Search');
+	};
 
-      dispatch(Channel(search))
-				.then(response => {
-					console.log(response);
-				// setMessage(response.payload.message);
-				if(response.payload.success === true) {
-						console.log('bar.content', response);
-						navigate('/channel');
-				}
-				else if(response.payload.success === false) {
-						navigate('/SearchFail')
-						alert("실패");
-
-				}
-				
-				
-			})
-    }
-
-    // navigate('/SearchNft');
-    // window.location.replace('/Search');
-  };
 
   const handleLogout = () => {
     console.log("logoout");
@@ -175,6 +159,7 @@ function Bar({ isLogin }) {
           alert("로그아웃 하는데 실패 했습니다");
         }
       });
+      
   };
 /////////////////Ripple Button 사용법//////////////////////////////
   // const RippleButton = ({ children, onClick }) => {
@@ -218,29 +203,30 @@ function Bar({ isLogin }) {
   // };
 /////////////////////////////////////////////////////////////
   return (
-    <Navbar bg="" expand="lg" style={{ width: "100%", height: "70px" , zIndex: 100}}>
+    <Navbar bg="white" expand="lg" style={{ width: "100%", height: "70px" , zIndex: 100}}>
       {/* position: "fixed" 해제했슴다 */}
       <Navbar.Brand href="/" al>
-        <img src={watto} width="200" style={{}}/>
+        <img src={watto} width="200" style={{marginTop: '10px'}}/>
       </Navbar.Brand>
 
-      <Container fluid>
-        <Navbar.Toggle aria-controls="navbarScroll" />
-        <Navbar.Collapse id="navbarScroll">
-          <Navbar.Toggle aria-controls="navbarScroll" />
+			<Container fluid>
+				<Navbar.Toggle aria-controls='navbarScroll' />
+				<Navbar.Collapse id='navbarScroll'>
+					<Navbar.Toggle aria-controls='navbarScroll' />
 
-          <Navbar.Collapse id="navbarScroll" className="d-flex justify-content-center">
-            <Form className="d-flex">
-              <DropdownButton variant="light">
-                <Dropdown.Item
-                  type="option"
-                  // value={option}
-                  onClick={(e) => {
-                    setSearchOption("NFT");
-                  }}
-                >
-                  NFT
-                </Dropdown.Item>
+					<Navbar.Collapse
+						id='navbarScroll'
+						className='d-flex justify-content-center'>
+						<Form className='d-flex'>
+							<DropdownButton variant='light'>
+								<Dropdown.Item
+									type='option'
+									// value={option}
+									onClick={(e) => {
+										setSearchOption('NFT');
+									}}>
+									NFT
+								</Dropdown.Item>
 
                 <Dropdown.Item
                   type="option"
@@ -325,19 +311,18 @@ function Bar({ isLogin }) {
                 Upload
               </Button>
 
-              <Button
-                variant="dark"
-                href={isAuth ? "" : "/login"}
-                size="md"
-                className="me-1"
-                onClick={() => {
-                  if (isAuth) {
-                    handleLogout();
-                  }
-                }}
-              >
-                {isAuth ? "Sign Out" : "Sign In"}
-              </Button>
+							<Button
+								variant='dark'
+								href={isAuth ? '' : '/login'}
+								size='md'
+								className='me-1'
+								onClick={() => {
+									if (isAuth) {
+										handleLogout();
+									}
+								}}>
+								{isAuth ? 'Sign Out' : 'Sign In'}
+							</Button>
 
               <Button
                 variant="dark"
