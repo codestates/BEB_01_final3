@@ -24,6 +24,7 @@ const StyledSlider = styled(Slider)`
 	.slick-slide div {
 		outline: none;
 	}
+ 
 	/* .slick-list {
 		//슬라이드 스크린
 		width: 100%;
@@ -57,16 +58,38 @@ const ImageContainer = styled.div`
 	height: 10%;
 	width: 10%;
 	justify-content: center;
+  display: inline-flex;
 `;
 
 const Image = styled.img`
 	/* max-width: 100%;
 	max-height: 100%; */
-	width: 50vw;
-	height: 60vh;
+	width: 700px;
+	height: 400px;
+  display: flex;
 	justify-content: center;
 `;
+const ImgDiv = styled.div`
 
+background:  no-repeat center;
+outline: none;
+cursor: pointer;
+border: none;
+border-radius: 5%;
+box-shadow: 4px 12px 30px 6px rgb(0 0 0 / 25%);
+transition: all 0.2s ease-in-out;
+margin: 20px;
+&:hover {
+
+  box-shadow: 4px 12px 20px 6px rgb(0 0 0 / 50%);
+  transform: translateY(5px);
+
+}
+`;
+const TextBox = styled.div`
+margin-left: 10px;
+ text-align: left;
+`
 // syled
 
 const { SubMenu } = Menu;
@@ -82,7 +105,7 @@ function LandingPage() {
 		slidesToShow: 1,
 		slidesToScroll: 1,
 		autoplay: true,
-		autoplaySpeed: 2000,
+		autoplaySpeed: 3500,
 	};
 	const [Video, setVideo] = useState([]);
 	const [UserVideo, setUserVideo] = useState([]);
@@ -114,113 +137,121 @@ function LandingPage() {
 	console.log('SV', Video);
 	console.log('UV', UserVideo);
 
-	const renderCards = Video.map((video, index) => {
-		var minutes = Math.floor(video.duration / 60);
-		var seconds = Math.floor(video.duration - minutes * 60);
-		// console.log(video._id)
-		return (
-			<Col>
-				{/* lg={7} md={10} xs={24} key={index} */}
-				{/*lg:가장클때 6그리드를쓰겠다. md:중간크기일때 8그리드를 쓰겠다. 
+	// const renderCards = Video.map((video, index) => {
+	// 	var minutes = Math.floor(video.duration / 60);
+	// 	var seconds = Math.floor(video.duration - minutes * 60);
+	// 	// console.log(video._id)
+	// 	return (
+	// 		<Col>
+	// 			{/* lg={7} md={10} xs={24} key={index} */}
+	// 			{/*lg:가장클때 6그리드를쓰겠다. md:중간크기일때 8그리드를 쓰겠다. 
+  //           xs:가장작은 크기일때는 24그리드를 쓰겠다. 총24그리드 */}
+	// 			<div style={{ position: 'relative' }}>
+	// 				<a href={`/video/${video._id}/counterpage`}>
+	// 					<img
+	// 						style={{ width: '100%' }}
+	// 						alt='thumbnail'
+	// 						src={`http://localhost:5000/${video.thumbnail}`}
+	// 					/>
+
+	// 					<div
+	// 						className='duration'
+	// 						style={{
+	// 							bottom: 0,
+	// 							right: 0,
+	// 							position: 'absolute',
+	// 							margin: '4px',
+	// 							color: '#fff',
+	// 							backgroundColor: 'rgba(17, 17, 17, 0.8)',
+	// 							opacity: 0.8,
+	// 							padding: '2px 6px',
+	// 							borderRadius: '2px',
+	// 							letterSpacing: '0.5px',
+	// 							fontSize: '12px',
+	// 							fontWeight: '500',
+	// 							lineHeight: '12px',
+	// 						}}>
+	// 						<span>
+	// 							{minutes} : {seconds}
+	// 						</span>
+	// 					</div>
+	// 				</a>
+	// 			</div>
+	// 			<br />
+	// 			<Meta
+	// 				// avatar={<Avatar src={video.writer.image} />}
+	// 				title={video.title}
+	// 				style={{ marginBottom: '-8%', marginTop: '-6%' }}
+	// 			/>
+	// 			{/* <span>{video.writer.name} </span> */}
+	// 			<br />
+	// 			{/* style={{ marginLeft: "3rem" }} */}
+	// 			<span>조회수 {video.views}회</span>
+	// 			<br />
+	// 			<span> {moment(video.createdAt).format('MMM Do YY')} </span>
+	// 		</Col>
+	// 	);
+	// });
+
+  const renderUserCards = UserVideo.map((video, index) => {
+    var minutes = Math.floor(video.duration / 60);
+    var seconds = Math.floor(video.duration - minutes * 60);
+//  console.log(video._id)
+    return (
+      <Col lg={7} md={10} xs={24} key={index}>
+        <ImgDiv>
+        {/*lg:가장클때 6그리드를쓰겠다. md:중간크기일때 8그리드를 쓰겠다. 
             xs:가장작은 크기일때는 24그리드를 쓰겠다. 총24그리드 */}
-				<div style={{ position: 'relative' }}>
-					<a href={`/video/${video._id}/counterpage`}>
-						<img
-							style={{ width: '100%' }}
-							alt='thumbnail'
-							src={`http://localhost:5000/${video.thumbnail}`}
-						/>
+        <div style={{ position: "relative" }}>
+          <a href={`/videos/${video._id}`}>
+            <img
+              style={{ width: "95%", marginTop: '5px', borderRadius: '5px'}}
+              alt="thumbnail"
+              src={`http://localhost:5000/${video.thumbnail}`}
+            />
 
-						<div
-							className='duration'
-							style={{
-								bottom: 0,
-								right: 0,
-								position: 'absolute',
-								margin: '4px',
-								color: '#fff',
-								backgroundColor: 'rgba(17, 17, 17, 0.8)',
-								opacity: 0.8,
-								padding: '2px 6px',
-								borderRadius: '2px',
-								letterSpacing: '0.5px',
-								fontSize: '12px',
-								fontWeight: '500',
-								lineHeight: '12px',
-							}}>
-							<span>
-								{minutes} : {seconds}
-							</span>
-						</div>
-					</a>
-				</div>
-				<br />
-				<Meta
-					// avatar={<Avatar src={video.writer.image} />}
-					title={video.title}
-					style={{ marginBottom: '-8%', marginTop: '-6%' }}
-				/>
-				{/* <span>{video.writer.name} </span> */}
-				<br />
-				{/* style={{ marginLeft: "3rem" }} */}
-				<span>조회수 {video.views}회</span>
-				<br />
-				<span> {moment(video.createdAt).format('MMM Do YY')} </span>
-			</Col>
-		);
-	});
-
-	const renderUserCards = UserVideo.map((video, index) => {
-		var minutes = Math.floor(video.duration / 60);
-		var seconds = Math.floor(video.duration - minutes * 60);
-		//  console.log(video._id)
-		return (
-			<Col lg={7} md={10} xs={24} key={index}>
-				{/*lg:가장클때 6그리드를쓰겠다. md:중간크기일때 8그리드를 쓰겠다. 
-            xs:가장작은 크기일때는 24그리드를 쓰겠다. 총24그리드 */}
-				<div style={{ position: 'relative' }}>
-					<a href={`/videos/${video._id}`}>
-						<img
-							style={{ width: '100%' }}
-							alt='thumbnail'
-							src={`http://localhost:5000/${video.thumbnail}`}
-						/>
-
-						<div
-							className='duration'
-							style={{
-								bottom: 0,
-								right: 0,
-								position: 'absolute',
-								margin: '4px',
-								color: '#fff',
-								backgroundColor: 'rgba(17, 17, 17, 0.8)',
-								opacity: 0.8,
-								padding: '2px 4px',
-								borderRadius: '2px',
-								letterSpacing: '0.5px',
-								fontSize: '12px',
-								fontWeight: '500',
-								lineHeight: '12px',
-							}}>
-							<span>
-								{minutes} : {seconds}
-							</span>
-						</div>
-					</a>
-				</div>
-				<br />
-				<Meta
-					avatar={<Avatar src={video.writer.image} />}
-					title={video.title}
-				/>
-				<span>{video.writer.name} </span>
-				<br />
-				<span style={{ marginLeft: '3rem' }}> {video.views}</span>-
-				<span> {moment(video.createdAt).format('MMM Do YY')} </span>
-			</Col>
-		);
-	});
+            <div
+              className="duration"
+              style={{
+                bottom: 0,
+                right: 0,
+                position: "absolute",
+                margin: "4px",
+                color: "#fff",
+                backgroundColor: "rgba(17, 17, 17, 0.8)",
+                opacity: 0.8,
+                padding: "2px 4px",
+                borderRadius: "2px",
+                letterSpacing: "0.5px",
+                fontSize: "12px",
+                fontWeight: "500",
+                lineHeight: "12px",
+              }}
+            >
+              <span>
+                {minutes} : {seconds}
+              </span>
+            </div>
+          </a>
+        </div>
+        <br />
+        <Meta
+          avatar={<Avatar src={video.writer.image} size={45}/>}
+          title={video.title}
+          style={{marginLeft: '10px'}}
+        />
+        <TextBox>
+        <span>{video.writer.name} </span>
+        <br />
+        <span style={{ marginLeft: "3rem" }}> 조회수 {video.views}</span>
+        <span> {moment(video.createdAt).format("MMM Do YY")} </span>
+        <br />
+        <br/>
+        </TextBox>
+        </ImgDiv>
+      </Col>
+    );
+  });
 
 	return (
 		<Layout style={{ paddingTop: '70px' }}>
@@ -246,7 +277,7 @@ function LandingPage() {
 									width: '100%',
 									// height: '100%',
 									height: '500px',
-									backgroundColor: 'gray',
+									backgroundColor: '#494f54',
 									// margin: 10,
 									padding: 45,
 									// justifyContent: 'center',
@@ -272,7 +303,13 @@ function LandingPage() {
 							<hr />
 							<Title level={0}>General Contents</Title>
 							<hr />
-							<Row gutter={16}>{renderUserCards}</Row>
+							<Row style={{
+                width: '80%',
+                display: 'inline-flex',
+                justifyContent: 'center',
+                marginBottom: '50px'
+              }}
+              gutter={16}>{renderUserCards}</Row>
 						</div>
 					</Content>
 				</Layout>

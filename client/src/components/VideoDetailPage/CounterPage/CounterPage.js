@@ -192,16 +192,19 @@ function CounterPage() {
         {/* <div onClick={(e) => showImg}> */}
         <a style={{ cursor: "pointer" }} onClick={showImg}>
           <Card.Img
-            // height: {'20vh'},
-            // width: {"20vw"},
+           
             size={150}
             src={`http://localhost:5000/${survival.img}`}
             alt
             style={{
+              display: 'flex',
               margin: "10px",
               width: "15vw",
               height: "15.5vh",
               justifyContent: "center",
+              height: '15vh',
+              width: "11vw",
+              
               // cursor: 'pointer',
             }}
           />

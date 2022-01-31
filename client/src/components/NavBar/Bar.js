@@ -133,7 +133,8 @@ function Bar({ isLogin }) {
   };
 
   return (
-    <Navbar bg="black" expand="lg" style={{position: "fixed", width: "100%", height: "70px" , zIndex: 100}}>
+    <Navbar bg="black" expand="lg" style={{ width: "100%", height: "70px" , zIndex: 100}}>
+      {/* position: "fixed" 해제했슴다 */}
       <Navbar.Brand href="/" al>
         <img src={watto} width="140" />
       </Navbar.Brand>

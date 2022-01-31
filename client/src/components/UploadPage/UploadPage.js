@@ -1,11 +1,67 @@
 import React, { useState } from 'react'
-import { Typography, Button, Form, Input, message } from 'antd';
+import { Typography, Form, Input, message } from 'antd';
 import Dropzone from 'react-dropzone';
 import { PlusOutlined } from '@ant-design/icons/lib/icons';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import UserImg from './UserImg';
+import styled from "styled-components";
+import { Row, Col } from 'react-bootstrap';
+
+const ImgDiv = styled.div`
+width: 100%;
+height: 20rem;
+background:  no-repeat center;
+background-size: 50% 20rem;
+outline: none;
+cursor: pointer;
+border: 1px solid #7DE7A6;
+border-radius: 5%;
+box-shadow: 4px 12px 30px 6px rgb(0 0 0 / 9%);
+transition: all 0.2s ease-in-out;
+
+&:hover {
+
+  box-shadow: 4px 12px 20px 6px rgb(0 0 0 / 18%);
+  transform: translateY(5px);
+
+}
+`;
+const inputBox = styled.input`
+
+`
+
+const Button = styled.button`
+  border-radius: 5px;
+  border: 1px solid #71b852;
+  padding: 5px;
+  min-width: 120px;
+  color: white;
+  font-weight: 600;
+  -webkit-appearance: none;
+  background-color: #7DE7A6;
+  box-shadow: 4px 12px 30px 6px rgb(0 0 0 / 9%);
+  cursor: pointer;
+  &:active,
+  &:foucus {
+    outline: none;
+  }
+  transition: all 0.2s ease-in-out;
+&:hover {
+
+  box-shadow: 4px 12px 20px 6px rgb(0 0 0 / 20%);
+  transform: translateY(5px);
+
+}
+`;
+const AllBox = styled.div`
+ box-shadow: 4px 12px 20px 6px rgb(0 0 0 / 20%);
+ width: 105%;
+ border-radius: 3%;
+ height: 44rem;
+`;
+
 
 const { TextArea } = Input
 const { Title, Text } = Typography
@@ -126,11 +182,15 @@ const UploadPage = (props) => {
     return (
         <div
             style={{
-                maxWidth: '700px',
+
+                maxWidth: '1000px',
+                margin: '2rem auto',
+
+                // maxWidth: '700px',
                 // margin: '2rem auto',
-                paddingTop: "100px",
-                marginLeft: '33%',
-                paddingBottom: "20px"
+                // paddingTop: "100px",
+                // marginLeft: '33%',
+                // paddingBottom: "20px"
             }}
         >
             <div
@@ -145,9 +205,12 @@ const UploadPage = (props) => {
             </div>
 
             <Form onSubmit={onSubmit}>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <AllBox>
+                {/* <div style={{ display: 'flex', justifyContent: 'space-between' }}> */}
                     {/* Drop zone 부분*/}
-
+            <Row style={{ display: 'flex', justifyContent: 'space-between', margin: '10px'}}>
+                <Col xs={5} style={{ marginTop: '40px', marginLeft: '80px'}}>
+                <ImgDiv>
                     <Dropzone
                         onDrop={onDrop}
                         multiple={false} //한번에 파일을 2개이상올릴껀지
@@ -156,9 +219,8 @@ const UploadPage = (props) => {
                         {({ getRootProps, getInputProps }) => (
                             <div
                                 style={{
-                                    width: '300px',
-                                    height: '240px',
-                                    border: '1px solid lightgray',
+                                    width: '410px',
+                                    height: '20rem',
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
@@ -170,15 +232,20 @@ const UploadPage = (props) => {
                             </div>
                         )}
                     </Dropzone>
+                    </ImgDiv>
+                    
                     {/* 썸네일부분 */}
                     {ThumbnailPath !== '' && (
                         <div>
                             <img src={`/${ThumbnailPath}`} alt="haha" />
                         </div>
                     )}
-                </div>
+                    
+                    </Col>
+                {/* </div> */}
+                <Col xs={5} style={{ marginTop: '40px',  marginRight: '80px' }}>
                 <label>Title</label>
-                <Input onChange={onTitleChange} value={VideoTitle} placeholder='콘텐츠 제목' />
+                <Input onChange={onTitleChange} value={VideoTitle} placeholder='[기획명] 부제 Ep.01' />
                 <br />
                 <br />
                 <label>Description</label>
@@ -194,9 +261,12 @@ const UploadPage = (props) => {
                 <Input  onChange={onSurvivalList} value={Survival} placeholder='이름, 이름, 이름, ...'/>
                 <br />
                 <br />
-                <label>후보자 이미지</label>
+                
+                </Col>
                 <UserImg refreshFunction={updateImages} />
                 <br />
+                <br />
+                </Row>
                 <br />
                 <select onChange={onPrivateChange}>
                     {PrivateOptions.map((
@@ -222,9 +292,12 @@ const UploadPage = (props) => {
                 </select>
                 <br />
                 <br />
-                <Button type="primary" size="large" onClick={onSubmit}>
+                <Button size="large" onClick={onSubmit}>
                     Submit
                 </Button>
+                <br />
+                <br />
+                </AllBox>
             </Form>
         </div>
     )
