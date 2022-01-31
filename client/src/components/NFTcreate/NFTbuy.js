@@ -26,8 +26,9 @@ function NFTbuy({ nftlist }) {
     const [modalInfo, setModalInfo] = useState({});
 
     const Div = styled.div`
-    width: 25%;
+    width: 400px;
     border-radius: 4%;
+    /* display: flex; */
     box-shadow: 4px 12px 30px 6px rgb(0 0 0 / 9%);
     transition: all 0.2s ease-in-out;
     &:hover {
@@ -36,6 +37,9 @@ function NFTbuy({ nftlist }) {
       transform: translateY(5px);
 
     }
+    /* margin-top: -60%; */
+    margin-right: 2.5%;
+    margin-left: 2.5%;
     `
 
     const ButtonDiv = styled.div`

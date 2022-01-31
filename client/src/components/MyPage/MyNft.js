@@ -210,6 +210,7 @@ function MyNft () {
      alignContent: 'center',
     backgroundColor:'black'
       }}>
+        
         {/* 판매부분 fixed / Acution 모달창  */}
         {fixed === true ? <FixedModal check={Fixed} modalInfo={modalInfo} sellNFT={sellNFT}/> : null}
         {auction === true ? <AuctionModal check={Auction} modalInfo={modalInfo} userInfo={userInfo} /> : null}

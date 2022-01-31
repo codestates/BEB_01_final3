@@ -5,14 +5,14 @@ import NftListSpinner from '../spinner/nftListSpinner';
 import NFTbuy from './NFTbuy'
 import styled from "styled-components";
 import Swal from "sweetalert2";
-
+import SideBar from '../NavBar/SideMainBar';
 const Div = styled.div`
 margin: auto;
 width: 90%;
 height: 100vh;
 display: flex;
 flex-wrap: wrap;
-justify-content: space-between;
+justify-content: center;
 align-items: center;
 
 `
@@ -29,7 +29,7 @@ function NftList() {
           if(res.data.data.length !== 0){
             setNft(res.data.data)
             console.log(res.data.data.length);
-            // setLoading(true)
+            setLoading(true)
           }else if( res.data.data.lenght === 0){
             setLoading(false)
           }
@@ -40,7 +40,7 @@ function NftList() {
         return (
           
          <Div>
-
+           <SideBar width={300}/>
             {
              loading === false ?
              <NftListSpinner></NftListSpinner>

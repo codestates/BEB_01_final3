@@ -61,7 +61,7 @@ function LikeNft () {
     const navigate = useNavigate();
 
     useEffect(() => {
-        axios.post('/api/contract/nft/list').then((res) => {
+        axios.post('/api/contract/nft/list', {type:"fixed"}).then((res) => {
             console.log(res);
           if(res.data.data.length !== 0){
             setNft(res.data.data)

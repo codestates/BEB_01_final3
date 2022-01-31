@@ -14,6 +14,8 @@ import MyConTent from "./MyConTent";
 import copyimg from "./copy.png";
 import styled from "styled-components";
 import Swal from "sweetalert2";
+import SideBar from '../NavBar/SideMainBar';
+
 const Div = styled.div`
 display: flex;
 flex-wrap: wrap;
@@ -187,9 +189,11 @@ function MyPage() {
         paddingTop: "70px"
       }}
     >
+            <SideBar width={300} />
+
       {modalShow === true ? <Modals show={modalShow} pfp={pfp}off={() => { setModalShow(false)}} img={nftInfo}></Modals> : null}
         
-      
+
       
       <div
         style={{

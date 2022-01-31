@@ -5,7 +5,7 @@ import styled from "styled-components";
 import SideBarr from "./SideBar";
 import image from "../img/watto.png"
 
-const Container = styled.div `
+const Container = styled.div`
     background-color: #7DE7A6;
 `
 const Sidebar = styled.div` 
@@ -29,7 +29,7 @@ height: 100%;
 
 const Button = styled.button`
 position: relative;
-  left: 150px; 
+  left: 160px; 
   top: 400px;
   width: 40px;
   height: 100px;
@@ -38,9 +38,9 @@ position: relative;
   border: 2px solid #7DE7A6;
   border-radius: 10px;
   overflow: hidden;
-  color: #7DE7A6;
+  color: black;
   background: #7DE7A6;
-
+  font-size: 30px;
 ` 
     
   
@@ -105,10 +105,10 @@ const SideMainBar = ({ width=280 }) => {
       <Sidebar ref={side} style={{ width: `${width}px`, transform: `translatex(${-xPosition}px)`}}>
           <Button onClick={() => toggleMenu()}>
             {isOpen ? 
-            <span>X</span> : <span>O</span>
+            <span>{'<'}</span> : <span>{'>'}</span>
             }
           </Button>
-          <img src={image} width="100%" style={{marginTop: "-30%"}} ></img>
+          <a href="/"><img src={image} width="100%" style={{marginTop: "-30%"}}></img></a>
         <Content><SideBarr /></Content>
         
       </Sidebar>

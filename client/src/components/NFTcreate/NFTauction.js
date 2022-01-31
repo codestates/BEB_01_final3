@@ -5,7 +5,6 @@ import { useNavigate} from 'react-router-dom';
 import LikeDisLike from './LikeDisLike';
 import DetailAuction from './AuctionButton/DetailAuction'
 
-
 function NFTauction({ nftlist }) {
   
     const navigate = useNavigate();
@@ -36,7 +35,6 @@ function NFTauction({ nftlist }) {
 
 
     <>
-
     {
              nftlist.map((el)=>{
                return(
