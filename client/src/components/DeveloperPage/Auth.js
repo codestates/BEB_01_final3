@@ -110,11 +110,13 @@ function Auth() {
 	// 	setPublicKey(e);
 	// }
 	return (
-		<Layout width={300} className='ant-layout-has-sider'>
+		<Layout width={300} className='ant-layout-has-sider' style={{paddingLeft: "200px", paddingTop: "20px",}}>
 			<Content>
-				<div>각 서버계정의 현 보유 토큰 총 량</div>
-				<div>wt : {currentWT}</div>
-				<div>nwt : {currentNWT}</div>
+				<div style={{ }}>
+					<div>각 서버계정의 현 보유 토큰 총 량</div>
+					<div>wt : {currentWT}</div>
+					<div>nwt : {currentNWT}</div>
+				</div>
 				{isLoading ? (
 					<Spinner />
 				) : (

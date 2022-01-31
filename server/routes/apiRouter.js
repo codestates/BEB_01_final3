@@ -12,6 +12,7 @@ const {
 	getServerList,
 	addAuth,
 	removeAuth,
+	searchChannelPage,
 } = require('../controller/api');
 // const { default: Search } = require('../../client/src/components/Search/Search');
 
@@ -35,6 +36,8 @@ router.get('/users/serverList', auth, getServerList);
 router.post('/users/serverAddOwner', auth, addAuth);
 
 router.post('/users/serverRemoveOwner', auth, removeAuth);
+
+router.post('/channel', auth, searchChannelPage);
 
 // router.post('/users/Search', Search);
 

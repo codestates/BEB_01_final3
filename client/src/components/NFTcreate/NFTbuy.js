@@ -89,11 +89,8 @@ function NFTbuy({ nftlist }) {
                   <div style={{width:"55%"}}></div>
                   <LikeDisLike userId={localStorage.getItem('userId')} nftId={ el._id } />
                 </Card.Body>
-                  
-                
                    </Card>
                    </Div>
-            
                )
              })
              

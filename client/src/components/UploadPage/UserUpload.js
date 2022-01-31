@@ -66,6 +66,7 @@ const PrivateOptions = [
 ];
 
 const CategoryOptions = [{ value: 1, label: "GeneralContents" }];
+
 const UploadPage = (props) => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
@@ -141,7 +142,7 @@ const UploadPage = (props) => {
       }
     });
   };
-
+//////////////////////////////////////////////////////////////////
   const onSubmit = (e) => {
     e.preventDefault(); //새로고침방지
     const variables = {
@@ -153,8 +154,6 @@ const UploadPage = (props) => {
       category: Category,
       duration: Duration,
       thumbnail: ThumbnailPath,
-      opendate: Opendate,
-      survival: Survival,
       image: Image,
     };
     axios.post("/api/user/video/uploadVideo", variables).then((response) => {
@@ -201,6 +200,18 @@ const UploadPage = (props) => {
           >
             {({ getRootProps, getInputProps }) => (
               <div
+//////////////////////////////////////////////
+    // return (
+    //     <div
+    //         style={{
+    //             maxWidth: '700px',
+    //             marginLeft: '33%',
+    //             margin: '2rem auto',
+    //             paddingTop: "100px",
+    //         }}
+    //     >
+    //         <div
+///////////////////////////////////////////////
                 style={{
                   width: "300px",
                   height: "240px",

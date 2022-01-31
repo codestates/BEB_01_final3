@@ -186,6 +186,7 @@ function MyPage() {
       style={{
         width: "100%",
         flexWrap: "wrap",
+        paddingTop: "70px"
       }}
     >
       {modalShow === true ? (

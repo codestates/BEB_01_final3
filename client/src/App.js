@@ -23,6 +23,7 @@ import LikeConTent from "./components/MyPage/Like/LikeConTent";
 import Batting from "./components/batting/Batting"
 import UserUpload from './components/UploadPage/UserUpload'
 import UserVideoDetailPage from './components/VideoDetailPage/UserVideoDetailPage'
+import channel from "./components/Channel/Channel";
 import AuctionDetailPage from "./components/NFTcreate/AuctionDetailPage/AuctionDetailPage";
 
 // const express = require("express");
@@ -89,6 +90,8 @@ function App(props) {
           <Route exact path="/user/mypage/Like/LikeNft" element={Auth(LikeNft, true)} />
           <Route exact path="/user/mypage/Like/LikeConTent" element={Auth(LikeConTent, true)} />
           <Route exact path="/Developer/batting" element={Auth(Batting, true)} />
+
+          <Route exact path="/channel" element={Auth(channel, null)} />
 
         </Routes>
       </div>
