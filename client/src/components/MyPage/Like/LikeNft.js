@@ -4,7 +4,7 @@ import axios from 'axios';
 import {Card,Button} from 'react-bootstrap'
 import { useNavigate, useParams } from 'react-router-dom';
 import LikeDisLike from '../../NFTcreate/LikeDisLike';
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import FixedModal  from '../FixedModal';
 import AuctionModal  from '../AuctionModal';
 import Swal from "sweetalert2";
@@ -28,6 +28,20 @@ function LikeNft () {
     const [sale, setSale] = useState(true);
     const [userInfo, setUserInfo] = useState("");
     const [profile, setProfile] = useState('')
+
+    const loadEffect2 = keyframes `
+    from{
+      opacity: 0
+    }
+    to {
+      opacity: 10
+    }
+    `
+
+    const MainDiv = styled.div`
+    animation: ${loadEffect2} 5s ease, step-start ;
+
+    `
 
     const Div = styled.div`
     margin: 2%;
@@ -237,7 +251,8 @@ function LikeNft () {
   }
 
     return(
-        <div>
+      <div>
+        <MainDiv>
             <div style={{
                 fontSize: "50px",
                 color: "white",
@@ -318,8 +333,8 @@ function LikeNft () {
             )}
 
         </div>
+        </MainDiv>
         </div>
-        
     )
 
 

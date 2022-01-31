@@ -28,12 +28,13 @@ function NftList() {
 
         return (
           <div style={{
-            width:'100vw', 
-            height:'100vh',
+            width:'2000px', 
+            height:'100%',
              display:'flex',
             flexWrap:'wrap',
              alignContent: 'center',
-            // backgroundColor:'black',
+            // backgroundColor:'tranparent',
+            // marginTop: '50px'
             paddingTop: "50px",
             backgroundColor:'tranparent',
             marginLeft: "36%"

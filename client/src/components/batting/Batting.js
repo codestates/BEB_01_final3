@@ -40,9 +40,10 @@ function Batting() {
 	width: 70vw;
 	display: flex;
 	flex-direction: column;
-	flex-wrap : wrap
+	flex-wrap : wrap;
 	justify-content: center;
 	`;
+
 	const Content = styled.div`
 	width:100%;
 	display: flex;
@@ -51,6 +52,7 @@ function Batting() {
 	background-color : pink;
 	margin : 1%;
 	`;
+	
 	const List13 = styled.div`
 	width:100%;
 	display: ${props => props.color || 'none'};

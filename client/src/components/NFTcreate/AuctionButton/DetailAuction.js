@@ -4,25 +4,30 @@ import { useNavigate } from "react-router-dom";
 import { Col, Row, Modal, Button, Container, Card } from "react-bootstrap";
 import styled from "styled-components";
 import Swal from "sweetalert2";
-import { ShakeOutlined , RiseOutlined, AlignLeftOutlined, ContainerOutlined, RedditSquareFilled} from '@ant-design/icons';
+import {
+  ShakeOutlined,
+  RiseOutlined,
+  AlignLeftOutlined,
+  ContainerOutlined,
+  RedditSquareFilled,
+} from "@ant-design/icons";
 const ContainerDiv = styled.div`
-
-display: flex;
-flex-direction: column;
-justify-content: center;
-`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`;
 const BasicDiv = styled.div`
-height: 100%;
-display: flex;
-flex-wrap: wrap;
-justify-content: center;
-margin: auto;
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: auto;
 `;
 const BottomDiv = styled.div`
-display: flex;
-flex-wrap: wrap;
-flex-direction: column;
-justify-content: center;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: center;
 `;
 
 const SideDiv = styled.div`
@@ -31,7 +36,7 @@ const SideDiv = styled.div`
   width: 25rem;
   /* background: #fffffe; */
   display: flex;
-  flex-direction: column  ;
+  flex-direction: column;
   justify-content: baseline;
   align-items: center;
   margin: 10px;
@@ -56,7 +61,7 @@ const TitleDiv = styled.div`
   background: #fffffe;
   display: flex;
   justify-content: baseline;
-  border-bottom: 2px solid #e2dede; 
+  border-bottom: 2px solid #e2dede;
   align-items: center;
   font-size: 1cm;
   font-weight: bolder;
@@ -109,11 +114,11 @@ const MiddleTitleDiv = styled.div`
 const OfferDiv = styled.div`
   width: 90%;
   height: 4rem;
-  display: flex;  
+  display: flex;
   border-bottom: none;
 `;
 const MiddleBoxDiv = styled.div`
- width: 100%;
+  width: 100%;
   height: 6rem;
   display: flex;
   border: 2px solid #e2dede;
@@ -148,13 +153,13 @@ const BidFirst = styled.div`
   background-color: gray;
   justify-content: space-between;
   border: 1px solid #e2dede;
-`
+`;
 const BidSecond = styled.div`
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-`
+`;
 const BidsDiv = styled.div`
   width: 30%;
   display: flex;
@@ -162,81 +167,67 @@ const BidsDiv = styled.div`
   align-items: center;
 `;
 const BidIcon = styled.p`
-   text-align: center;
-   width: 100%;
-   background-color: gray;
-   color: black;
-   margin: 0;
-`
-
-
+  text-align: center;
+  width: 100%;
+  background-color: gray;
+  color: black;
+  margin: 0;
+`;
+////////////////////End Styled/////////////////////////////////
 function DetailAuction(props) {
-  
-  
-
   const navigate = useNavigate();
   const [userbids, setuserbids] = useState("");
-  const [topPrice, setTopPrice] = useState('');
-
- 
-  
+  const [topPrice, setTopPrice] = useState("");
 
   useEffect(() => {
-    setTopPrice(props.nftdata.price); 
+    setTopPrice(props.nftdata.price);
     const beforeData = props.nftdata.bids;
     if (beforeData[0] !== undefined) {
       setTopPrice(beforeData[beforeData.length - 1].bid);
     } else {
-     
-    }  
-    
-  },[])
-
+    }
+  }, []);
 
   const onUserBids = (e) => {
     setuserbids(e.currentTarget.value);
   };
 
-
   const onSubmit = (e) => {
     e.preventDefault(); //새로고침방지
-   
 
     const beforeData = props.nftdata.bids;
     let beforeBuyer;
     let beforePrice = props.nftdata.price;
     if (beforeData[0] !== undefined) {
       beforeBuyer = beforeData[beforeData.length - 1].bidAddress;
-      beforePrice = beforeData[beforeData.length - 1].bid
+      beforePrice = beforeData[beforeData.length - 1].bid;
     }
 
     setTopPrice(beforePrice);
-    
+
     const variables = {
       bids: userbids,
       tokenId: props.nftdata.tokenId,
       beforeBuyer,
-      beforePrice
+      beforePrice,
     };
-   
+
     axios.post("/api/contract/bid", variables).then((res) => {
-  
       if (res.data.success === false) {
         Swal.fire({
-          icon: 'error',
+          icon: "error",
           title: res.data.detail,
-        }).then(res => {
-          return
-        })
+        }).then((res) => {
+          return;
+        });
       } else if (res.data.success) {
         Swal.fire({
-          icon: 'success',
-          title: '입찰에 성공했습니다.',
-        }).then(res => {
+          icon: "success",
+          title: "입찰에 성공했습니다.",
+        }).then((res) => {
           navigate("/nft/auctionlist");
-          return
-        })
-    
+          return;
+        });
       }
     });
   };
@@ -246,7 +237,7 @@ function DetailAuction(props) {
     const variables = {
       tokenId: props.nftdata.tokenId,
     };
-   
+
     axios.post("/api/contract/withdraw", variables).then((res) => {
       if (res.data.faild === false) {
         alert(
@@ -264,7 +255,7 @@ function DetailAuction(props) {
     const variables = {
       tokenId: props.nftdata.tokenId,
     };
-  
+
     axios.post("/api/contract/endauction", variables).then((res) => {
       if (res.data.faild === false) {
         alert(
@@ -277,29 +268,38 @@ function DetailAuction(props) {
     });
   };
   return (
-    <Modal {...props}  size="xl " aria-labelledby="contained-modal-title-vcenter">
+    <Modal
+      {...props}
+      size="xl "
+      aria-labelledby="contained-modal-title-vcenter"
+    >
       <Modal.Body className="show-grid">
         <ContainerDiv>
-        <TitleDiv>{props.nftdata.contentTitle}</TitleDiv>
+          <TitleDiv>{props.nftdata.contentTitle}</TitleDiv>
           <BasicDiv>
-              <ImgDiv>
-                <Card.Img
-                  variant="top"
-                  src={props.nftdata.imgUri}
-                  style={{ height: "70%", width: "70%" }}
-                />
+            <ImgDiv>
+              <Card.Img
+                variant="top"
+                src={props.nftdata.imgUri}
+                style={{ height: "70%", width: "70%" }}
+              />
             </ImgDiv>
             <SideDiv>
-
-            <TopBoxDiv>
-                <SubTitleDiv><AlignLeftOutlined style={{marginRight: '6px'}}/>Desctiption</SubTitleDiv>
+              <TopBoxDiv>
+                <SubTitleDiv>
+                  <AlignLeftOutlined style={{ marginRight: "6px" }} />
+                  Desctiption
+                </SubTitleDiv>
               </TopBoxDiv>
               <MiddleBoxDiv>
                 <ContentDiv>{props.nftdata.description}</ContentDiv>
               </MiddleBoxDiv>
 
               <MiddleTitleDiv>
-                <SubTitleDiv><RiseOutlined style={{margin: '6px'}}/>Top Bid</SubTitleDiv>
+                <SubTitleDiv>
+                  <RiseOutlined style={{ margin: "6px" }} />
+                  Top Bid
+                </SubTitleDiv>
               </MiddleTitleDiv>
               <MiddleBoxDiv>
                 <TitleDiv>{topPrice} NWT</TitleDiv>
@@ -313,7 +313,7 @@ function DetailAuction(props) {
                     borderTop: "none",
                     borderLeft: "none",
                     borderRight: "none",
-                    marginRight: '10px',
+                    marginRight: "10px",
                   }}
                   value={userbids}
                   placeholder="NWT"
@@ -321,62 +321,62 @@ function DetailAuction(props) {
 
                 <Button
                   variant="warning"
-                  style={{ fontWeight: "bold", marginRight: '10px'}}
+                  style={{ fontWeight: "bold", marginRight: "10px" }}
                   value={props.nftdata.tokenId}
                   onClick={onSubmit}
                 >
-                  <ShakeOutlined style={{marginRight: '10px'}}/>
-                    Bid
+                  <ShakeOutlined style={{ marginRight: "10px" }} />
+                  Bid
                 </Button>
               </MiddleRightBoxDiv>
-             </SideDiv>
-            
+            </SideDiv>
           </BasicDiv>
-            <BottomDiv>
-              <OfferDiv>
-                <SubTitleDiv>
-                  <ContainerOutlined style={{ margin: '6px' }} />Offer
-                </SubTitleDiv>
-              </OfferDiv>
-              <BottomBoxDiv>
-                <BidFirst>
+          <BottomDiv>
+            <OfferDiv>
+              <SubTitleDiv>
+                <ContainerOutlined style={{ margin: "6px" }} />
+                Offer
+              </SubTitleDiv>
+            </OfferDiv>
+            <BottomBoxDiv>
+              <BidFirst>
                 <BidsDiv>
                   <BidIcon>사람</BidIcon>
-                  </BidsDiv>               
+                </BidsDiv>
                 <BidsDiv>
                   <BidIcon>주소</BidIcon>
-                  </BidsDiv>
+                </BidsDiv>
                 <BidsDiv>
                   <BidIcon>금액</BidIcon>
-                  </BidsDiv>
-                </BidFirst>
-                <BidSecond>
-                  {props.nftdata.bids.map(el => {
-                    return (
-                      <>
-                         <BidsDiv>
-                          <BidIcon>{el.bidAddress}</BidIcon>
-                        </BidsDiv>
-                        <BidsDiv>
-                      <BidIcon>{el.bidAddress}</BidIcon>
-                        </BidsDiv>
-                        <BidsDiv>
-                          <BidIcon>{el.bid}</BidIcon>
-                  </BidsDiv>
-                        </>
-                    )
-                  })}
-                </BidSecond>
+                </BidsDiv>
+              </BidFirst>
+              <BidSecond>
+                {props.nftdata.bids.map((el) => {
+                  return (
+                    <>
+                      <BidsDiv>
+                        <BidIcon>{el.bidAddress}</BidIcon>
+                      </BidsDiv>
+                      <BidsDiv>
+                        <BidIcon>{el.bidAddress}</BidIcon>
+                      </BidsDiv>
+                      <BidsDiv>
+                        <BidIcon>{el.bid}</BidIcon>
+                      </BidsDiv>
+                    </>
+                  );
+                })}
+              </BidSecond>
             </BottomBoxDiv>
-            </BottomDiv>
-              </ContainerDiv>
+          </BottomDiv>
+        </ContainerDiv>
       </Modal.Body>
       <Modal.Footer>
-      <Button onClick={onClick}>Bid Cancle</Button> 
-            <Button>Transaction</Button>
-          <Button variant="danger" onClick={EndAuction}>
-              입찰 종료
-          </Button>
+        <Button onClick={onClick}>Bid Cancle</Button>
+        <Button>Transaction</Button>
+        <Button variant="danger" onClick={EndAuction}>
+          입찰 종료
+        </Button>
         <Button onClick={props.show}>Close</Button>
       </Modal.Footer>
     </Modal>

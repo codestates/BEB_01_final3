@@ -7,13 +7,26 @@ import LikeDisLike from '../../NFTcreate/LikeDisLike';
 import "antd/dist/antd.css";
 import { Card, Avatar, Col, Typography, Row, Layout } from "antd";
 import moment from "moment";
+import styled, { keyframes } from "styled-components";
 
 const { Meta } = Card;
 const { Content, Sider } = Layout;
 
 
 // import NFTbuy from './NFTbuy'
+const loadEffect2 = keyframes `
+    from{
+      opacity: 0
+    }
+    to {
+      opacity: 10
+    }
+    `
 
+    const MainDiv = styled.div`
+    animation: ${loadEffect2} 5s ease, step-start ;
+
+    `
 
 
 function LikeNft () {
@@ -167,6 +180,7 @@ function LikeNft () {
 
     return(
         <div style={{}}>
+          <MainDiv>
             <div style={{
                 fontSize: "50px",
                 color: "white",
@@ -187,6 +201,7 @@ function LikeNft () {
               <Row gutter={16}>{renderCards}</Row>
 
             </div>
+            </MainDiv>
         </div>
         
     )
