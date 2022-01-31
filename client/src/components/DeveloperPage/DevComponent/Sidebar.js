@@ -34,7 +34,7 @@ function Sidebar({getNum}) {
   }
 
   return (
-        <Sider width={300} className="site-layout-background" style={{position: "fixed", transform: "none", height: "90%"}}>
+        <Sider width={300} className="site-layout-background" style={{position: "fixed", transform: "none", height: "100%", marginTop: "-70px"}}>
           <Menu
             mode="inline"
             defaultSelectedKeys={["1"]}
@@ -69,37 +69,6 @@ function Sidebar({getNum}) {
           </Menu>
         </Sider>
       
-    // <Sider >
-    //   <div className="logo" />
-
-    //   <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
-    //   <Menu.Item key="1" icon={<UserOutlined />}>
-    //       <a href="/">
-    //         Home
-    //       </a>
-    //     </Menu.Item>
-    //     <Menu.Item key="2" icon={<UserOutlined />}>
-    //     <a onClick={()=>{onClick("0")}}>
-    //         토큰 발행
-    //       </a>
-    //     </Menu.Item>
-    //     <Menu.Item key="3" icon={<UserOutlined />}>
-    //     <a onClick={()=>{onClick("1")}}>
-    //         NFT 민팅
-    //       </a>
-    //     </Menu.Item>
-    //     <Menu.Item key="4" icon={<UserOutlined />}>
-    //       <a onClick={()=>{onClick("2")}}>
-    //         Battinig
-    //       </a>
-    //     </Menu.Item>
-    //     <Menu.Item key="5" icon={<UploadOutlined />}>
-    //       <a onClick={()=>{onClick("3")}}>
-    //         관리자권한부여
-    //       </a>
-    //     </Menu.Item>
-    //   </Menu>
-    // </Sider>
   );
 }
 

@@ -6,8 +6,9 @@ import axios from 'axios';
 import { Form, Col, Row } from 'antd';
 import wtImg from './basic.png';
 import BootstrapSwitchButton from 'bootstrap-switch-button-react';
-import { default as Spinner } from './Spinner';
+// import { default as Spinner } from './Spinner';
 import styled from 'styled-components';
+import Spinner from '../spinner/nftListSpinner'
 
 const Box = styled.div`
 box-shadow: 4px 12px 30px 6px rgb(0 0 0 / 25%);
@@ -110,7 +111,7 @@ function Auth() {
 	// 	setPublicKey(e);
 	// }
 	return (
-		<Layout width={300} className='ant-layout-has-sider' style={{paddingLeft: "200px", paddingTop: "20px",}}>
+		<Layout width={300} className='ant-layout-has-sider' style={{paddingLeft: "0px", paddingTop: "20px",}}>
 			<Content>
 				<div style={{ }}>
 					<div>각 서버계정의 현 보유 토큰 총 량</div>

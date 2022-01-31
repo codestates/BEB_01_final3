@@ -16,14 +16,7 @@ import styled, { keyframes } from "styled-components";
 import Swal from "sweetalert2";
 import SideBar from '../NavBar/SideMainBar';
 
-const loadEffect2 = keyframes `
-from{
-  opacity: 0
-}
-to {
-  opacity: 10
-}
-`
+
 
 const Div = styled.div`
   display: flex;
@@ -31,7 +24,7 @@ const Div = styled.div`
   justify-content: space-between;
   align-items: center;
   margin: 0;
-  animation: ${loadEffect2} 1s ease, step-start ;
+  
 
 `;
 

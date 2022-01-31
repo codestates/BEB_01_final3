@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import UserImg from './UserImg';
 import styled from 'styled-components';
 import { Row, Col } from 'react-bootstrap';
+import Spinner from '../spinner/nftListSpinner'
 
 const ImgDiv = styled.div`
 	width: 100%;
@@ -81,6 +82,7 @@ const UploadPage = (props) => {
 	const [Opendate, setOpenDate] = useState('');
 	const [Survival, setSurvival] = useState('');
 	const [Image, setImage] = useState([]);
+	const [loading, setLoading] = useState(false)
 
 	const onTitleChange = (e) => {
 		setVideoTitle(e.currentTarget.value);
@@ -145,6 +147,8 @@ const UploadPage = (props) => {
 
 	const onSubmit = (e) => {
 		e.preventDefault(); //새로고침방지
+		setLoading(true)
+
 		const variables = {
 			writer: user.userData._id,
 			title: VideoTitle,
@@ -164,6 +168,7 @@ const UploadPage = (props) => {
 				setTimeout(() => {
 					navigate('/');
 				}, 3000);
+				setLoading(false)
 			} else {
 				alert('비디오 업로드에 실패 했습니다.');
 			}
@@ -171,17 +176,12 @@ const UploadPage = (props) => {
 	};
 
 	return (
+		<div>
+		{loading === true ? <Spinner /> :
 		<div
 			style={{
 				maxWidth: '1000px',
-				// margin: '2rem auto',
-				margin: '7rem auto',
-
-				// maxWidth: '700px',
-				// margin: '2rem auto',
-				// paddingTop: "100px",
-				// marginLeft: '33%',
-				// paddingBottom: "20px"
+				margin: '3rem auto',
 			}}>
 			<div
 				style={{
@@ -316,6 +316,7 @@ const UploadPage = (props) => {
 					<br />
 				</AllBox>
 			</Form>
+			</div>}
 		</div>
 	);
 };
