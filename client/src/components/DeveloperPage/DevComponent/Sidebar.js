@@ -34,7 +34,7 @@ function Sidebar({getNum}) {
   }
 
   return (
-        <Sider width={300} className="site-layout-background" style={{position: "fixed", transform: "none", height: "100%"}}>
+        <Sider width={300} className="site-layout-background" style={{position: "fixed", transform: "none", height: "90%"}}>
           <Menu
             mode="inline"
             defaultSelectedKeys={["1"]}

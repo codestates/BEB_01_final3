@@ -22,9 +22,26 @@ flex-wrap: wrap;
 justify-content: space-between;
 align-items: center;
 margin:0;
+.mount2{ animation: 0.6s ease-in-out loadEffect2; }
+
+@keyframes loadEffect2 {
+    0%{
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    50%{
+        opacity: 0.5;
+        transform: translateX(30px);
+    }
+    100%{
+        opacity: 1;
+        transform: translateX(0px);
+    }
+}
+`
+const ContentDiv = styled.div`
 
 `
-
 
 
 
