@@ -61,7 +61,6 @@ function NFTauction({ nftlist }) {
 
 
     <>
-
     {
              nftlist.map((el)=>{
                return(

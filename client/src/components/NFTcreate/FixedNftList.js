@@ -5,14 +5,14 @@ import NftListSpinner from '../spinner/nftListSpinner';
 import NFTbuy from './NFTbuy'
 import styled from "styled-components";
 import Swal from "sweetalert2";
-
+import SideBar from '../NavBar/SideMainBar';
 const Div = styled.div`
 margin: auto;
 width: 90%;
 height: 100vh;
 display: flex;
 flex-wrap: wrap;
-justify-content: space-between;
+justify-content: center;
 align-items: center;
 
 `
@@ -40,7 +40,7 @@ function NftList() {
         return (
           
          <Div>
-
+           <SideBar width={300}/>
             {
              loading === false ?
              <NftListSpinner></NftListSpinner>

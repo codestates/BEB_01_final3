@@ -32,6 +32,41 @@ function NFTbuy({ nftlist }) {
     const nftId = useParams().nftId;
     console.log(nftId);
 
+    const [fixed, setFixed] = useState(false);
+    const [auction, setAuction] = useState(false);
+    const [modalInfo, setModalInfo] = useState({});
+
+    const Div = styled.div`
+    width: 400px;
+    border-radius: 4%;
+    /* display: flex; */
+    box-shadow: 4px 12px 30px 6px rgb(0 0 0 / 9%);
+    transition: all 0.2s ease-in-out;
+    &:hover {
+
+      box-shadow: 4px 12px 20px 6px rgb(0 0 0 / 18%);
+      transform: translateY(5px);
+
+    }
+    /* margin-top: -60%; */
+    margin-right: 2.5%;
+    margin-left: 2.5%;
+    `
+
+    const ButtonDiv = styled.div`
+
+    display: flex;
+    flex-wrap: wrap;
+    /* justify-content: none; */
+    margin-top: -20px;
+    `
+    const TBody = styled.div`
+    display: flex;
+    /* justify-content: left; */
+    text-align: left;
+    `
+    
+
     const onClick = () => {
       console.log('좋아요?');
       check ? setCheck(false) : setCheck(true);

@@ -6,10 +6,21 @@ import axios from "axios";
 import FixedModal  from './FixedModal';
 import AuctionModal  from './AuctionModal';
 import LikeDisLike from "../NFTcreate/LikeDisLike";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import Swal from "sweetalert2";
 
+const loadEffect2 = keyframes `
+  from{
+    opacity: 0
+  }
+  to {
+    opacity: 100
+  }
+  `
 
+const MainDiv = styled.div`
+  animation: ${loadEffect2} 5s ease, step-start ;
+`
 
 
 const Div = styled.div`
@@ -192,6 +203,7 @@ function MyNft () {
   return (
 
     <div>
+      <MainDiv>
     <div style={{
         fontSize: "50px",
         color: "white",
@@ -210,6 +222,7 @@ function MyNft () {
      alignContent: 'center',
     backgroundColor:'black'
       }}>
+        
         {/* 판매부분 fixed / Acution 모달창  */}
         {fixed === true ? <FixedModal check={Fixed} modalInfo={modalInfo} sellNFT={sellNFT}/> : null}
         {auction === true ? <AuctionModal check={Auction} modalInfo={modalInfo} userInfo={userInfo} /> : null}
@@ -273,6 +286,7 @@ function MyNft () {
   )}
 
 </div>
+</MainDiv>
 </div>
   )
 }
