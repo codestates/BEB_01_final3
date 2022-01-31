@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import '../../App.css';
-import Sidebar from './DevComponent/Sidebar';
 import Layout, { Content } from 'antd/lib/layout/layout';
 import { Card } from 'react-bootstrap';
 import Avatar from 'antd/lib/avatar/avatar';
 import wtImg from '../img/wtimg.png';
 import axios from 'axios';
 import { default as Spinner } from './Spinner';
-import { Form, Col, Row } from 'antd';
+import { Form } from 'antd';
 import WNTlogo from '../img/WNT-logo.png';
 import styled from 'styled-components';
 
