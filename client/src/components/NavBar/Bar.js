@@ -3,7 +3,6 @@ import {
   Navbar,
   Nav,
   NavDropdown,
-  Button,
   Container,
   Offcanvas,
   Form,
@@ -22,8 +21,54 @@ import {
 } from "../../actions/user_action";
 import { BankOutlined } from "@ant-design/icons";
 import axios from "axios";
-import watto from "../img/watto.png";
+import watto from "../img/투명로고.png";
 import DropdownMenu from "react-bootstrap/esm/DropdownMenu";
+import styled from "styled-components";
+
+const Button = styled.a`
+ border: none;
+ border-radius: 7%;
+ background-color: white;
+ font-size: 22px;
+ text-decoration: none;
+ color: black;
+ margin: 7px;
+ 
+  cursor: pointer;
+  &:active{
+    /* 커서 올려놓으면 색깔 변경 color: black; */
+  }
+  &:focus {
+    outline: none;
+    color: black;
+  }
+  transition: all 0.2s ease-in-out;
+&:hover {
+  color: black;
+  box-shadow: 4px 12px 20px 6px rgb(0 0 0 / 10%);
+  transform: translateY(4px);
+}
+`;
+
+const SearchButton = styled.button`
+border: none;
+border-radius: 7%;
+background-color: white;
+min-width: 120px;
+font-size: 20px;
+margin-left: 3px;
+cursor: pointer;
+&:active,
+&:focus {
+    outline: none;
+  }
+  transition: all 0.2s ease-in-out;
+&:hover {
+  box-shadow: 4px 12px 20px 6px rgb(0 0 0 / 20%);
+  transform: translateY(4px);
+}
+`;
+
 
 function Bar({ isLogin }) {
   const [show, setShow] = useState(false);
@@ -131,12 +176,52 @@ function Bar({ isLogin }) {
         }
       });
   };
-
+/////////////////Ripple Button 사용법//////////////////////////////
+  // const RippleButton = ({ children, onClick }) => {
+  //   const [coords, setCoords] = React.useState({ x: -1, y: -1 });
+  //   const [isRippling, setIsRippling] = React.useState(false);
+  
+  //   React.useEffect(() => {
+  //     if (coords.x !== -1 && coords.y !== -1) {
+  //       setIsRippling(true);
+  //       setTimeout(() => setIsRippling(false), 300);
+  //     } else setIsRippling(false);
+  //   }, [coords]);
+  
+  //   React.useEffect(() => {
+  //     if (!isRippling) setCoords({ x: -1, y: -1 });
+  //   }, [isRippling]);
+  
+  //   return (
+  //     <button
+  //       className="ripple-button"
+  //       onClick={e => {
+  //         const rect = e.target.getBoundingClientRect();
+  //         setCoords({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+  //         onClick && onClick(e);
+  //       }}
+  //     >
+  //       {isRippling ? (
+  //         <span
+  //           className="ripple"
+  //           style={{
+  //             left: coords.x,
+  //             top: coords.y
+  //           }}
+  //         />
+  //       ) : (
+  //         ''
+  //       )}
+  //       <span className="content">{children}</span>
+  //     </button>
+  //   );
+  // };
+/////////////////////////////////////////////////////////////
   return (
-    <Navbar bg="black" expand="lg" style={{ width: "100%", height: "70px" , zIndex: 100}}>
+    <Navbar bg="" expand="lg" style={{ width: "100%", height: "70px" , zIndex: 100}}>
       {/* position: "fixed" 해제했슴다 */}
       <Navbar.Brand href="/" al>
-        <img src={watto} width="140" />
+        <img src={watto} width="200" style={{}}/>
       </Navbar.Brand>
 
       <Container fluid>
@@ -179,16 +264,16 @@ function Bar({ isLogin }) {
               <FormControl
                 type="search"
                 className="me-4"
-				style={{width: '500px'}}
+		          	style={{width: '500px'}}
                 // value={searchValue}
                 placeholder="search the value or NFT"
                 onChange={(e) => {
                   setSearchValue(e.target.value);
                 }}
               />
-              <Button variant="light" method="get" onClick={onSubmit} style={{marginLeft: "-25px",}}>
+              <SearchButton variant="light" method="get" onClick={onSubmit}>
                 Search
-              </Button>
+              </SearchButton>
             </Form>
           </Navbar.Collapse>
 
@@ -206,7 +291,18 @@ function Bar({ isLogin }) {
               ) : (
                 ""
               )}
-
+              {isAdmin ? (
+                <Button
+                  variant="dark"
+                  href="/video/upload"
+                  size="md"
+                  className="me-1"
+                >
+                  AdUpload
+                </Button>
+              ) : (
+                ""
+              )}
               {isAuth ? (
                 <Button
                   variant="light"
@@ -220,20 +316,6 @@ function Bar({ isLogin }) {
               ) : (
                 ""
               )}
-
-              {isAdmin ? (
-                <Button
-                  variant="dark"
-                  href="/video/upload"
-                  size="md"
-                  className="me-1"
-                >
-                  AdUpload
-                </Button>
-              ) : (
-                ""
-              )}
-
               <Button
                 variant="dark"
                 href="/video/userupload"
@@ -264,6 +346,7 @@ function Bar({ isLogin }) {
               >
                 {isAuth ? "My Page" : "Sign Up"}
               </Button>
+              {/* <RippleButton onClick={e => console.log(e)}>Click me</RippleButton> */}
             </div>
           </Nav>
         </Navbar.Collapse>
