@@ -21,6 +21,7 @@ function SideBar() {
             // defaultOpenKeys={["sub1"]}
             style={{ height: "100%", borderRight: 0 , backgroundColor:"white" }}
           >
+            {/* <SubMenu style={{marginTop: '10px'}}>NFT MARKET</SubMenu> */}
               <Menu.Item key="1">
                 <Link to="/nft/fixedlist" className="nav-text" style={{textDecoration: 'none'}}>NFT LIST(Fixed)</Link>
               </Menu.Item>  
@@ -28,7 +29,7 @@ function SideBar() {
                 <Link to="/nft/auctionlist" className="nav-text" style={{textDecoration: 'none'}}>NFT LIST(Auction)</Link>
               </Menu.Item>
               <Menu.Item key="3">NFT Ranking</Menu.Item>
-              <Menu.Item key="4">option4</Menu.Item>
+              
           </Menu>
         </Sider>
       </Layout>

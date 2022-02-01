@@ -29,6 +29,8 @@ const loadEffect2 = keyframes `
 
 const MainDiv = styled.div`
   animation: ${loadEffect2} 5s ease, step-start ;
+  display: flex;
+  justify-content: center;
 `
 function MyConTent () {
 
@@ -116,7 +118,7 @@ function MyConTent () {
     return (
           <div>
             <MainDiv>
-            <BigBox>
+            
                 <div style={{
                     fontSize: "50px",
                     color:"white",
@@ -134,7 +136,7 @@ function MyConTent () {
                  <Row gutter={16}>{renderCards}</Row>}
                   
                 </div>
-              </BigBox>
+              
               </MainDiv>   
               </div>
                 

@@ -19,7 +19,19 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 // syled
-
+const SliderBackDiv = styled.div`
+background: linear-gradient(
+  20deg,
+  #00c3ff,
+  #ffff1c
+  /* #77A1D3,
+  #79CBCA,
+  #E684AE */
+);
+height: 500px;
+width: 100%;
+padding: 45;  
+`;
 const StyledSlider = styled(Slider)`
   .slick-slide div {
     outline: none;
@@ -55,6 +67,7 @@ const Container = styled.div`
 
 const ImageContainer = styled.div`
   margin: 3px 5px;
+  margin-top: 30px;
   height: 10%;
   width: 10%;
   justify-content: center;
@@ -270,17 +283,7 @@ function LandingPage() {
               <hr />
               {/* <Row gutter={16}>{renderCards}</Row> */}
               {/* <Container> */}
-              <div
-                style={{
-                  width: "100%",
-                  // height: '100%',
-                  height: "500px",
-                  backgroundColor: "#494f54",
-                  // margin: 10,
-                  padding: 45,
-                  // justifyContent: 'center',
-                }}
-              >
+              <SliderBackDiv>
                 <StyledSlider {...settings}>
                   {Video.map((item) => {
                     return (
@@ -292,11 +295,12 @@ function LandingPage() {
                             />
                           </a>
                         </ImageContainer>
+                        <div>{item.title}</div>
                       </div>
                     );
                   })}
                 </StyledSlider>
-              </div>
+             </SliderBackDiv>
               {/* </Container> */}
               <hr />
               <Title level={0}>General Contents</Title>

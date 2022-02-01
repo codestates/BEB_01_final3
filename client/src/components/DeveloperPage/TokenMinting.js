@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import '../../App.css';
-import Sidebar from './DevComponent/Sidebar';
 import Layout, { Content } from 'antd/lib/layout/layout';
 import { Card } from 'react-bootstrap';
 import Avatar from 'antd/lib/avatar/avatar';

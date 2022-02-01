@@ -51,12 +51,16 @@ const Button = styled.a`
 `;
 
 const SearchButton = styled.button`
-border: none;
+border: 1px solid #12FFF7;
 border-radius: 7%;
-background-color: white;
-min-width: 120px;
+min-width: 100px;
 font-size: 20px;
 margin-left: 3px;
+background: linear-gradient(
+  20deg,
+  #B3FFAB,
+  #12FFF7
+);
 cursor: pointer;
 &:active,
 &:focus {
@@ -68,6 +72,7 @@ cursor: pointer;
   transform: translateY(4px);
 }
 `;
+
 
 
 function Bar({ isLogin }) {
@@ -257,7 +262,7 @@ function Bar({ isLogin }) {
                   setSearchValue(e.target.value);
                 }}
               />
-              <SearchButton variant="light" method="get" onClick={onSubmit}>
+              <SearchButton  method="get" onClick={onSubmit}>
                 Search
               </SearchButton>
             </Form>
