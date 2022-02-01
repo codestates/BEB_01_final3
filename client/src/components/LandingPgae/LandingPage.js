@@ -61,9 +61,6 @@ const StyledSlider = styled(Slider)`
 	}  */
 `;
 
-const Container = styled.div`
-  overflow: hidden;
-`;
 
 const ImageContainer = styled.div`
   margin: 3px 5px;
@@ -108,6 +105,7 @@ const { Title } = Typography;
 const { Meta } = Card;
 
 function LandingPage() {
+
   const settings = {
     dots: true,
     infinite: true,
@@ -117,6 +115,7 @@ function LandingPage() {
     autoplay: true,
     autoplaySpeed: 3500,
   };
+  
   const [Video, setVideo] = useState([]);
   const [UserVideo, setUserVideo] = useState([]);
   // const [Category, setCategory] = useState([]);

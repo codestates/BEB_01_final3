@@ -37,7 +37,7 @@ function NftList() {
             // marginTop: '50px'
             paddingTop: "50px",
             backgroundColor:'tranparent',
-            marginLeft: "36%"
+            marginLeft: "3%"
           }}>
             <SideBar width={300} />
 

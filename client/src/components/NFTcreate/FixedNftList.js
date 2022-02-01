@@ -6,10 +6,11 @@ import NFTbuy from './NFTbuy'
 import styled from "styled-components";
 import Swal from "sweetalert2";
 import SideBar from '../NavBar/SideMainBar';
+
 const Div = styled.div`
 margin: auto;
-width: 90%;
-height: 100vh;
+width: 100%;
+height: 100%;
 display: flex;
 flex-wrap: wrap;
 justify-content: center;

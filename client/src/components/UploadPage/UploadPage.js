@@ -56,7 +56,7 @@ const AllBox = styled.div`
 	width: 105%;
 	border-radius: 3%;
 	/* height: 44rem; */
-	height: 66rem;
+	height: 70rem;
 `;
 
 const { TextArea } = Input;
@@ -85,6 +85,7 @@ const UploadPage = (props) => {
 	const [Survival, setSurvival] = useState('');
 	const [Image, setImage] = useState([]);
 	const [loading, setLoading] = useState(false);
+
 	const [Thumbnail, setThumbnail] = useState([]);
 	const [ThumbCheck, setThumbCheck] = useState(false);
 
@@ -105,7 +106,10 @@ const UploadPage = (props) => {
 	};
 	const onSurvivalList = (e) => {
 		setSurvival(e.currentTarget.value);
+	
 	};
+
+
 	const updateImages = (newImages) => {
 		setImage(newImages);
 	};
@@ -114,6 +118,7 @@ const UploadPage = (props) => {
 		setThumbCheck(true);
 	};
 
+	
 	const onDrop = (files) => {
 		//올린파일에대한 정보가 files에대입
 

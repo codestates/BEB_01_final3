@@ -247,10 +247,6 @@ const CreateNFT = (props) => {
                 </FirstDiv>
           
             </>
-       
-         
-        
-        
         
     )
 }
