@@ -12,15 +12,23 @@ import LikeConTent from "./Like/LikeConTent";
 import MyNft from "./MyNft";
 import MyConTent from "./MyConTent";
 import copyimg from "./copy.png";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import Swal from "sweetalert2";
+import SideBar from '../NavBar/SideMainBar';
+
+
+
 const Div = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   margin: 0;
+  
+
 `;
+
+
 const BoxDiv = styled.div`
   width: 50%;
   height: 100%;
@@ -83,7 +91,7 @@ function MyPage() {
   const [modalShow, setModalShow] = useState(false);
   const [profile, setProfile] = useState("");
   const [changeSell, setChangeSell] = useState(true);
-
+  const [check, setCheck] = useState(false);
   //타이머가 끝나는 조건
 
   const [SubscribeNumber, setSubscribeNumber] = useState(0);
@@ -143,12 +151,16 @@ function MyPage() {
   function likeResult(userId, click) {
     if (click === "LIKENFT") {
       setlikeOption(0);
+      setCheck(true);
     } else if (click === "LIKECONTENT") {
       setlikeOption(1);
+      setCheck(true);
     } else if (click === "MYNFT") {
       setlikeOption(2);
+      setCheck(true);
     } else if (click === "MYCONTENT") {
       setlikeOption(3);
+      setCheck(true);
     }
   }
 
@@ -328,7 +340,8 @@ function MyPage() {
           My ConTent
         </Button>
       </div>
-      <Div>{obj[likeOption]}</Div>
+      {check === true ? <Div>{obj[likeOption]}</Div> : <div></div>}
+      
     </div>
   );
 }

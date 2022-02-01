@@ -6,7 +6,7 @@ import "antd/dist/antd.css";
 import { Layout, Menu } from "antd";
 import moment from "moment";
 import { UserAddOutlined } from "@ant-design/icons";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 const BigBox = styled.div`
 width:70%;
@@ -17,6 +17,21 @@ box-shadow: 4px 12px 30px 6px rgb(0 0 0 / 15%);
 flex-wrap: wrap;
 margin-left: 300px;
 `;
+
+const loadEffect2 = keyframes `
+  from{
+    opacity: 0
+  }
+  to {
+    opacity: 10
+  }
+  `
+
+const MainDiv = styled.div`
+  animation: ${loadEffect2} 5s ease, step-start ;
+  display: flex;
+  justify-content: center;
+`
 function MyConTent () {
 
     const [Video, setVideo] = useState([]);
@@ -101,8 +116,9 @@ function MyConTent () {
       });
 
     return (
-
-            <BigBox>
+          <div>
+            <MainDiv>
+            
                 <div style={{
                     fontSize: "50px",
                     color:"white",
@@ -120,7 +136,9 @@ function MyConTent () {
                  <Row gutter={16}>{renderCards}</Row>}
                   
                 </div>
-              </BigBox>
+              
+              </MainDiv>   
+              </div>
                 
 
       );

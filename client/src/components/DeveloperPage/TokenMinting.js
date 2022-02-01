@@ -5,10 +5,11 @@ import { Card } from 'react-bootstrap';
 import Avatar from 'antd/lib/avatar/avatar';
 import wtImg from '../img/wtimg.png';
 import axios from 'axios';
-import { default as Spinner } from './Spinner';
-import { Form } from 'antd';
+// import { default as Spinner } from './Spinner';
+import { Form, Col, Row } from 'antd';
 import WNTlogo from '../img/WNT-logo.png';
 import styled from 'styled-components';
+import Spinner from '../spinner/nftListSpinner'
 
 
 const Box = styled.div`
@@ -101,7 +102,7 @@ function Minting() {
 	};
 	return (
 		<Layout>
-			<Layout width={300} className='ant-layout-has-sider' style={{paddingLeft: "350px"}}>
+			<Layout width={300} className='ant-layout-has-sider' style={{paddingLeft: "120px"}}>
 				<Layout>
 					<Content>
 						<form

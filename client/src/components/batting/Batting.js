@@ -12,6 +12,7 @@ import styled from "styled-components";
 import BattingList from './BattingList';
 // import { default as Spinner } from './Spinner';
 import { Form, Col, Row } from 'antd';
+import Spinner from '../spinner/nftListSpinner'
 
 
 function Batting() {
@@ -20,6 +21,8 @@ function Batting() {
 	const [contentsName, setContentsName] = useState([]);
 	const [isCheck, setIsCheck] = useState(false);
 	const [name, setName] = useState("");
+	const [isLoading, setIsLoading] = useState(false);
+
 	// const [num, setNum] = useState(0);
 
 	useEffect(() => {
@@ -78,24 +81,35 @@ function Batting() {
 	
 
 	const closeContent = (info) => {
+		setIsLoading(true);
+
 		axios.post("/api/bat/closeContent", { contentNum: info.contentNum })
 			.then(res => {
 				console.log(res);
+				setIsLoading(false);
 			})
+			
+
 	}
 	const payOut = (info) => {
+		setIsLoading(true);
+
 		axios.post("/api/bat/payOut", { contentNum: info.contentNum,answer:'ㅁㄹㅇ'})
 			.then(res => {
 				console.log(1);
 				console.log(res);
+				setIsLoading(false);
 			})
+			
+
 	}
 
 	console.log(contentsName);
 	return (
 		
-		
-		<Layout style={{display:'flex',justifyContent:'center',alignItems:'center', backgroundColor:"gray", paddingLeft: "300px"}}>
+		<div>
+		{isLoading === true ? <Spinner /> :
+		<Layout style={{display:'flex',justifyContent:'center',alignItems:'center', backgroundColor:"gray", paddingLeft: ""}}>
 		
 			<Contents>
 		
@@ -126,7 +140,8 @@ function Batting() {
 					})}
 			</Contents>
 		</Layout>	
-		
+		}
+		</div>
 	);
 }
 

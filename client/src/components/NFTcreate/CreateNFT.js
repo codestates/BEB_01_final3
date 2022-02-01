@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { create } from 'ipfs-http-client';
 import background from '../img/wtimg.png';
-import Spinner from '../spinner/spinner';
+import Spinner from '../spinner/nftListSpinner';
 import styled from "styled-components";
 import Swal from "sweetalert2";
 
@@ -22,8 +22,9 @@ background: white;
 display: flex;
 justify-content: center;
 align-items: center;
-padding-left: 400px;
-margin-top: -50px;
+padding-left: 130px;
+padding-right: 90px;
+margin-top: -70px;
 `;
 const SeDiv = styled.div`
 width: 90%;
@@ -243,7 +244,6 @@ const CreateNFT = (props) => {
       
                 }
                    
-
                 </FirstDiv>
           
             </>

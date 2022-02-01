@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import NftListSpinner from '../spinner/nftListSpinner';
 import NFTauction from './NFTauction';
+import SideBar from '../NavBar/SideMainBar';
 
 
 function NftList() {
@@ -35,9 +36,10 @@ function NftList() {
             // backgroundColor:'tranparent',
             // marginTop: '50px'
             paddingTop: "50px",
-            backgroundColor:'tranparent'
-
+            backgroundColor:'tranparent',
+            marginLeft: "36%"
           }}>
+            <SideBar width={300} />
 
             {
              loading === false ?
