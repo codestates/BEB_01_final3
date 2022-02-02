@@ -5,7 +5,7 @@ const { Video } = require('../models/Video');
 const { Batting } = require('../models/batting');
 const { Contents } = require('../models/Contents');
 const { Vote } = require('../models/Vote');
-const Subscriber = require("../models/Subscriber");
+const Subscriber = require('../models/Subscriber');
 const cron = require('node-cron');
 
 const Web3 = require('web3');
@@ -732,7 +732,9 @@ module.exports = {
 					tx,
 					serverPrivateKey
 				);
-				console.log("---------- start videoUpload / createRoom tranction ------");
+				console.log(
+					'---------- start videoUpload / createRoom tranction ------'
+				);
 				const hash = await web3.eth.sendSignedTransaction(
 					signedTx.rawTransaction
 				);
@@ -745,12 +747,12 @@ module.exports = {
 				);
 				console.log(JSON.stringify(decodedParameters));
 				const num = decodedParameters.num;
-             
+
 				const video = await Video.find({ title: rawTitle }).exec();
 				console.log(video);
 				console.log(video[0]._id);
 				const batting = new Batting({
-					videoId : video[0]._id,
+					videoId: video[0]._id,
 					contentsName: title,
 					subTitle: subTitle,
 					contentsNum: num,
@@ -1028,10 +1030,55 @@ module.exports = {
 												'wt, nwt, nft 싹다 권한 부여',
 												txHash
 											);
-											res.json({
-												success: true,
-												message: '권한 부여 성공',
-											});
+
+											const data =
+												await nftContract.methods
+													.approveSale(
+														authAddress
+													)
+													.encodeABI();
+											const nonce =
+												await web3.eth.getTransactionCount(
+													serverAddress,
+													'latest'
+												);
+											const gasprice =
+												await web3.eth.getGasPrice();
+											const gasPrice = Math.round(
+												Number(gasprice) +
+													Number(gasprice / 10)
+											);
+
+											const tx = {
+												from: serverAddress,
+												to: process.env.NFTTOKENCA,
+												nonce: nonce,
+												gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
+												gasLimit: 5000000,
+												data: data,
+											};
+
+											const signedTx =
+												await web3.eth.accounts.signTransaction(
+													tx,
+													serverPrivateKey
+												);
+											const hash = await web3.eth
+												.sendSignedTransaction(
+													signedTx.rawTransaction
+												)
+												.on('receipt', (txHash) => {
+													res.json({
+														success: true,
+														message:
+															'권한 부여 성공',
+													});
+												});
+
+											// res.json({
+											// 	success: true,
+											// 	message: '권한 부여 성공',
+											// });
 										});
 								} catch (err) {
 									console.log(
@@ -1218,55 +1265,49 @@ module.exports = {
 	},
 
 	searchChannelPage: async (req, res) => {
-		console.log("???", req.body);
+		console.log('???', req.body);
 
 		const userInfo = await User.find().find({
-			name: { $regex: req.body.name , $options: 'i' },
+			name: { $regex: req.body.name, $options: 'i' },
 		});
-		
-		console.log("user?", userInfo[0]._id);
 
-		Video.find({ writer: userInfo[0]._id },(err, content) => {
+		console.log('user?', userInfo[0]._id);
+
+		Video.find({ writer: userInfo[0]._id }, (err, content) => {
 			const contentInfo = content;
 
-			Subscriber.find({ userTo: userInfo[0]._id }).exec((err, subscribe) => {
-				if (contentInfo[0] !== null) {
-					res.status(201).json({
-						success: true,
-						contentdata: contentInfo,
-						userdata: userInfo,
-						subscribeNumber: subscribe.length,
-						type: 'result'
-					});
-				} else {
-					res.json({ success: false });
+			Subscriber.find({ userTo: userInfo[0]._id }).exec(
+				(err, subscribe) => {
+					if (contentInfo[0] !== null) {
+						res.status(201).json({
+							success: true,
+							contentdata: contentInfo,
+							userdata: userInfo,
+							subscribeNumber: subscribe.length,
+							type: 'result',
+						});
+					} else {
+						res.json({ success: false });
+					}
 				}
-			  });
+			);
 
-			
 			// console.log("????", contentInfo);
 			// console.log("?", userInfo);
 		});
 
-		
-		
+		// Video.find({writer: user[0]._id}), (err, video) => {
+		// 	console.log("video", video);
+		// 	if (video[0]) {
+		// 		res.status(201).json({
+		// 			success: true,
+		// 			videodata: video,
+		// 			userdata: user,
+		// 		});
 
-			
-			// Video.find({writer: user[0]._id}), (err, video) => {
-			// 	console.log("video", video);
-			// 	if (video[0]) {
-			// 		res.status(201).json({
-			// 			success: true,
-			// 			videodata: video,
-			// 			userdata: user,
-			// 		});
-					
-			// 	} else {
-			// 		res.json({ success: false });
-			// 	}
-			// }
-
-			
-		
+		// 	} else {
+		// 		res.json({ success: false });
+		// 	}
+		// }
 	},
 };

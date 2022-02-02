@@ -1,7 +1,6 @@
 
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
-// import { Facoad } from 'react-icons/fa'
 import {Card,Button} from 'react-bootstrap'
 import { useNavigate, useParams } from 'react-router-dom';
 import {HeartOutlined, HeartFilled} from '@ant-design/icons'; 
