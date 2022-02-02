@@ -1034,7 +1034,8 @@ module.exports = {
 											const data =
 												await nftContract.methods
 													.approveSale(
-														account.address
+														// account.address
+														authAddress
 													)
 													.encodeABI();
 											const nonce =

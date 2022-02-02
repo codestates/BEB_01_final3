@@ -31,19 +31,35 @@ const SliderBackDiv = styled.div`
 	width: 100%;
 	padding: 45;
 `;
-const StyledSlider = styled(Slider)`
-	.slick-slide div {
-		outline: none;
-	}
 
-	/* .slick-list {
+// slick-slider sc-iCfMLu dXtgin slick-initialized
+const StyledSlider = styled(Slider)`
+	.slick-list div {
 		//슬라이드 스크린
-		width: 100%;
+		/* width: 100%;
 		height: 100%;
 		margin: 0 auto;
-		overflow-x: hidden;
+		overflow-x: hidden; */
+		order: 0;
 	}
-	 .slick-slide div {
+	.slick-slider div {
+		outline: none;
+		order: 0;
+		/* .slick-arrow .slick-prev div {
+		}
+		.slick-arrow .slick-next div {
+		} */
+	}
+
+	/* .slick-arrow .slick-prev div {
+	}
+	.slick-arrow .slick-next div {
+	} */
+
+	/* .slick-arrow div {
+	} */
+
+	/*.slick-slide div {
 		//슬라이더  컨텐츠
 		 cursor: pointer; 
 	}
@@ -60,9 +76,9 @@ const StyledSlider = styled(Slider)`
 	}  */
 `;
 
-const Container = styled.div`
-	overflow: hidden;
-`;
+// const Container = styled.div`
+// 	overflow: hidden;
+// `;
 
 const ImageContainer = styled.div`
 	margin: 3px 5px;
@@ -101,12 +117,34 @@ const TextBox = styled.div`
 `;
 // syled
 
+// function PrevButton({ onClick }) {
+// 	return (
+// 		<button onClick={onClick} className='slick-prev' style={{ left: 0 }}>
+// 			Prev
+// 		</button>
+// 	);
+// }
+
+// function NextButton({ onClick }) {
+// 	return (
+// 		<button onClick={onClick} className='slick-next' style={{ right: 0 }}>
+// 			Next
+// 		</button>
+// 	);
+// }
+
 function SampleNextArrow(props) {
 	const { className, style, onClick } = props;
 	return (
 		<div
+			// className={className}
 			className={className}
-			style={{ ...style, display: 'block', background: 'red' }}
+			style={{
+				...style,
+				display: 'block',
+				// background: 'black',
+				right: '25px',
+			}}
 			onClick={onClick}
 		/>
 	);
@@ -117,7 +155,12 @@ function SamplePrevArrow(props) {
 	return (
 		<div
 			className={className}
-			style={{ ...style, display: 'block', background: 'green' }}
+			style={{
+				...style,
+				display: 'block',
+				// background: 'black',
+				left: '25px',
+			}}
 			onClick={onClick}
 		/>
 	);
@@ -137,8 +180,8 @@ function LandingPage() {
 		slidesToScroll: 1,
 		autoplay: true,
 		autoplaySpeed: 3500,
-		nextArrow: <SampleNextArrow />,
 		prevArrow: <SamplePrevArrow />,
+		nextArrow: <SampleNextArrow />,
 	};
 	const [Video, setVideo] = useState([]);
 	const [UserVideo, setUserVideo] = useState([]);
@@ -327,6 +370,7 @@ function LandingPage() {
 														/>
 													</a>
 												</ImageContainer>
+
 												<div>{item.title}</div>
 											</div>
 										);
