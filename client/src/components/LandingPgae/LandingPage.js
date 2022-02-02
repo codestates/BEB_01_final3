@@ -23,8 +23,7 @@ const SliderBackDiv = styled.div`
 	background: linear-gradient(
 		20deg,
 		#00c3ff,
-		#ffff1c 
-		/* #77A1D3,
+		#ffff1c /* #77A1D3,
   #79CBCA,
   #E684AE */
 	);
@@ -33,53 +32,24 @@ const SliderBackDiv = styled.div`
 	padding: 45;
 `;
 
-// slick-slider sc-iCfMLu dXtgin slick-initialized
 const StyledSlider = styled(Slider)`
 	.slick-list div {
 		//슬라이드 스크린
-		/* width: 100%;
+		width: 100%;
 		height: 100%;
-		margin: 0 auto;
-		overflow-x: hidden; */
+		/* margin: 0 auto; */
+		overflow-x: hidden;
 		order: 0;
+		.slick-arrow .slick-prev div {
+		}
+		.slick-arrow .slick-next div {
+		}
 	}
 	.slick-slider div {
 		outline: none;
 		order: 0;
-		/* .slick-arrow .slick-prev div {
-		}
-		.slick-arrow .slick-next div {
-		} */
 	}
-
-	/* .slick-arrow .slick-prev div {
-	}
-	.slick-arrow .slick-next div {
-	} */
-
-	/* .slick-arrow div {
-	} */
-
-	/*.slick-slide div {
-		//슬라이더  컨텐츠
-		 cursor: pointer; 
-	}
-
-	.slick-dots {
-		//슬라이드의 위치
-		bottom: 20px;
-		margin-top: 200px;
-	}
-
-	.slick-track {
-		//이건 잘 모르겠음
-		width: 100%;
-	}  */
 `;
-
-// const Container = styled.div`
-// 	overflow: hidden;
-// `;
 
 const ImageContainer = styled.div`
 	margin: 3px 5px;
@@ -118,22 +88,6 @@ const TextBox = styled.div`
 `;
 // syled
 
-// function PrevButton({ onClick }) {
-// 	return (
-// 		<button onClick={onClick} className='slick-prev' style={{ left: 0 }}>
-// 			Prev
-// 		</button>
-// 	);
-// }
-
-// function NextButton({ onClick }) {
-// 	return (
-// 		<button onClick={onClick} className='slick-next' style={{ right: 0 }}>
-// 			Next
-// 		</button>
-// 	);
-// }
-
 function SampleNextArrow(props) {
 	const { className, style, onClick } = props;
 	return (
@@ -159,8 +113,8 @@ function SamplePrevArrow(props) {
 			style={{
 				...style,
 				display: 'block',
-				// background: 'black',
 				left: '25px',
+				zIndex: 1,
 			}}
 			onClick={onClick}
 		/>
@@ -174,6 +128,8 @@ const { Meta } = Card;
 
 function LandingPage() {
 	const settings = {
+		slide: 'div',
+		arrows: true,
 		dots: true,
 		infinite: true,
 		speed: 500,
@@ -213,62 +169,6 @@ function LandingPage() {
 
 	console.log('SV', Video);
 	console.log('UV', UserVideo);
-
-	// const renderCards = Video.map((video, index) => {
-	// 	var minutes = Math.floor(video.duration / 60);
-	// 	var seconds = Math.floor(video.duration - minutes * 60);
-	// 	// console.log(video._id)
-	// 	return (
-	// 		<Col>
-	// 			{/* lg={7} md={10} xs={24} key={index} */}
-	// 			{/*lg:가장클때 6그리드를쓰겠다. md:중간크기일때 8그리드를 쓰겠다.
-	//           xs:가장작은 크기일때는 24그리드를 쓰겠다. 총24그리드 */}
-	// 			<div style={{ position: 'relative' }}>
-	// 				<a href={`/video/${video._id}/counterpage`}>
-	// 					<img
-	// 						style={{ width: '100%' }}
-	// 						alt='thumbnail'
-	// 						src={`http://localhost:5000/${video.thumbnail}`}
-	// 					/>
-
-	// 					<div
-	// 						className='duration'
-	// 						style={{
-	// 							bottom: 0,
-	// 							right: 0,
-	// 							position: 'absolute',
-	// 							margin: '4px',
-	// 							color: '#fff',
-	// 							backgroundColor: 'rgba(17, 17, 17, 0.8)',
-	// 							opacity: 0.8,
-	// 							padding: '2px 6px',
-	// 							borderRadius: '2px',
-	// 							letterSpacing: '0.5px',
-	// 							fontSize: '12px',
-	// 							fontWeight: '500',
-	// 							lineHeight: '12px',
-	// 						}}>
-	// 						<span>
-	// 							{minutes} : {seconds}
-	// 						</span>
-	// 					</div>
-	// 				</a>
-	// 			</div>
-	// 			<br />
-	// 			<Meta
-	// 				// avatar={<Avatar src={video.writer.image} />}
-	// 				title={video.title}
-	// 				style={{ marginBottom: '-8%', marginTop: '-6%' }}
-	// 			/>
-	// 			{/* <span>{video.writer.name} </span> */}
-	// 			<br />
-	// 			{/* style={{ marginLeft: "3rem" }} */}
-	// 			<span>조회수 {video.views}회</span>
-	// 			<br />
-	// 			<span> {moment(video.createdAt).format('MMM Do YY')} </span>
-	// 		</Col>
-	// 	);
-	// });
 
 	const renderUserCards = UserVideo.map((video, index) => {
 		var minutes = Math.floor(video.duration / 60);
@@ -347,12 +247,8 @@ function LandingPage() {
 					<Content>
 						<div
 							style={{
-								// width: '70%',
 								height: '70%',
 								width: '100%',
-								// margin: 100,
-								// margin: '10px 0px 0px 20%',
-								// marginRight: "200px",
 							}}>
 							<Title level={0}>Survivals</Title>
 							<hr />
