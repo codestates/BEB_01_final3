@@ -23,7 +23,8 @@ const SliderBackDiv = styled.div`
 	background: linear-gradient(
 		20deg,
 		#00c3ff,
-		#ffff1c /* #77A1D3,
+		#ffff1c 
+		/* #77A1D3,
   #79CBCA,
   #E684AE */
 	);

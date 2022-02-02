@@ -10,6 +10,7 @@ import wtImg from '../img/wtimg.png';
 import axios from 'axios';
 import styled from "styled-components";
 import BattingList from './BattingList';
+import BetDetail from './BatDetail';
 // import { default as Spinner } from './Spinner';
 import { Form, Col, Row } from 'antd';
 import Spinner from '../spinner/nftListSpinner'
@@ -17,7 +18,9 @@ import Spinner from '../spinner/nftListSpinner'
 
 function Batting() {
 
-
+	const [modalShow, setModalShow] = useState(false);
+	const [betInfo, setBetInfo] = useState();
+	const [contentNum, setContentNum] = useState();
 	const [contentsName, setContentsName] = useState([]);
 	const [isCheck, setIsCheck] = useState(false);
 	const [name, setName] = useState("");
@@ -30,7 +33,6 @@ function Batting() {
 			.then(res => {
 				//데이터 가공을 해주어야합니다. 같은 content끼리묵어야 합니다.
 				//일단 몇개의 데이터가 있는지 확인해 봅시다.
-			
 				if (res.data.success) {
 					let contentName = res.data.contentsName;
 					setContentsName(contentName);
@@ -40,20 +42,29 @@ function Batting() {
 	},[])
 
 	const Contents = styled.div`
-	width: 70vw;
+	width: 100%;
+	height : 100%;
 	display: flex;
-	flex-direction: column;
 	flex-wrap : wrap;
 	justify-content: center;
+	background-color: transparent;
 	`;
 
 	const Content = styled.div`
-	width:100%;
+	width:30%;
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
-	background-color : pink;
+	justify-content: space-between;
+	background-color: transparent;
+	border-radius: 4%;
 	margin : 1%;
+	border: 1px solid rgb(125,231,166);
+	&:hover {
+
+box-shadow: 4px 12px 20px 6px rgb(0 0 0 / 18%);
+transform: translateY(5px);
+
+}
 	`;
 	
 	const List13 = styled.div`
@@ -103,45 +114,57 @@ function Batting() {
 			
 
 	}
+	function Auction(contentName,contentNum) {
+       console.log(contentName,contentNum);
+		if (modalShow) {
+		  setModalShow(false);
+		} else {
+		  setModalShow(true);
+		}
+		setBetInfo(contentName);
+		setContentNum(contentNum)
+		}
+   
 
-	console.log(contentsName);
+	
 	return (
 		
-		<div>
-		{isLoading === true ? <Spinner /> :
-		<Layout style={{display:'flex',justifyContent:'center',alignItems:'center', backgroundColor:"gray", paddingLeft: ""}}>
-		
+		<>
 			<Contents>
-		
+		{isLoading === true ? <Spinner /> :
+					<>
+				{modalShow === true ? <BetDetail show={Auction} betData={betInfo} contentNum={contentNum}/> : null}
 				{contentsName.map((el) => {
 				
 						return (
 							<>
+								
 								<Content>
-								<Card bg='black' text='danger'>
+									<Card style={{borderRadius:"4%"} }>
+									<Card.Img variant="top" src="https://ipfs.io/ipfs/QmRdcvE8DUmDoDFHhz6qVw5VWwoknW5eksqGcEcMSYK4Gc" style={{ width: '25 rem', height:'15rem',border:"1px solid #7DE7A6", borderTopLeftRadius:"4%",borderTopRightRadius:"4%"}}/>
                                <Card.Body>
-                              <Card.Title>
-                               <a onClick={() => { Name(el.contentNum) }}>Content : {el.contentName}</a>
+								<Card.Title>
+								<a onClick={() => { Name(el.contentNum) }} style={{color:"#7DE7A6"}}>Content : {el.contentName}</a>
                                </Card.Title>
                               <span>
-							<Button variant="black" style={{ border: "1px dashed gray" }} onClick={() => { closeContent(el) }} >Game Close</Button>
-							<Button variant="black" style={{border:"1px dashed gray"}} onClick={() => { payOut(el) }} >정산하기</Button>
+							<Button variant="black" style={{border:"1px solid #7DE7A6",fontWeight:"bold",fontSize:"1.5rem",color:"#7DE7A6"}} onClick={() => {Auction(el.contentName,el.contentNum)}} >Detail</Button>
                               </span> 
                             </Card.Body>
 									</Card>
-										<div className={name + el.contentNum} style={{display:'none'} } >
-										<BattingList id={el.contentsName} contentName={el.contentName} check={isCheck}></BattingList>
-									</div>
+								
+										
+									
 							</Content>
 								
 						</>
 						
 						)
 					})}
-			</Contents>
-		</Layout>	
-		}
-		</div>
+		</>
+	
+				}
+				</Contents>
+		</>
 	);
 }
 

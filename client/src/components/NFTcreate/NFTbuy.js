@@ -53,7 +53,7 @@ function NFTbuy({ nftlist }) {
     const [fixed, setFixed] = useState(false);
     const [auction, setAuction] = useState(false);
     const [modalInfo, setModalInfo] = useState({});
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false);
    
     
     const onClick = () => {

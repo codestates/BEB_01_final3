@@ -1,15 +1,10 @@
 /* eslint-disable */
 
 import React, { useState } from 'react'
-import { Typography, Button, Form, message } from 'antd';
-import Icon from '@ant-design/icons/lib/components/Icon';
-import Dropzone from 'react-dropzone';
-import { PlusOutlined } from '@ant-design/icons/lib/icons';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { create } from 'ipfs-http-client';
-import background from '../img/wtimg.png';
 import Spinner from '../spinner/nftListSpinner';
 import styled from "styled-components";
 import Swal from "sweetalert2";
@@ -25,37 +20,48 @@ align-items: center;
 padding-left: 130px;
 padding-right: 90px;
 margin-top: -70px;
+
 `;
 const SeDiv = styled.div`
 width: 90%;
-height: 40rem;
+height: 60rem;
 display: flex;
+flex-direction: column;
 justify-content: space-evenly;
 align-items: center;
 
 `;
 const Div = styled.div`
-width: 90%;
-height: 35rem;
-border: 1px solid #eee;
+width: 40%;
+height: 50rem;
+border: 2px solid rgb(125,231,166);
 border-radius: 5%;
 display: flex;
 flex-direction: column;
-justify-content: center;
+justify-content: space-between;
 align-items: center;
-background:rgb(125,231,166);
-`;
+/* background-color: black; */
+background: linear-gradient(
+		20deg,
+		#00c3ff,
+		#ffff1c 
+);
+box-shadow: 4px 12px 30px 6px rgb(0 0 0 / 70%);
+/* background:rgb(125,231,166); */
+`
 const ImgDiv = styled.div`
-width: 90%;
-height: 35rem;
+width: 60%;
+height: 20rem;
 background: url(https://media.discordapp.net/attachments/927789146494369835/936276516264874094/WNT-logo.png?width=628&height=611) no-repeat center;
-background-size: 50% 20rem;
+background-size: 70% 17rem;
+background-color: black;
 outline: none;
 cursor: pointer;
 border-radius: 5%;
 box-shadow: 4px 12px 30px 6px rgb(0 0 0 / 9%);
 transition: all 0.2s ease-in-out;
-background:rgb(125,231,166);
+border: 1px dashed rgb(125,231,166);
+/* background:rgb(125,231,166); */
 &:hover {
 
   box-shadow: 4px 12px 20px 6px rgb(0 0 0 / 18%);
@@ -64,40 +70,70 @@ background:rgb(125,231,166);
 }
 `;
 const Lable = styled.label`
-display:block;
+display:flex;
 width: 100%;
+height: 50%;
+justify-content: center;
+align-items: center;
+flex-direction: column;
 cursor: pointer;
+margin: 2%;
 `
 const ImgInput = styled.input`
 visibility: hidden;
 `;
 const Input = styled.input`
-width: 70%;
+width: 75%;
 background-color: transparent;
-border: 1px dashed gray;
+border: 2px dashed black;
 color: white;
 font-size: 1.5rem;
-border-radius: 5%;
-margin-bottom: 4%;
+margin-bottom: 2%;
 `;
 
 const Img = styled.img`
 width: 70%;
-height: 70%;
-border: 1px dashed #eee;
+height: 25rem;
+border: 1px dashed rgb(125,231,166);
 border-radius: 5%;
-margin-bottom: 4%;
+&:hover {
+
+box-shadow: 4px 12px 20px 6px rgb(0 0 0 / 18%);
+transform: translateY(5px);
+
+}
 
 `;
 const TextArea = styled.textarea`
-width: 70%;
+width: 75%;
 height: 50%;
-border: 1px dashed gray;
+/* border: 1px dashed rgb(125,231,166); */
+border: 2px dashed black;
 background-color: transparent;
 font-size: 1.5rem;
-border-radius: 5%;
 color: white;
 outline-style: none;
+`;
+
+const Button =styled.button`
+	background: linear-gradient(
+		20deg,
+		#77A1D3,
+    #79CBCA,
+    #E684AE
+	);
+  font-size:1.3rem;
+  font-weight:bold; 
+  margin:3%;
+  border: 1px solid #77A1D3;
+  border-radius: 6%; 
+  width:7rem;
+  height:3rem;
+  &:hover {
+  box-shadow: 4px 12px 20px 6px rgb(0 0 0 / 18%);
+  transform: translateY(3px);
+
+}
 `;
 
 // syled-Component 
@@ -216,8 +252,10 @@ const CreateNFT = (props) => {
             <FirstDiv >
             {loading === true ? <Spinner /> : 
                 <SeDiv>
-                     {/* 이미지 미리보기 chagne 부분 */}
-                    {imgSrc === '' ?
+                  <h1>NFT Minting</h1>
+                     {/* 이미지 미리보기 chagne 부분
+              {imgSrc === '' ?
+                       
                         <Lable>
                         <ImgDiv>
                                 <ImgInput type="file" onChange={onHandleChange} />
@@ -227,25 +265,43 @@ const CreateNFT = (props) => {
                         <Lable>
                         <Div>
                                 <Img src={imgSrc} onClick={() => {setImgSrc(''), setFiles('')}} />
-                                <Input type="text" placeholder="HERE! You Write NFT NAME" onChange={(e)=>{setNftName(e.target.value)}} />
-                        </Div>
-                        </Lable>
-                    }
-                    <Lable>
-                        <Div>
-                            <Input type="text" placeholder="What is the CONTENT TITLE??" onChange={(e)=>{ setContentTitle(e.target.value)}} />
+                    <Input type="text" placeholder="HERE! You Write NFT NAME" onChange={(e) => { setNftName(e.target.value) }} />
+                    <Input type="text" placeholder="What is the CONTENT TITLE??" onChange={(e)=>{ setContentTitle(e.target.value)}} />
                                 <TextArea placeholder="whatever you want Description!!" onChange={(e) => { setNftDescription(e.target.value) }} />
                                 <Button variant="warning" onClick={onSubmit} style={{ fontSize:'1.3rem', margin:"3%", borderRadius: '5%', width:'7rem',height:'3rem',backgroundColor:'transparent'}}>
                         Submit
                     </Button>
                         </Div>
-                    </Lable>                    
-                </SeDiv>
-      
-                }
-                   
-                </FirstDiv>
-          
+                        </Lable>
+                    }
+                    <Lable>
+                       
+                    </Lable>                     */}
+              <Div>
+              {imgSrc === '' ?
+                       
+                       <Lable>
+                       <ImgDiv>
+                               <ImgInput type="file" onChange={onHandleChange} /> 
+                       </ImgDiv>
+                </Lable> :
+                <Lable>
+                  <Img src={imgSrc} onClick={() => { setImgSrc(''), setFiles('') }} />
+                  </Lable>
+              }
+           
+              <Lable>
+              <Input type="text" placeholder="HERE! You Write NFT NAME" onChange={(e) => { setNftName(e.target.value) }} />
+                    <Input type="text" placeholder="What is the CONTENT TITLE??" onChange={(e)=>{ setContentTitle(e.target.value)}} />
+                <TextArea placeholder="whatever you want Description!!" onChange={(e) => { setNftDescription(e.target.value) }} />                
+              <Button variant="warning" onClick={onSubmit} style={{ backgroundColor:'transparent'}}>
+                        CREATE
+                    </Button> 
+            </Lable>
+             </Div>
+                   </SeDiv>
+                    }
+                </FirstDiv>         
             </>
         
     )
