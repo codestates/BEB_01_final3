@@ -6,7 +6,6 @@ import axios from 'axios';
 import { Form, Col, Row } from 'antd';
 import wtImg from './basic.png';
 import BootstrapSwitchButton from 'bootstrap-switch-button-react';
-// import { default as Spinner } from './Spinner';
 import styled from 'styled-components';
 import Spinner from '../spinner/nftListSpinner'
 

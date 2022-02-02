@@ -3,7 +3,7 @@ import { Row, Col } from "react-bootstrap";
 import styled from "styled-components";
 import logo from '../img/투명로고.png'
 const FooterDiv = styled.div`
-  margin-top: 140px;
+  /* margin-top: 140px; */
   z-index: 200;
   /* background-color: #7de7a6; */
 `;

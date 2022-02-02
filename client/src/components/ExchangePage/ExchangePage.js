@@ -6,7 +6,7 @@ import axios from 'axios';
 import { SwapOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
 import { wtTokenExchange, nwtTokenExchange } from '../../actions/token_action';
-import { default as Spinner } from './Spinner';
+import Spinner from '../spinner/nftListSpinner';
 import styled from 'styled-components';
 
 const AllBox = styled.div`
