@@ -176,6 +176,7 @@ module.exports = {
 	},
 	contentList: async (req, res) => {
 		try {
+
 			const contentName = req.body.contentName;
 			const info = await Batting.find({
 				contentsName: contentName,
