@@ -12,6 +12,7 @@ import "../style.css";
 import Modals from "./Modals";
 import ImgModals from "./ImgModals";
 import Swal from "sweetalert2";
+import Spinner from "../../spinner/nftListSpinner";
 
 function CounterPage() {
   const videoId = useParams().videoId;
@@ -26,6 +27,7 @@ function CounterPage() {
   const [amount, setAmount] = useState('');
   const [closeInfo, setCloseInfo] = useState("");
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const showImg = (e) => {
     setSurvivalImgShow(e.target.src);
@@ -126,8 +128,7 @@ function CounterPage() {
 
 
   function vote(name) {
-    
-
+    setLoading(true)
     //일단 누가 누구에게 투표를 했는지 보낸다. 
     //필수정보 방이름 방번호가 필요하다. 그이
     console.log(name);
@@ -153,9 +154,12 @@ function CounterPage() {
           }).then((result) => {
            
             if (result.value) {
+              setLoading(false)
                navigate('/')
             }
+            setLoading(false)
           });
+
         } else {
           Swal.fire({
             icon: 'error',
@@ -170,8 +174,10 @@ function CounterPage() {
           }).then((result) => {
             console.log(result);
             if (result.value) {
+              setLoading(false)
                navigate('/')
             }
+            setLoading(false)
           });
          
         
@@ -181,6 +187,7 @@ function CounterPage() {
 
   const renderCard = Survival.map((survival, index) => {
     return (
+
       <Card
         style={{
           width: "15rem",
@@ -192,7 +199,6 @@ function CounterPage() {
         {/* <div onClick={(e) => showImg}> */}
         <a style={{ cursor: "pointer" }} onClick={showImg}>
           <Card.Img
-           
             size={150}
             src={`http://localhost:5000/${survival.img}`}
             alt
@@ -222,7 +228,6 @@ function CounterPage() {
             style={{ border: "none", borderBottom: "1px solid" }}
             onChange={(e) => { setAmount(e.target.value)}}
             placeholder="WT 갯수"
-            //   style={{justifyContent: 'flex-start', alignItems: 'flex-start'}}
           ></input>
         </Card.Body>
       </Card>
@@ -230,6 +235,10 @@ function CounterPage() {
   });
 
   return (
+
+    <>
+    {loading === true ? <Spinner /> : 
+      <>
     <div className="CounterPageBody">
       <br />
       <br />
@@ -271,6 +280,9 @@ function CounterPage() {
         />
       ) : null}
     </div>
+    </>
+          }
+      </>
   );
 }
 

@@ -261,6 +261,7 @@ function DetailAuction(props) {
 
   const EndAuction = (e) => {
     e.preventDefault();
+    setIsLoading(true);
     const variables = {
       tokenId: props.nftdata.tokenId,
     };
@@ -270,8 +271,10 @@ function DetailAuction(props) {
         alert(
           "입찰 종료가 실패하였습니다 확인해주세요!, reason :" + res.data.reason
         );
+        setIsLoading(false);
       } else if (res.data.success) {
         alert("입찰 종료가 성공적으로 진행되었습니다.");
+        setIsLoading(false);
         navigate("/nft/auctionlist");
       }
     });
