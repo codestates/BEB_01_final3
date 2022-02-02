@@ -1033,10 +1033,7 @@ module.exports = {
 
 											const data =
 												await nftContract.methods
-													.approveSale(
-														// account.address
-														authAddress
-													)
+													.approveSale(authAddress)
 													.encodeABI();
 											const nonce =
 												await web3.eth.getTransactionCount(
