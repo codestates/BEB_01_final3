@@ -23,7 +23,8 @@ const SliderBackDiv = styled.div`
 	background: linear-gradient(
 		20deg,
 		#00c3ff,
-		#ffff1c /* #77A1D3,
+		#ffff1c /* 
+		#77A1D3,
   #79CBCA,
   #E684AE */
 	);
@@ -36,25 +37,20 @@ const SliderBackDiv = styled.div`
 const StyledSlider = styled(Slider)`
 	.slick-list div {
 		//슬라이드 스크린
-		/* width: 100%;
+		width: 100%;
 		height: 100%;
-		margin: 0 auto;
-		overflow-x: hidden; */
+		/* margin: 0 auto; */
+		overflow-x: hidden;
 		order: 0;
+		.slick-arrow .slick-prev div {
+		}
+		.slick-arrow .slick-next div {
+		}
 	}
 	.slick-slider div {
 		outline: none;
 		order: 0;
-		/* .slick-arrow .slick-prev div {
-		}
-		.slick-arrow .slick-next div {
-		} */
 	}
-
-	/* .slick-arrow .slick-prev div {
-	}
-	.slick-arrow .slick-next div {
-	} */
 
 	/* .slick-arrow div {
 	} */
@@ -75,10 +71,6 @@ const StyledSlider = styled(Slider)`
 		width: 100%;
 	}  */
 `;
-
-// const Container = styled.div`
-// 	overflow: hidden;
-// `;
 
 const ImageContainer = styled.div`
 	margin: 3px 5px;
@@ -117,22 +109,6 @@ const TextBox = styled.div`
 `;
 // syled
 
-// function PrevButton({ onClick }) {
-// 	return (
-// 		<button onClick={onClick} className='slick-prev' style={{ left: 0 }}>
-// 			Prev
-// 		</button>
-// 	);
-// }
-
-// function NextButton({ onClick }) {
-// 	return (
-// 		<button onClick={onClick} className='slick-next' style={{ right: 0 }}>
-// 			Next
-// 		</button>
-// 	);
-// }
-
 function SampleNextArrow(props) {
 	const { className, style, onClick } = props;
 	return (
@@ -158,8 +134,8 @@ function SamplePrevArrow(props) {
 			style={{
 				...style,
 				display: 'block',
-				// background: 'black',
 				left: '25px',
+				zIndex: 1,
 			}}
 			onClick={onClick}
 		/>
@@ -173,6 +149,8 @@ const { Meta } = Card;
 
 function LandingPage() {
 	const settings = {
+		slide: 'div',
+		arrows: true,
 		dots: true,
 		infinite: true,
 		speed: 500,
@@ -346,12 +324,8 @@ function LandingPage() {
 					<Content>
 						<div
 							style={{
-								// width: '70%',
 								height: '70%',
 								width: '100%',
-								// margin: 100,
-								// margin: '10px 0px 0px 20%',
-								// marginRight: "200px",
 							}}>
 							<Title level={0}>Survivals</Title>
 							<hr />
