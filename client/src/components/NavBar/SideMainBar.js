@@ -1,6 +1,5 @@
 import React, {useEffect, useRef, useState } from "react";
 import { useAsync } from "react-async"
-// import styles from "./sidebar.module.css";
 import styled from "styled-components";
 import SideBarr from "./SideBar";
 import image from "../img/투명로고.png"
@@ -10,14 +9,12 @@ const Container = styled.div`
 `
 const Sidebar = styled.div` 
 background-color: white;
-/* border-right: 1px solid #202020; */
 position: fixed;
 top: 0;
 bottom: 0;
 left: 0;
 transition: 0.4s ease;
 color: #7DE7A6;
-/* height: 100%; */
 z-index: 199;
 height: 100%;
 &:hover{

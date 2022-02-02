@@ -1,10 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { loginUser, auth } from "../../actions/user_action";
-import { useNavigate, useParams } from "react-router-dom";
-
 import wtImg from "./basic.png";
-import { myPageCheck } from "../../actions/user_action";
 import axios from "axios";
 import Modals from "./Modals";
 import LikeNft from "./Like/LikeNft";
@@ -13,10 +9,6 @@ import MyNft from "./MyNft";
 import MyConTent from "./MyConTent";
 import copyimg from "./copy.png";
 import styled, { keyframes } from "styled-components";
-import Swal from "sweetalert2";
-import SideBar from '../NavBar/SideMainBar';
-
-
 
 const Div = styled.div`
   display: flex;
@@ -27,7 +19,6 @@ const Div = styled.div`
   
 
 `;
-
 
 const BoxDiv = styled.div`
   width: 50%;
@@ -45,7 +36,6 @@ const ImgDiv = styled.div`
   width: 50%;
   cursor: pointer;
   border-radius: 5%;
-  /* box-shadow: 4px 12px 30px 6px rgb(0 0 0 / 9%); */
   transition: all 0.2s ease-in-out;
   &:hover {
     box-shadow: 4px 12px 20px 6px rgb(0 0 0 / 18%);
@@ -76,10 +66,6 @@ const Button = styled.button`
 }
 `;
 function MyPage() {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const [Email, setEmail] = useState("");
-  const [Password, setPassword] = useState("");
   const [pbKey, setPbKey] = useState("");
   const [privKey, setPrivKey] = useState("");
   const [nftInfo, setNftInfo] = useState([]);
@@ -87,12 +73,9 @@ function MyPage() {
   const [wtToken, setWtToken] = useState("");
   const [nwtToken, setNwtToken] = useState("");
   const [isCheck, setIsCheck] = useState(false);
-  const [sellPrice, setSellPrice] = useState("");
   const [modalShow, setModalShow] = useState(false);
   const [profile, setProfile] = useState("");
-  const [changeSell, setChangeSell] = useState(true);
   const [check, setCheck] = useState(false);
-  //타이머가 끝나는 조건
 
   const [SubscribeNumber, setSubscribeNumber] = useState(0);
   const [userid, setUserid] = useState("");
@@ -109,7 +92,6 @@ function MyPage() {
 
   axios.post("/api/subscribe/subscribeNumber", variable).then((response) => {
     if (response.data.success) {
-      // console.log(response.data.subscribeNumber);
       setSubscribeNumber(response.data.subscribeNumber);
     } else {
       alert("구독자 수 정보를 받아오지 못했습니다.");

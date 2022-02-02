@@ -6,6 +6,11 @@ import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
+const Menudiv = styled.div`
+margin: 30px 0px 20px 0px;
+text-align: center;
+font-size: 23px;
+`
 
 const { SubMenu } = Menu;
 const { Sider } = Layout;
@@ -17,19 +22,18 @@ function SideBar() {
       <Sider width={300} className="site-layout-background" style={{ position: "fixed", transform: "none"}} >
           <Menu
             mode="inline"
-            // defaultSelectedKeys={["1"]}
-            // defaultOpenKeys={["sub1"]}
             style={{ height: "100%", borderRight: 0 , backgroundColor:"white" }}
           >
-            {/* <SubMenu style={{marginTop: '10px'}}>NFT MARKET</SubMenu> */}
+            <hr />
+            <Menudiv>M A R K E T</Menudiv>
               <Menu.Item key="1">
-                <Link to="/nft/fixedlist" className="nav-text" style={{textDecoration: 'none'}}>NFT LIST(Fixed)</Link>
+                <Link to="/nft/fixedlist" className="nav-text" style={{textDecoration: 'none'}}>Fixed MARKET</Link>
               </Menu.Item>  
               <Menu.Item key="2">
-                <Link to="/nft/auctionlist" className="nav-text" style={{textDecoration: 'none'}}>NFT LIST(Auction)</Link>
+                <Link to="/nft/auctionlist" className="nav-text" style={{textDecoration: 'none'}}>Auction MARKET</Link>
               </Menu.Item>
-              <Menu.Item key="3">NFT Ranking</Menu.Item>
-              
+              <hr />
+              <div style={{marginLeft: "8%", marginTop: "10%"}}>NFT Ranking</div>
           </Menu>
         </Sider>
       </Layout>
