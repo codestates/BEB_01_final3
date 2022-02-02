@@ -35,6 +35,7 @@ function BetDetail(props,{show,betData}) {
   const [topPrice, setTopPrice] = useState("");
   const [list, setList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [serialLoading, setSerialLoading] = useState(false);
    
 
  
@@ -53,6 +54,7 @@ function BetDetail(props,{show,betData}) {
 
   function closeSerial(contentsName, serial) {
     // 이제 방을 닫는 트랜잭션을 보내봅시다.
+    setIsLoading(true);
     axios.post("/api/bat/closeSerial", { contentsName,serial }).then((res) => {
       if (res.data.success) {
         Swal.fire({
@@ -66,6 +68,7 @@ function BetDetail(props,{show,betData}) {
           // cancelButtonText: '취소', // cancel 버튼 텍스트 지정
           // reverseButtons: true, // 버튼 순서 거꾸로
         }).then((res) => {
+          setIsLoading(false);
           window.location.reload();
         });
       } else {
@@ -112,10 +115,10 @@ function BetDetail(props,{show,betData}) {
       <Modal.Body className="show-grid">
         {isLoading === false ?
           <Contents>
+            
             {list.map((el) => {
               return (
                 <>
-                 
                     <Card bg="white" text="black" style={{ margin: "1%", width:"15rem", height:"15rem" }}>
                       <Card.Body>
                       <Card.Title >
