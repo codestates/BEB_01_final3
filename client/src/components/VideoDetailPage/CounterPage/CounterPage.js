@@ -100,8 +100,8 @@ function CounterPage() {
             return;
           } else {
             setComplete(true);
-            let days = Math.floor(distDt / _day);
-            let hours = Math.floor((distDt % _day) / _hour);
+            // let days = Math.floor(distDt / _day);
+            let hours = Math.floor(distDt  / _hour);
             let minutes = Math.floor((distDt % _hour) / _minute);
             let seconds = Math.floor((distDt % _minute) / _second);
             let HapDate =

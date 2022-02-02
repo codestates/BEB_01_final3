@@ -128,9 +128,6 @@ const SideMainBar = ({getNum}, { width=300 }) => {
             style={{ height: "100%", borderRight: 0 }}
           >
             
-              <Menu.Item key="1">
-                <Link to="/" className="nav-text">HOME</Link>
-              </Menu.Item>
               <Menu.Item key="2">
                 <a onClick={()=>{onClick("0")}}>
                 토큰 발행
@@ -150,6 +147,9 @@ const SideMainBar = ({getNum}, { width=300 }) => {
                 <a onClick={()=>{onClick("3")}}>
                   관리자 권한 부여
                 </a>
+              </Menu.Item>
+              <Menu.Item key="1">
+                <Link to="/" className="nav-text">HOME으로</Link>
               </Menu.Item>
            
           </Menu>

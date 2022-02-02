@@ -158,7 +158,7 @@ module.exports = {
 				tx,
 				serverPrivateKey
 			);
-			console.log('----- purchaseToken function start ----');
+			console.log('-----NFT Aprove function end ----');
 			const approveHash = await web3.eth.sendSignedTransaction(
 				signedTx.rawTransaction
 			);

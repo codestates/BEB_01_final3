@@ -11,8 +11,7 @@ height: 65%;
 border-radius: 4%;
 box-shadow: 4px 12px 30px 6px rgb(0 0 0 / 9%);
 transition: all 0.2s ease-in-out;
-margin-left: 20px;
-margin-right: 15px;
+margin: 10px;
 display: flex;
 justify-content: center;
 &:hover {
@@ -23,20 +22,6 @@ justify-content: center;
 }
 
 `
-// const Div = styled.div`
-// width: 25%;
-// border-radius: 4%;
-// box-shadow: 4px 12px 30px 6px rgb(0 0 0 / 9%);
-// transition: all 0.2s ease-in-out;
-// &:hover {
-
-//   box-shadow: 4px 12px 20px 6px rgb(0 0 0 / 18%);
-//   transform: translateY(5px);
-
-// }
-
-// `
-
 function NFTauction({ nftlist }) {
   
   

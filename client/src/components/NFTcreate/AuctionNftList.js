@@ -27,17 +27,19 @@ function NftList() {
     }, []);
 
         return (
+          <div style={{marginTop: '15px'}}> <h1>Auction price NFTs</h1>
           <div style={{
-            width:'2000px', 
+            width:'100%', 
             height:'100%',
              display:'flex',
             flexWrap:'wrap',
              alignContent: 'center',
-            // backgroundColor:'tranparent',
-            // marginTop: '50px'
             paddingTop: "50px",
             backgroundColor:'tranparent',
-            marginLeft: "36%"
+            margin: 'auto',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            alignContent: 'center'
           }}>
             <SideBar width={300} />
 
@@ -47,6 +49,7 @@ function NftList() {
              : <NFTauction nftlist={nft}></NFTauction>
 } 
            
+          </div>
           </div>
         );
 

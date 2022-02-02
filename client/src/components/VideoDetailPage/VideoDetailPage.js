@@ -60,7 +60,7 @@ function VideoDetailPage(props) {
 		//   console.log('videoId', videoId)
 		//   console.log('user', user.userData._id)
 		return (
-			<div style={{paddingTop: "70px"}}>
+			<div style={{paddingTop: "70px", height: "100%"}}>
 			<Row gutter={(16, 16)}>
 				<Col lg={18} xs={24}>
 					<div style={{ width: '100%', padding: '3rem 4rem' }}>

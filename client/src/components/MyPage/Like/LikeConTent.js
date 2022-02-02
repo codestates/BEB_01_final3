@@ -24,7 +24,8 @@ const loadEffect2 = keyframes `
 
     const MainDiv = styled.div`
     animation: ${loadEffect2} 5s ease, step-start ;
-    margin-left: 25%;
+    width: 100%;
+    /* margin-left: 25%; */
     `
 
 const ImgDiv = styled.div`
@@ -279,7 +280,7 @@ function LikeNft () {
       });
 
     return(
-        <div style={{}}>
+        <div >
           <MainDiv>
             <div style={{
                 fontSize: "50px",
@@ -295,11 +296,10 @@ function LikeNft () {
             <div style={{
                 width: "100%",
                 margin: "3rem auto",
-                // textAlign:"center",
 
-                // marginRight: "250px",
             }}>
               <Title level={0}>Survival Contents</Title>
+              
               <Row
 								style={{
 									width: '100%',
