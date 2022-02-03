@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { Row, Col } from 'react-bootstrap';
 import Spinner from '../spinner/nftListSpinner'
-
+import ThumbnailImg from '../UploadPage/ThumbnailImg'
 // import UserImg from './UserImg';
 const ImgDiv = styled.div`
 	width: 80%;
@@ -82,7 +82,8 @@ const UploadPage = (props) => {
 	const [Survival, setSurvival] = useState('');
 	const [Image, setImage] = useState([]);
 	const [loading, setLoading] = useState(false)
-
+	const [Thumbnail, setThumbnail] = useState([]);
+	const [ThumbCheck, setThumbCheck] = useState(false);
 
 	const onTitleChange = (e) => {
 		setVideoTitle(e.currentTarget.value);
@@ -96,14 +97,9 @@ const UploadPage = (props) => {
 	const onCategoryChange = (e) => {
 		setCategory(e.currentTarget.value);
 	};
-	const onDateChange = (e) => {
-		setOpenDate(e.currentTarget.value);
-	};
-	const onSurvivalList = (e) => {
-		setSurvival(e.currentTarget.value);
-	};
-	const updateImages = (newImages) => {
-		setImage(newImages);
+	const updateThumbnailImage = (newImages) => {
+		setThumbnail(newImages);
+		setThumbCheck(true);
 	};
 
 	const onDrop = (files) => {
@@ -151,7 +147,22 @@ const UploadPage = (props) => {
 		e.preventDefault(); //새로고침방지
 		setLoading(true)
 
-		const variables = {
+		let variables = {};
+
+		if (ThumbCheck) {
+			variables = {
+			writer: user.userData._id,
+			title: VideoTitle,
+			description: Description,
+			privacy: Private,
+			filePath: FilePath,
+			category: Category,
+			duration: Duration,
+			thumbnail: Thumbnail[0],
+			image: Image,
+		};
+	} else {
+		variables = {
 			writer: user.userData._id,
 			title: VideoTitle,
 			description: Description,
@@ -162,6 +173,7 @@ const UploadPage = (props) => {
 			thumbnail: ThumbnailPath,
 			image: Image,
 		};
+	}
 		axios
 			.post('/api/user/video/uploadVideo', variables)
 			.then((response) => {
@@ -215,18 +227,6 @@ const UploadPage = (props) => {
 								>
 									{({ getRootProps, getInputProps }) => (
 										<div
-											//////////////////////////////////////////////
-											// return (
-											//     <div
-											//         style={{
-											//             maxWidth: '700px',
-											//             marginLeft: '33%',
-											//             margin: '2rem auto',
-											//             paddingTop: "100px",
-											//         }}
-											//     >
-											//         <div
-											///////////////////////////////////////////////
 											style={{
 												width: '300px',
 												height: '240px',
@@ -271,6 +271,11 @@ const UploadPage = (props) => {
 								placeholder='콘텐츠 설명'
 							/>
 						</Col>
+					</Row>
+					<Row style={{marginTop: '30px', width: '900px'}}>
+					<ThumbnailImg
+									refreshFunction={updateThumbnailImage}
+								/>
 					</Row>
 					<br />
 					<br />

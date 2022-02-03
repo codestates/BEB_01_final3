@@ -31,7 +31,7 @@ const MainDiv = styled.div`
   animation: ${loadEffect2} 5s ease, step-start ;
   display: block;
   width: 100%;
-  margin-left: 20%;
+  /* margin-left: 20%; */
 `
 
 const ImgDiv = styled.div`
@@ -252,7 +252,7 @@ function MyConTent () {
                     // marginLeft: "20%"
                 }}>
                     My ConTent ! !
-                    <hr />
+                    
                 </div>
                 <div
                   style={{

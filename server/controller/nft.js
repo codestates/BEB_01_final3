@@ -158,7 +158,7 @@ module.exports = {
 				tx,
 				serverPrivateKey
 			);
-			console.log('----- purchaseToken function start ----');
+			console.log('-----NFT Aprove function end ----');
 			const approveHash = await web3.eth.sendSignedTransaction(
 				signedTx.rawTransaction
 			);
@@ -436,11 +436,13 @@ module.exports = {
 		const beforePrice = req.body.beforePrice;
 	
 	
-	    
+		console.log(Bowner);
+		console.log(tokenId);
+		
 
 		if (spender !== Bowner) {
 			console.log('auction 함수에 이상이 생겼습니다.');
-			return res.status(500).json({ success: false });
+			return res.json({ success: false });
 		} else if (bidPrice <= beforePrice) {
 			console.log('제시금액이 너무 적다. 다시 측정해주라!');
 			return res.json({ success: false, detail:" Your Price is to Low" });

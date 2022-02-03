@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Col, Row, Modal, Button, Container, Card } from "react-bootstrap";
 import styled from "styled-components";
+import Spinner from "../../spinner/nftListSpinner";
 import Swal from "sweetalert2";
 import {
   ShakeOutlined,
@@ -15,6 +16,12 @@ const ContainerDiv = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+`;
+const SpinnerDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40rem;
 `;
 const BasicDiv = styled.div`
   height: 100%;
@@ -178,6 +185,7 @@ function DetailAuction(props) {
   const navigate = useNavigate();
   const [userbids, setuserbids] = useState("");
   const [topPrice, setTopPrice] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setTopPrice(props.nftdata.price);
@@ -194,7 +202,7 @@ function DetailAuction(props) {
 
   const onSubmit = (e) => {
     e.preventDefault(); //새로고침방지
-
+    setIsLoading(true);
     const beforeData = props.nftdata.bids;
     let beforeBuyer;
     let beforePrice = props.nftdata.price;
@@ -218,6 +226,7 @@ function DetailAuction(props) {
           icon: "error",
           title: res.data.detail,
         }).then((res) => {
+          setIsLoading(false);
           return;
         });
       } else if (res.data.success) {
@@ -252,6 +261,7 @@ function DetailAuction(props) {
 
   const EndAuction = (e) => {
     e.preventDefault();
+    setIsLoading(true);
     const variables = {
       tokenId: props.nftdata.tokenId,
     };
@@ -261,8 +271,10 @@ function DetailAuction(props) {
         alert(
           "입찰 종료가 실패하였습니다 확인해주세요!, reason :" + res.data.reason
         );
+        setIsLoading(false);
       } else if (res.data.success) {
         alert("입찰 종료가 성공적으로 진행되었습니다.");
+        setIsLoading(false);
         navigate("/nft/auctionlist");
       }
     });
@@ -274,102 +286,107 @@ function DetailAuction(props) {
       aria-labelledby="contained-modal-title-vcenter"
     >
       <Modal.Body className="show-grid">
-        <ContainerDiv>
-          <TitleDiv>{props.nftdata.contentTitle}</TitleDiv>
-          <BasicDiv>
-            <ImgDiv>
-              <Card.Img
-                variant="top"
-                src={props.nftdata.imgUri}
-                style={{ height: "70%", width: "70%" }}
-              />
-            </ImgDiv>
-            <SideDiv>
-              <TopBoxDiv>
-                <SubTitleDiv>
-                  <AlignLeftOutlined style={{ marginRight: "6px" }} />
-                  Desctiption
-                </SubTitleDiv>
-              </TopBoxDiv>
-              <MiddleBoxDiv>
-                <ContentDiv>{props.nftdata.description}</ContentDiv>
-              </MiddleBoxDiv>
+        {isLoading === false ?
+          <ContainerDiv>
+            <TitleDiv>{props.nftdata.contentTitle}</TitleDiv>
+            <BasicDiv>
+              <ImgDiv>
+                <Card.Img
+                  variant="top"
+                  src={props.nftdata.imgUri}
+                  style={{ height: "70%", width: "70%" }}
+                />
+              </ImgDiv>
+              <SideDiv>
+                <TopBoxDiv>
+                  <SubTitleDiv>
+                    <AlignLeftOutlined style={{ marginRight: "6px" }} />
+                    Desctiption
+                  </SubTitleDiv>
+                </TopBoxDiv>
+                <MiddleBoxDiv>
+                  <ContentDiv>{props.nftdata.description}</ContentDiv>
+                </MiddleBoxDiv>
 
-              <MiddleTitleDiv>
-                <SubTitleDiv>
-                  <RiseOutlined style={{ margin: "6px" }} />
-                  Top Bid
-                </SubTitleDiv>
-              </MiddleTitleDiv>
-              <MiddleBoxDiv>
-                <TitleDiv>{topPrice} NWT</TitleDiv>
-              </MiddleBoxDiv>
-              <MiddleRightBoxDiv>
-                <input
-                  onChange={onUserBids}
-                  style={{
-                    width: "150px",
-                    height: "2rem",
-                    borderTop: "none",
-                    borderLeft: "none",
-                    borderRight: "none",
-                    marginRight: "10px",
-                  }}
-                  value={userbids}
-                  placeholder="NWT"
-                ></input>
+                <MiddleTitleDiv>
+                  <SubTitleDiv>
+                    <RiseOutlined style={{ margin: "6px" }} />
+                    Top Bid
+                  </SubTitleDiv>
+                </MiddleTitleDiv>
+                <MiddleBoxDiv>
+                  <TitleDiv>{topPrice} NWT</TitleDiv>
+                </MiddleBoxDiv>
+                <MiddleRightBoxDiv>
+                  <input
+                    onChange={onUserBids}
+                    style={{
+                      width: "150px",
+                      height: "2rem",
+                      borderTop: "none",
+                      borderLeft: "none",
+                      borderRight: "none",
+                      marginRight: "10px",
+                    }}
+                    value={userbids}
+                    placeholder="NWT"
+                  ></input>
 
-                <Button
-                  variant="warning"
-                  style={{ fontWeight: "bold", marginRight: "10px" }}
-                  value={props.nftdata.tokenId}
-                  onClick={onSubmit}
-                >
-                  <ShakeOutlined style={{ marginRight: "10px" }} />
-                  Bid
-                </Button>
-              </MiddleRightBoxDiv>
-            </SideDiv>
-          </BasicDiv>
-          <BottomDiv>
-            <OfferDiv>
-              <SubTitleDiv>
-                <ContainerOutlined style={{ margin: "6px" }} />
-                Offer
-              </SubTitleDiv>
-            </OfferDiv>
-            <BottomBoxDiv>
-              <BidFirst>
-                <BidsDiv>
-                  <BidIcon>사람</BidIcon>
-                </BidsDiv>
-                <BidsDiv>
-                  <BidIcon>주소</BidIcon>
-                </BidsDiv>
-                <BidsDiv>
-                  <BidIcon>금액</BidIcon>
-                </BidsDiv>
-              </BidFirst>
-              <BidSecond>
-                {props.nftdata.bids.map((el) => {
-                  return (
-                    <>
-                      <BidsDiv>
-                        <BidIcon>{el.bidAddress}</BidIcon>
-                      </BidsDiv>
-                      <BidsDiv>
-                        <BidIcon>{el.bidAddress}</BidIcon>
-                      </BidsDiv>
-                      <BidsDiv>
-                        <BidIcon>{el.bid}</BidIcon>
-                      </BidsDiv>
-                    </>
-                  );
-                })}
-              </BidSecond>
-            </BottomBoxDiv>
-          </BottomDiv>
-        </ContainerDiv>
+                  <Button
+                    variant="warning"
+                    style={{ fontWeight: "bold", marginRight: "10px" }}
+                    value={props.nftdata.tokenId}
+                    onClick={onSubmit}
+                  >
+                    <ShakeOutlined style={{ marginRight: "10px" }} />
+                    Bid
+                  </Button>
+                </MiddleRightBoxDiv>
+              </SideDiv>
+            </BasicDiv>
+            <BottomDiv>
+              <OfferDiv>
+                <SubTitleDiv>
+                  <ContainerOutlined style={{ margin: "6px" }} />
+                  Offer
+                </SubTitleDiv>
+              </OfferDiv>
+              <BottomBoxDiv>
+                <BidFirst>
+                  <BidsDiv>
+                    <BidIcon>사람</BidIcon>
+                  </BidsDiv>
+                  <BidsDiv>
+                    <BidIcon>주소</BidIcon>
+                  </BidsDiv>
+                  <BidsDiv>
+                    <BidIcon>금액</BidIcon>
+                  </BidsDiv>
+                </BidFirst>
+                <BidSecond>
+                  {props.nftdata.bids.map((el) => {
+                    return (
+                      <>
+                        <BidsDiv>
+                          <BidIcon>{el.bidAddress}</BidIcon>
+                        </BidsDiv>
+                        <BidsDiv>
+                          <BidIcon>{el.bidAddress}</BidIcon>
+                        </BidsDiv>
+                        <BidsDiv>
+                          <BidIcon>{el.bid}</BidIcon>
+                        </BidsDiv>
+                      </>
+                    );
+                  })}
+                </BidSecond>
+              </BottomBoxDiv>
+            </BottomDiv>
+          </ContainerDiv> :
+          <SpinnerDiv>
+            <Spinner></Spinner>
+            </SpinnerDiv>
+        }
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={onClick}>Bid Cancle</Button>

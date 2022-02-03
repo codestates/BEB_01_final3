@@ -13,7 +13,7 @@ import styled, { keyframes } from "styled-components";
 const Div = styled.div`
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   margin: 0;
   

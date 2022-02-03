@@ -141,5 +141,21 @@ router.post('/image', (req, res) => {
 
 })
 
+router.post('/thumbnailImage', (req, res) => {
+	// console.log('여기는 라우터');
+	// console.log(req);
+	upload(req, res, (err) => {
+		if (err) {
+			return req.json({ success: false, err });
+		} else {
+			return res.json({
+				success: true,
+				filePath: res.req.file.path,
+				fileName: res.req.file.filename,
+			});
+		}
+	});
+});
+
 
 module.exports = router;

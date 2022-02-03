@@ -28,7 +28,10 @@ const ImgDiv = styled.div`
 		transform: translateY(5px);
 	}
 `;
-const inputBox = styled.input``;
+const Div = styled.div`
+width: 100%;
+height: 100%;
+`
 
 const Button = styled.button`
 	border-radius: 5px;
@@ -56,7 +59,7 @@ const AllBox = styled.div`
 	width: 105%;
 	border-radius: 3%;
 	/* height: 44rem; */
-	height: 66rem;
+	height: 100%;
 `;
 
 const { TextArea } = Input;
@@ -85,6 +88,7 @@ const UploadPage = (props) => {
 	const [Survival, setSurvival] = useState('');
 	const [Image, setImage] = useState([]);
 	const [loading, setLoading] = useState(false);
+
 	const [Thumbnail, setThumbnail] = useState([]);
 	const [ThumbCheck, setThumbCheck] = useState(false);
 
@@ -105,7 +109,10 @@ const UploadPage = (props) => {
 	};
 	const onSurvivalList = (e) => {
 		setSurvival(e.currentTarget.value);
+	
 	};
+
+
 	const updateImages = (newImages) => {
 		setImage(newImages);
 	};
@@ -114,6 +121,7 @@ const UploadPage = (props) => {
 		setThumbCheck(true);
 	};
 
+	
 	const onDrop = (files) => {
 		//올린파일에대한 정보가 files에대입
 
@@ -203,7 +211,7 @@ const UploadPage = (props) => {
 	};
 
 	return (
-		<div>
+		<Div>
 			{loading === true ? (
 				<Spinner />
 			) : (
@@ -335,7 +343,11 @@ const UploadPage = (props) => {
 								<br />
 							</Row>
 							<br />
-							<select onChange={onPrivateChange}>
+							
+						</AllBox>
+						<br />
+							<br />
+						<select onChange={onPrivateChange}>
 								{PrivateOptions.map(
 									(
 										item,
@@ -366,13 +378,10 @@ const UploadPage = (props) => {
 							<Button size='large' onClick={onSubmit}>
 								Submit
 							</Button>
-							<br />
-							<br />
-						</AllBox>
 					</Form>
 				</div>
 			)}
-		</div>
+		</Div>
 	);
 };
 
