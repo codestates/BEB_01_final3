@@ -89,7 +89,7 @@ function ThumbnailImg(props) {
 						{({ getRootProps, getInputProps }) => (
 							<div
 								style={{
-									width: 350,
+									width: 410,
 									height: 240,
 									display: 'flex',
 									alignItems: 'center',
