@@ -45,6 +45,7 @@ const ImgDiv = styled.div`
 const TextBox = styled.div`
 	margin-left: 10px;
 	text-align: left;
+  color: black;
 `;
 
 function LikeNft () {
