@@ -248,8 +248,8 @@ function MyConTent () {
                     fontSize: "50px",
                     color:"black",
                     marginBottom: "-2%",
-                    width: "1340px"
-                    // marginLeft: "20%"
+                    width: "1340px",
+                    marginLeft: "5%"
                 }}>
                     My ConTent ! !
                     
