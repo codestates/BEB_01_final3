@@ -52,6 +52,7 @@ const ImgDiv = styled.div`
 const TextBox = styled.div`
 	margin-left: 10px;
 	text-align: left;
+  color: black;
 `;
 function MyConTent () {
 
@@ -247,8 +248,8 @@ function MyConTent () {
                     fontSize: "50px",
                     color:"black",
                     marginBottom: "-2%",
-                    width: "1340px"
-                    // marginLeft: "20%"
+                    width: "1340px",
+                    marginLeft: "5%"
                 }}>
                     My ConTent ! !
                     
@@ -262,8 +263,9 @@ function MyConTent () {
                   renderCards.length === 0 ?  <div style={{ height: "40vh" }}><p style={{fontSize:"4rem"}}> 관리자 계정이 아니거나</p><p style={{fontSize:"4rem"}}>서바이벌 컨텐츠가 없습니다 !</p></div>
                  : 
                  <div>
-                   <hr />
                  <Title level={0}>Survivals</Title>
+                 <hr />
+
                  <Row
 								style={{
 									width: '100%',

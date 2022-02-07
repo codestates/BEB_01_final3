@@ -17,7 +17,7 @@
         IERC20 public token;  //IERC20 함수를 사용한다. 위함이다 setToken을 먼저 해줄 수 있도록 
         uint256 public nftPrice; // nft 가격을 정하기위해서 만들어논 상태변수 
 
-        event NewNft(address owner,uint256 tokenId,string tokenUri);
+        event NewNft(address owner, uint256 tokenId, string tokenUri);
 
         mapping (string => uint256) public getTokenId;   // tokenUri를 key값으로하는 tokenId를 얻기위한 맵핑 tokenId가 재대로반환이 되지않아서 만들어 놓았다.
         mapping (uint256 => uint256) public tokenPrice;   // 토큰아이디를 통해서 해당 nft의 가격을 알 수 있게 만들어 놓은 맵핑 
