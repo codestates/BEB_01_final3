@@ -19,7 +19,7 @@ const { myPage } = require('./controller/api');
 const mongoose = require('mongoose');
 
 mongoose
-	.connect(config.mongoURI)
+	.connect("mongodb+srv://jun:1234@cluster0.zjit4.mongodb.net/NFTSTOAGE?retryWrites=true&w=majority")
 	.then(() => console.log('MongoDB Connected success !!'))
 	.catch((err) => console.log(err));
 
