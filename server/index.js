@@ -23,6 +23,10 @@ mongoose
 	.then(() => console.log('MongoDB Connected success !!'))
 	.catch((err) => console.log(err));
 
+	app.get('/', (req, res) => {
+		res.send("서버배포 연습중");
+	});
+
 // app.get('/api/hello', (req, res) => res.send('Hello World!~~ '));
 
 //application/x-www-form-urlencoded //application/json // use 사용 부분
