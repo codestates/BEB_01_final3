@@ -1,10 +1,9 @@
 const express = require('express');
 const app = express();
 require('dotenv').config();
-
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-const config = require('./config/prod');
+// const config = require('./config/prod');
 const apiRouter = require('./routes/apiRouter');
 const cors = require('cors');
 const coinRouter = require('./routes/coinRouter');
@@ -20,7 +19,7 @@ const { myPage } = require('./controller/api');
 const mongoose = require('mongoose');
 
 mongoose
-	.connect(config.mongoURI,{ useNewUrlParser: true })
+	.connect("mongodb+srv://kimgwhjg:rla121457@gunk.ouvru.mongodb.net/Watto?retryWrites=true&w=majority",{ useNewUrlParser: true })
 	.then(() => console.log('MongoDB Connected success !!'))
 	.catch((err) => console.log(err));
 
