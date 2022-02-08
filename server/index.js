@@ -9,7 +9,7 @@ const cors = require('cors');
 const coinRouter = require('./routes/coinRouter');
 const batRouter = require('./routes/battingRouter');
 const { auth } = require('./middleware/auth');
-
+const path = require('path');
 // const { auth } = require('./middleware/auth');
 
 const { myPage } = require('./controller/api');
@@ -23,9 +23,11 @@ mongoose
 	.then(() => console.log('MongoDB Connected success !!'))
 	.catch((err) => console.log(err));
 
-	app.get('/', (req, res) => {
-		res.send("서버배포 연습중");
-	});
+	app.use(express.static('client/build'));
+	app.get('*', (req, res) => {
+		res.sendFile(path.resolve("client", "build", "index.html"));
+	  })
+	
 
 // app.get('/api/hello', (req, res) => res.send('Hello World!~~ '));
 

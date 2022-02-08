@@ -8,7 +8,6 @@ function DetailAuction(props) {
 
   console.log(props.nftdata)
 
-
   const navigate = useNavigate();
   const [userbids, setuserbids] = useState("");
  
