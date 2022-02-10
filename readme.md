@@ -6,7 +6,7 @@
 
 ### 🤡 이 프로젝트는 최근 무분별한 NFT를 어떻게 하면 무분별하지 않고 가치있는 NFT 발행을 할 수 있을까??? 라는 시작점에서 나온 프로젝트입니다. 🤡
 ###  KEYWORD : IP(지적재산권), 컨텐츠, 유명 유튜브, 서바이벌 컨텐츠, 배팅 
-###  stack : React.js, node.js, web3.js, solidity, JavaScript 등 뼈대가 되는 언어만 작성했습니다. 
+###  stack : React.js, node.js, web3.js, solidity, JavaScript 등 뼈대가 되는 언어와 라이브러리만 작성했습니다. 
 <hr>
 📝 Stugy Logs : <a href="https://lazy-crew.tistory.com/">Blog</a>
 <hr>
