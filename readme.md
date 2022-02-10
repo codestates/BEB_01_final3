@@ -8,5 +8,5 @@
 ###  KEYWORD : IP(지적재산권), 컨텐츠, 유명 유튜브, 서바이벌 컨텐츠, 배팅 
 ###  stack : React.js, node.js, web3.js, solidity, JavaScript 등 뼈대가 되는 언어와 라이브러리만 작성했습니다. 
 <hr>
-📝 Stugy Logs : <a href="https://lazy-crew.tistory.com/">Blog</a>
+📝 Stugy Logs : <a href="https://lazy-crew.tistory.com/45?category=994668">Blog</a>
 <hr>
