@@ -61,11 +61,10 @@ contract WTToken is ERC20, Ownable {
          uint256 amount = balanceOf(owner);
         _approve(owner,spender,amount);
     }
-    //남아있는양을 업데이트 해준다. 
+
     
 
     // 교환해주는 함수
-
     function exchange(address _to, uint256 price) public onlyAuthorized returns (bool) {
         require(_to != address(0x0));
         require(balanceOf(msg.sender) > 0);
@@ -76,7 +75,7 @@ contract WTToken is ERC20, Ownable {
     }
 
   
-     // 베팅 함수들 
+     // 배팅에 관련된 함수 시작 
 
      // 1.베팅할 수 있는 방을 개설하는 함수.
       function createContent () public onlyAuthorized returns (uint roomNum){
@@ -132,9 +131,9 @@ contract WTToken is ERC20, Ownable {
     function closeContent(uint roomNum) public onlyAuthorized {
         rooms[roomNum].contentStatus=false;
     }
-    // 6.회차로인해서 다시 true로 변경해서 투표를 할 수 있게 합니다. 
     
-   
+    
+    // 6.회차로인해서 다시 true로 변경해서 투표를 할 수 있게 합니다. 
     // 정답을 맞춘 인원이 몇명이니지 계산해보자. 
     function CountWinner(string memory res, uint roomNum) public onlyAuthorized returns(uint256){
          uint256 count;
@@ -151,9 +150,8 @@ contract WTToken is ERC20, Ownable {
 
     }
 
-    //정산해 주는 로직을 작성해봅시다. 
-  
-
+    // 7.정산해 주는 로직을 작성해봅시다. 
+    // 정답을 입력해 주면 정답을 맞춘 주소에게 알아서 토큰이 분배됩니다.
     function payOut(string memory res, uint roomNum) public onlyAuthorized {
     
     require(rooms[roomNum].contentStatus == false,"still open contentsRoom");

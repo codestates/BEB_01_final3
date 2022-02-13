@@ -1,3 +1,4 @@
+import { stat } from 'fs';
 import {
     LOGIN_USER,
     REGISTER_USER,
@@ -13,8 +14,10 @@ import {
 
 export default function (state = {}, action) {
     switch (action.type) {
+
         case LOGIN_USER:
-            return { ...state, loginSuccess: action.payload }
+            state.loginSuccess = action.payload;
+;            return { ...state, loginSuccess: action.payload }
             
         case REGISTER_USER:
            
@@ -43,3 +46,6 @@ export default function (state = {}, action) {
             return state;
     }
 }
+
+
+

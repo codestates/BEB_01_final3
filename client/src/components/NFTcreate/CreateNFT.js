@@ -206,8 +206,10 @@ const CreateNFT = (props) => {
             nftName: nftName,
             nftDescription : nftDescription,
             imgURI: `https://ipfs.io/ipfs/${imgHash.path}`,
-          };
-          const tokenURI = await ipfs.add(JSON.stringify(metadata));
+        };
+      
+       const tokenURI = await ipfs.add(JSON.stringify(metadata));
+      
           const result = {
              contentTitle : contentTitle,
              nftName : nftName,
