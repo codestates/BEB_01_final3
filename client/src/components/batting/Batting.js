@@ -105,7 +105,7 @@ transform: translateY(5px);
 	const payOut = (info) => {
 		setIsLoading(true);
 
-		axios.post("/api/bat/payOut", { contentNum: info.contentNum,answer:'ㅁㄹㅇ'})
+		axios.post("/api/bat/payOut", { contentNum: info.contentNum, answer:'ㅁㄹㅇ'})
 			.then(res => {
 				console.log(1);
 				console.log(res);
@@ -151,9 +151,6 @@ transform: translateY(5px);
                               </span> 
                             </Card.Body>
 									</Card>
-								
-										
-									
 							</Content>
 								
 						</>
