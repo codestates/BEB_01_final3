@@ -111,11 +111,11 @@ transform: translateY(5px);
 				console.log(res);
 				setIsLoading(false);
 			})
-			
+					
 
 	}
 	function Auction(contentName,contentNum) {
-       console.log(contentName,contentNum);
+       console.log(1,contentName,contentNum);
 		if (modalShow) {
 		  setModalShow(false);
 		} else {
