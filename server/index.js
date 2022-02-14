@@ -12,8 +12,7 @@ const { auth } = require('./middleware/auth');
 const path = require('path');
 // const { auth } = require('./middleware/auth');
 
-// const { myPage } = require('./controller/api');
-const { myPage } = require('./controller/caver_api');
+const { myPage } = require('./controller/api');
 
 //DB connect
 const mongoose = require('mongoose');
@@ -38,8 +37,8 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
-// app.use('/api', apiRouter);
-app.use('/caver_api', apiRouter);
+app.use('/api', apiRouter);
+// app.use('/caver_api', apiRouter);
 app.use('/uploads', express.static('uploads'));
 app.use('/api/video', require('./routes/video'));
 app.use('/api/user/video', require('./routes/uservideo'));

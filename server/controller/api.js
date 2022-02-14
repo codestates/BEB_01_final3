@@ -36,10 +36,10 @@ cron.schedule('*/5 * * * *', async function () {
 const subManagerAddress = '';
 
 // abi json
-const WTABI = fs.readFileSync('../abi/WTToken.json', 'utf-8');
-const NWTABI = fs.readFileSync('../abi/NWTToken.json', 'utf-8');
-const NFTABI = fs.readFileSync('../abi/NFTWT.json', 'utf8');
-const SWAPABI = fs.readFileSync('../abi/TokenSwap.json', 'utf-8');
+const WTABI = fs.readFileSync('server/abi/WTToken.json', 'utf-8');
+const NWTABI = fs.readFileSync('server/abi/NWTToken.json', 'utf-8');
+const NFTABI = fs.readFileSync('server/abi/NFTWT.json', 'utf8');
+const SWAPABI = fs.readFileSync('server/abi/TokenSwap.json', 'utf-8');
 
 // abi parse
 const nftAbi = JSON.parse(NFTABI);
