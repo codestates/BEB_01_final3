@@ -1,0 +1,211 @@
+{
+	"compiler": {
+		"version": "0.5.6+commit.b259423e"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "token2",
+				"outputs": [
+					{
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "owner2",
+				"outputs": [
+					{
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "owner1",
+				"outputs": [
+					{
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "token1",
+				"outputs": [
+					{
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"name": "spender",
+						"type": "address"
+					},
+					{
+						"name": "_contract",
+						"type": "address"
+					}
+				],
+				"name": "_exchangeToken",
+				"outputs": [
+					{
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"name": "_amount",
+						"type": "uint256"
+					},
+					{
+						"name": "user",
+						"type": "address"
+					},
+					{
+						"name": "spender",
+						"type": "address"
+					},
+					{
+						"name": "_contract1",
+						"type": "address"
+					},
+					{
+						"name": "_contract2",
+						"type": "address"
+					}
+				],
+				"name": "swap",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"name": "_token1",
+						"type": "address"
+					},
+					{
+						"name": "_token2",
+						"type": "address"
+					},
+					{
+						"name": "serverAddress",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			}
+		],
+		"devdoc": {
+			"methods": {}
+		},
+		"userdoc": {
+			"methods": {}
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contract/contracts/KIP_TokenSwap.sol": "TokenSwap"
+		},
+		"evmVersion": "constantinople",
+		"libraries": {},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contract/contracts/KIP_TokenSwap.sol": {
+			"keccak256": "0x3dab483420636acd408d486f9d4b582f816425f422a84ccfd0c95f7b40213dd2",
+			"urls": [
+				"bzzr://49a9161794aa1832bb974f817991727291c8665b9686c4971f7910ed7a8bba13"
+			]
+		},
+		"contract/klaytn-contracts-master/contracts/introspection/IKIP13.sol": {
+			"keccak256": "0xf7415711dbec40bc633af7d8cb5c3c0bc3d1ed97fd8c13f795a03eb3073ea219",
+			"urls": [
+				"bzzr://2c161a0e94debcd164c7a87e2c12c087ffefe24bc7a4a9f304f5d8ba39ed15a1"
+			]
+		},
+		"contract/klaytn-contracts-master/contracts/introspection/KIP13.sol": {
+			"keccak256": "0x84681701e79f53ba1e9660b6a130bba31880d66cee996ab7d5567d239155c6da",
+			"urls": [
+				"bzzr://743958df51380e11b5e58092297c1e122582ade8d358010c733f27e175e7ca10"
+			]
+		},
+		"contract/klaytn-contracts-master/contracts/math/SafeMath.sol": {
+			"keccak256": "0x640b6dee7a4b830bdfd52b5031a07fc2b12209f5b2e29e5d364a7d37f69d8076",
+			"urls": [
+				"bzzr://292843005e754e752644f767477ec5ad7a1ffc91ddb18c38b8079c62f3993cad"
+			]
+		},
+		"contract/klaytn-contracts-master/contracts/token/KIP7/IKIP7.sol": {
+			"keccak256": "0xb2b107e08a5044b50d4596191b2853ada5d87b351765a66b8cff7062b159843d",
+			"urls": [
+				"bzzr://b7ab743c5f3c411177fcaea13e871410075e50d4df7f67453261736c33034498"
+			]
+		},
+		"contract/klaytn-contracts-master/contracts/token/KIP7/IKIP7Receiver.sol": {
+			"keccak256": "0xbe8276c8cc253992fc6789d62fb7946b859893948167dd1e326da6ece3202574",
+			"urls": [
+				"bzzr://e260d02b9f03bb324802362279f4af290df1a6b84482189d09a598e702929b76"
+			]
+		},
+		"contract/klaytn-contracts-master/contracts/token/KIP7/KIP7.sol": {
+			"keccak256": "0x2b345cc9f043282c2e934b0f2c0800b393d6148c4d1877af293c3b1c4c4989c0",
+			"urls": [
+				"bzzr://424f574202c6b81470b2f3e8fe59407307b09cedeea5af3c2e6216821fdd1b8c"
+			]
+		},
+		"contract/klaytn-contracts-master/contracts/utils/Address.sol": {
+			"keccak256": "0xf3358e5819ca73357abd6c90bdfffd0474af54364897f6b3e3234c4b71fbe9a1",
+			"urls": [
+				"bzzr://f7f6da60a184233fd666ac44e6fb2bd51ca6ebdc4867a310d368049aa4e62786"
+			]
+		}
+	},
+	"version": 1
+}

@@ -1050,9 +1050,9 @@
 	},
 	"sources": {
 		"contract/contracts/KIP_WTTOKEN.sol": {
-			"keccak256": "0x8a024be3d5e358a29dd4221f8608f2b3d3f0f09f57e41d47d35564ddb3a159f4",
+			"keccak256": "0x4aaf344545c5648dbd8876c75345946c9d253e817e95b161ebe0d3f87df7302c",
 			"urls": [
-				"bzzr://0af221e7ad1d55adc71c086334698b4b96e1c4924288766931fc71b665ff9c2b"
+				"bzzr://2806aaa8cfb02eeee2a3ed8c59c62479d49c7978f70d162d7b18926808c7a80a"
 			]
 		},
 		"contract/klaytn-contracts-master/contracts/access/Roles.sol": {
