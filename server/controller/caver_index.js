@@ -36,13 +36,12 @@ const infuraWeb3Provider = (infuraURL) => {
 	return new Web3(new Web3.providers.HttpProvider(infuraURL));
 };
 
-const newContract = (web3, abi, ca) => {
+const newCaverContract = (web3, abi, ca) => {
 	return new web3.eth.Contract(abi, ca, {
 		from: process.env.SERVERADDRESS,
 		gas: 3000000,
 	});
 };
-//newContract :  컨트렉트 연결
 
 // 경우 1 : 로그인한 계정이 서버한테 권한을 받고 nft 민팅을 진행하려고 함. => serverAddress 가 로그인 중인 서버 계정이어야함
 // 원래 기존의 CA배포한 서버계정(serverAddress), 로그인되어 있는 서버 주소({ _id: req.user._id }, {role:1})
@@ -62,9 +61,9 @@ const changeAuther = async (highPrivilege, loginServer) => {
 		difCheck = false;
 	}
 
-	const wtContract = newContract(web3, wtAbi, process.env.WTTOKENCA); // wt
-	const nwtContract = newContract(web3, nwtAbi, process.env.NWTTOKENCA); // nwt
-	const nftContract = newContract(web3, nftAbi, process.env.NFTTOKENCA); // nft
+	const wtContract = newCaverContract(web3, wtAbi, process.env.WTTOKENCA); // wt
+	const nwtContract = newCaverContract(web3, nwtAbi, process.env.NWTTOKENCA); // nwt
+	const nftContract = newCaverContract(web3, nftAbi, process.env.NFTTOKENCA); // nft
 
 	const serverDB_addr = await User.find({ role: 1 }).exec();
 
@@ -100,9 +99,9 @@ const changeAuther = async (highPrivilege, loginServer) => {
 // 크론을 1분마다 돌려서 서버계정을 확인해서 바꿔주는 함수
 const targetServerAddress = async (serverAddress) => {
 	// console.log('크론으로 돌리는 중');
-	const wtContract = newContract(web3, wtAbi, process.env.WTTOKENCA); // wt
-	const nwtContract = newContract(web3, nwtAbi, process.env.NWTTOKENCA); // nwt
-	const nftContract = newContract(web3, nftAbi, process.env.NFTTOKENCA); // nft
+	const wtContract = newCaverContract(web3, wtAbi, process.env.WTTOKENCA); // wt
+	const nwtContract = newCaverContract(web3, nwtAbi, process.env.NWTTOKENCA); // nwt
+	const nftContract = newCaverContract(web3, nftAbi, process.env.NFTTOKENCA); // nft
 
 	// 1순위 체크 : 서버 root 계정이 넉넉한 양의 토큰을 가지고 있는지, 이더를 보유하고 있는지 체크
 	const wtAmount = web3.utils.fromWei(
@@ -195,7 +194,7 @@ const targetAddrPK = async (addr) => {
 
 module.exports = {
 	infuraWeb3Provider,
-	newContract,
+	newCaverContract,
 	changeAuther,
 	targetServerAddress,
 	targetAddrPK,
