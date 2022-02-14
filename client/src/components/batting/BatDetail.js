@@ -89,6 +89,7 @@ function BetDetail(props,{show,betData}) {
   const closeContent = () => {
 		setIsLoading(true);
 
+     
 		axios.post("/api/bat/closeContent", { contentNum: props.contentNum })
 			.then(res => {
       
@@ -158,7 +159,7 @@ function BetDetail(props,{show,betData}) {
       </Modal.Body>
       <Modal.Footer>
         <Button variant="danger" onClick={closeContent}>
-          컨텐츠 종료
+          컨텐츠 종료   
         </Button>
         <Button onClick={props.show}>Close</Button>
       </Modal.Footer>
