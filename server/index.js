@@ -3,7 +3,7 @@ const app = express();
 require('dotenv').config();
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-const config = require('./config/prod');
+// const config = require('./config/prod');
 const apiRouter = require('./routes/apiRouter');
 const cors = require('cors');
 const coinRouter = require('./routes/coinRouter');
@@ -19,9 +19,15 @@ const { myPage } = require('./controller/api');
 const mongoose = require('mongoose');
 
 mongoose
-	.connect("mongodb+srv://jun:1234@cluster0.zjit4.mongodb.net/NFTSTOAGE?retryWrites=true&w=majority")
+	.connect("mongodb+srv://kimgwhjg:rla121457@gunk.ouvru.mongodb.net/Watto?retryWrites=true&w=majority",{ useNewUrlParser: true })
 	.then(() => console.log('MongoDB Connected success !!'))
 	.catch((err) => console.log(err));
+
+	app.use(express.static('client/build'));
+	app.get('*', (req, res) => {
+		res.sendFile(path.resolve("client", "build", "index.html"));
+	  })
+	
 
 // app.get('/api/hello', (req, res) => res.send('Hello World!~~ '));
 

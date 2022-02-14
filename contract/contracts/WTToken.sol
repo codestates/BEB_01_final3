@@ -135,7 +135,7 @@ contract WTToken is ERC20, Ownable {
     
     // 6.회차로인해서 다시 true로 변경해서 투표를 할 수 있게 합니다. 
     // 정답을 맞춘 인원이 몇명이니지 계산해보자. 
-    function CountWinner(string memory res, uint roomNum) public onlyAuthorized returns(uint256){
+    function CoupntWinner(string memory res, uint roomNum) public onlyAuthorized returns(uint256){
          uint256 count;
 
         for(uint i=0; i<rooms[roomNum].taker.length; i++){

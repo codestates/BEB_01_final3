@@ -1,5 +1,3 @@
-
-
 import PacmanLoader from "react-spinners/PacmanLoader";
 import styled from "styled-components";
 import {Modal,Card, Button } from "react-bootstrap";

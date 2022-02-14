@@ -12,8 +12,6 @@ import wtImg from "../basic.png";
 
 // import NFTbuy from './NFTbuy'
 
-
-
 function LikeNft () {
     const user = useSelector(state=> state.user.userData)
 
