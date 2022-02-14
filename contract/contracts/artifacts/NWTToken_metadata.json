@@ -780,9 +780,9 @@
 	},
 	"sources": {
 		"contract/contracts/KIP_NWT.sol": {
-			"keccak256": "0x9a2aa59658faa114c4b51e626c6f34afef71aaefc784e1edf440e72095d2d223",
+			"keccak256": "0xb23a1934d4b46a82dbc74231a99b9414c0e57c777ff894044dc842fcacde5bba",
 			"urls": [
-				"bzzr://70c6464ac1cca27208449cf1a587641f0199263879a386db53c01eae53b3af9d"
+				"bzzr://176e1a57ba9ebde25bfe5ad2def144afe0dbb620b274891b0ebdfa60388ca817"
 			]
 		},
 		"contract/klaytn-contracts-master/contracts/access/Roles.sol": {

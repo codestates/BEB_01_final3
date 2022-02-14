@@ -3,9 +3,9 @@ pragma solidity ^0.5.6;
 
 
 import "../klaytn-contracts-master/contracts/token/KIP7/KIP7TokenFull.sol";
-import "../klaytn-contracts-master/contracts/ownership/Ownable.sol";
 
-contract NWTToken is Ownable, KIP7TokenFull {
+
+contract NWTToken is KIP7TokenFull {
     // IERC20 public token1;  // stable coin
     // address public owner1;  // user. (token1의 소유자 계정 주소)
     // IERC20 public token2;  // 유동성 코임

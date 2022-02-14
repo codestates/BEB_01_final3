@@ -11,16 +11,39 @@ import "../node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
  
     contract WATTONFT is ERC721URIStorage, Ownable {  
+       
+
+        event NewNft(address owner,uint256 tokenId,string tokenUri);
+        event Start();
+        event Bid(address indexed sender, uint amount);
+        event Withdraw(address indexed bidder, uint amount);
+        event End(address winner, uint amount);
+        event Endedat(uint a);
+        /*toal event*/
+
+  
         using Counters for Counters.Counter;
         Counters.Counter private _tokenIds;
-
         IERC20 public token;  //IERC20 함수를 사용한다. 위함이다 setToken을 먼저 해줄 수 있도록 
         uint256 public nftPrice; // nft 가격을 정하기위해서 만들어논 상태변수 
 
-        event NewNft(address owner, uint256 tokenId, string tokenUri);
-
         mapping (string => uint256) public getTokenId;   // tokenUri를 key값으로하는 tokenId를 얻기위한 맵핑 tokenId가 재대로반환이 되지않아서 만들어 놓았다.
         mapping (uint256 => uint256) public tokenPrice;   // 토큰아이디를 통해서 해당 nft의 가격을 알 수 있게 만들어 놓은 맵핑 
+        mapping(uint => Auction) auction;
+        mapping(uint => mapping(address => uint)) public bids;
+
+           struct Auction {
+            bool started;
+            address owner;
+            uint nftId;
+            bool status;
+            uint endAt;
+            address highestBidder;
+            uint highestBid;
+            bool ended;
+            
+        }
+    
 
         constructor() ERC721("WATTONFTs", "WTNFT") {}   
 
@@ -91,40 +114,21 @@ import "../node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol";
             safeTransferFrom(tokenSeller, buyer, _tokenId);  // 판매자가 구매자에게 tokenId를 넘기는 함수.
             
         }
-
-
-    event Start();
-    event Bid(address indexed sender, uint amount);
-    event Withdraw(address indexed bidder, uint amount);
-    event End(address winner, uint amount);
-    event Endedat(uint a);
-    
-
-    struct Auction {
-            bool started;
-            address owner;
-            uint nftId;
-            bool status;
-            uint endAt;
-            address highestBidder;
-            uint highestBid;
-            bool ended;
-            
-        }
-    mapping(uint => Auction) auction;
-    mapping(uint => mapping(address => uint)) public bids;
-    
-    function startAuction(uint nftId, address owner, uint _startingBid) public {
+     // 6. auction is start. 가각 nftId에 대한 struct구조 생성  
+     //    소유자를 CA에 넘기고, auction 기한이 정해진다(block.timestamp참조)
+         function startAuction(uint nftId, address owner, uint _startingBid) public {
          auction[nftId].nftId = nftId;
          auction[nftId].owner = owner;
-         auction[nftId].started = true;
+         auction[nftId].started = true; 
          auction[nftId].highestBid = _startingBid;
          transferFrom(owner, address(this), nftId);
          auction[nftId].endAt = block.timestamp + 1 days;
-
          emit Endedat(auction[nftId].endAt);
       }
-
+     
+     //7. 시작된 auction에 구매하고싶은 인원이 가격을 매기는 함수
+     //   공개입찰방식이며, 전 사람보다 가격이 낮으면 auction에 참여할 수가없다.
+    //    즉 계속해서 높은가격으로 갱신하는 방식.
     function bid(uint nftId, address buyer, uint amount) public {
         require(auction[nftId].started, "not started");
         require(block.timestamp < auction[nftId].endAt, "ended");
@@ -132,17 +136,14 @@ import "../node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
         if (auction[nftId].highestBidder != address(0)) {
             bids[nftId][auction[nftId].highestBidder] += auction[nftId].highestBid;
-            // 
-            //현재 가장 높은 입찰자의 입찰 금액에 
-            //가장 높은 입찰자가 누군지도 알아야되서 
-            //bids[highestBidder] 선언
-            //300이더
         }
         token.transferFrom(buyer, address(this), amount);
         auction[nftId].highestBidder = buyer;
         auction[nftId].highestBid = amount;
     }
 
+    // 8. bid함수에서 나보다 더 높은 가격을 제시한 사람이 생기면 
+    //   내가 auction에 참여한 금액을 회수한다.
     function withdraw(address addr, uint nftId) public {
         uint bal = bids[nftId][addr];
         bids[nftId][addr] = 0;
@@ -167,6 +168,8 @@ import "../node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol";
         emit End(auction[nftId].highestBidder, auction[nftId].highestBid);
     }
 }
+
+
 
 
     

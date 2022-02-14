@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.c9fe35df.css",
-    "main.js": "/static/js/main.64c3ad61.js",
+    "main.js": "/static/js/main.81dd9b15.js",
     "static/js/787.c4e7f8f9.chunk.js": "/static/js/787.c4e7f8f9.chunk.js",
     "static/media/nothing.png": "/static/media/nothing.71d3bd5d6a09efd43042.png",
     "static/media/WNT-logo.png": "/static/media/WNT-logo.92013d57a95426329b1e.png",
@@ -14,11 +14,11 @@
     "static/media/slick.woff": "/static/media/slick.295183786cd8a1389865.woff",
     "index.html": "/index.html",
     "main.c9fe35df.css.map": "/static/css/main.c9fe35df.css.map",
-    "main.64c3ad61.js.map": "/static/js/main.64c3ad61.js.map",
+    "main.81dd9b15.js.map": "/static/js/main.81dd9b15.js.map",
     "787.c4e7f8f9.chunk.js.map": "/static/js/787.c4e7f8f9.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.c9fe35df.css",
-    "static/js/main.64c3ad61.js"
+    "static/js/main.81dd9b15.js"
   ]
 }

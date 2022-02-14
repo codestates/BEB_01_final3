@@ -211,7 +211,7 @@ module.exports = {
 					.encodeABI();
 				const nonce = await web3.eth.getTransactionCount(
 					serverAddress,
-					'latest'
+					'latest'	
 				);
 				const gasprice = await web3.eth.getGasPrice();
 				const gasPrice = Math.round(
@@ -280,7 +280,13 @@ module.exports = {
 		signedTx.rawTransaction
 	);
 		if (hash) {
-			res.status(201).json({success:true})
+			Contents.findOneAndUpdate({ contentNum}, { status: false }, (err, data) => {
+				console.log(data);		
+				if (!err) {
+					res.status(201).json({success:true})
+				}
+			});
+			
 		}
 
 	},
