@@ -50,7 +50,7 @@ router.post('/uploads', (req, res) => {
 	});
 });
 
-router.post('/uploadVideo', videoUpload);
+router.post('/uploadVideo', KIP_videoUpload);
 
 router.get('/getVideos', (req, res) => {
 	//비디오를 DB에서 가져와서 클라이언트에 보낸다.

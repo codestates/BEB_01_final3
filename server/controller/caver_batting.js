@@ -1,4 +1,5 @@
 require('dotenv').config();
+const fs = require('fs');
 const { User } = require('../models/User');
 const { Nft } = require('../models/Nft');
 const { Video } = require('../models/Video');

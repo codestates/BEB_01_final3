@@ -192,7 +192,7 @@ const targetAddrPK = async (addr) => {
 
 module.exports = {
 	// infuraWeb3Provider,
-	// CavernewContract,
+		 CavernewContract,
 	// changeAuther,
 	// targetServerAddress,
 	// targetAddrPK,
