@@ -1,6 +1,6 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
-require('dotenv').config();
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 // const config = require('./config/prod');
@@ -16,10 +16,10 @@ const { myPage } = require('./controller/api');
 
 //DB connect
 const mongoose = require('mongoose');
-
+console.log(process.env.MONGDB);
 mongoose
 	.connect(
-		process.env.MONGODB,
+		process.env.MONGDB,
 		{ useNewUrlParser: true }
 	)
 	.then(() => console.log('MongoDB Connected success !!'))
