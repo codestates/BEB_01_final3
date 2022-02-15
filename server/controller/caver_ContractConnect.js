@@ -15,7 +15,7 @@ const CavernewContract = (caver, abi, ca) => {
 
 const KIPWTABI = fs.readFileSync('server/abi/KIP_WTToken.json', 'utf-8');
 const KIPNWTABI = fs.readFileSync('server/abi/KIP_NWTToken.json', 'utf-8');
-const KIPNFTABI = fs.readFileSync('server/abi/KIP_NFTWT.json', 'utf8');
+const KIPNFTABI = fs.readFileSync('server/abi/KIP_NFTWT.json', 'utf-8');
 const KIPSWAPABI = fs.readFileSync('server/abi/KIP_TokenSwap.json', 'utf-8');
 
 const nftAbi = JSON.parse(KIPNFTABI);

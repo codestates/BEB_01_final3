@@ -7,8 +7,7 @@ const { Contents } = require('../models/Contents');
 const { Vote } = require('../models/Vote');
 
 
-
-const { nftContract, nwtContract, caver, serverPrivateKey, serverAddress } = require('./caver_ContractConnect');
+const { wtContract, nwtContract, nftContract, swapContract, caver, serverPrivateKey, serverAddress } = require('./caver_ContractConnect');
 const { json } = require('body-parser');
 
 //계정부분
@@ -27,65 +26,56 @@ module.exports = {
 	},
 	createNFT: async (req, res) => {
 		//===================  server 계정 변환 테스트
-		const loginServer = req.user.publicKey;
-		serverAddress = await changeAuther(serverAddress, loginServer);
-		if (serverAddress === loginServer) {
-			serverPrivateKey = req.user.privateKey;
-		}
-
+		// const loginServer = req.user.publicKey;
+		// serverAddress = await changeAuther(serverAddress, loginServer);
+		// if (serverAddress === loginServer) {
+		// 	serverPrivateKey = req.user.privateKey;
+		// }
+		// await caver.klay.accounts.wallet.add(serverPrivateKey);
 		//===================  server 계정 변환 테스트
 		const { contentTitle, nftName, nftDescription, imgURI, tokenURI } =
 			req.body.result;
 		try {
+			
 			const data = await nftContract.methods
 				.mintNFT(tokenURI)
 				.encodeABI();
-			const nonce = await web3.eth.getTransactionCount(
-				serverAddress,
-				'latest'
-			);
-			const gasprice = await web3.eth.getGasPrice();
-			const gasPrice = Math.round(
-				Number(gasprice) + Number(gasprice / 10)
-			);
-
+			
+			// const txHash = await caver.klay.sendTransaction({
+			// 	type: 'SMART_CONTRACT_EXECUTION',
+			// 	from: serverAddress,
+			// 	to: process.env.NFTTOKENCA,
+			// 	gas: 300000,
+			// 	data: data
+			// }, serverPrivateKey)
 			const tx = {
 				from: serverAddress,
 				to: process.env.NFTTOKENCA,
-				nonce: nonce,
-				gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
-				gasLimit: 5000000,
-				data: data,
-			};
-
-			const signedTx = await web3.eth.accounts.signTransaction(
-				tx,
-				serverPrivateKey
-			);
-			console.log('----- createNFT function start ----');
-			const hash = await web3.eth.sendSignedTransaction(
-				signedTx.rawTransaction
-			);
-			const tokenId = web3.utils.hexToNumber(hash.logs[0].topics[3]);
-			console.log('tokenId 생성 :' + tokenId);
-			const nft = new Nft();
-			nft.address = serverAddress;
-			nft.tokenId = tokenId;
-			nft.contentTitle = contentTitle;
-			nft.nftName = nftName;
-			nft.description = nftDescription;
-			nft.imgUri = imgURI;
-			nft.tokenUrl = tokenURI;
-			nft.save((err, userInfo) => {
-				if (!err) {
-					res.json({ success: true });
-				} else {
-					res.json({
-						failed: false,
-						reason: '블록체인에는 올라갔지만 DB에 문제가 생겼습니다.',
-					});
-				}
-			});
+				data : data,
+				gas: 300000,
+			}
+			const signedTx = await caver.klay.accounts.signTransaction(tx, serverPrivateKey)
+			const txHash = await caver.klay.sendSignedTransaction(signedTx.rawTransaction)
+			
+				const tokenId = caver.utils.hexToNumber(txHash.logs[0].topics[3]);
+				const nft = new Nft();
+				nft.address = serverAddress;
+				nft.tokenId = tokenId;
+				nft.contentTitle = contentTitle;
+				nft.nftName = nftName;
+				nft.description = nftDescription;
+				nft.imgUri = imgURI;
+				nft.tokenUrl = tokenURI;
+				nft.save((err, userInfo) => {
+					if (!err) {
+						res.json({ success: true });
+					} else {
+						res.json({
+							failed: false,
+							reason: '블록체인에는 올라갔지만 DB에 문제가 생겼습니다.',
+						});
+					}
+				});
 		} catch (e) {
 			console.log('err' + e);
 			res.json({ failed: false, reason: '블록체인에 문제가있습니다' });
