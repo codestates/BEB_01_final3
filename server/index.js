@@ -48,11 +48,37 @@ app.use('/api/subscribe', require('./routes/subscribe'))
 //current api/contract/mypage path is error
 app.post('/', myPage);
 
+
+
 const port = 5000;
 
 // app.get('*', (req, res) => {
 // 	res.sendFile(path.resolve("client", "build", "index.html"));
 //   })
   
+
+
+
+const Caver = require('caver-js');
+const caver = new Caver(
+	new Caver.providers.HttpProvider('https://api.baobab.klaytn.net:8651')
+);
+
+app.post('/test', async (req, res) => {		
+	//const ab = await caver.account.create(process.env.SERVERADDRESS, process.env.SERVERPRIVATEKEY);
+	// const result = await 	(process.env.SERVERPRIVATEKEY);
+	// console.log('result',result);
+	// let getAccount = caver.klay.accounts.privateKeyToAccount(process.env.SERVERPRIVATEKEY);
+	// console.log(getAccount.address);	
+	// let exist = await caver.klay.accountCreated(process.env.SERVERADDRESS)
+	// console.log(exist);
+	
+	// const keyring = await caver.wallet.keyring.createFromPrivateKey(process.env.SERVERPRIVATEKEY);
+	// console.log('kerying',keyring);
+	//caver.rpc.klay.getAccount(process.env.SERVERADDRESS).then(console.log)
+	//caver.klay.getAccounts().then(console.log);
+	
+})
+
   
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));

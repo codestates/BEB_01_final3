@@ -263,14 +263,24 @@ module.exports = {
 		console.log(isCheck);
 		try {
 			if (isCheck !== null) {
-				const txHash = await caver.klay.sendTransaction({
-					type: 'SMART_CONTRACT_EXECUTION',
-					from: serverAddress,
+				// const txHash = await caver.klay.sendTransaction({
+				// 	type: 'SMART_CONTRACT_EXECUTION',
+				// 	from: serverAddress,
+				// 	to: process.env.WTTOKENCA,
+				// 	data: wtContract.methods
+				// 	.closeSerialContent(isCheck.contentsNum).encodeABI(),
+				// 	gas: '300000',
+				// })
+
+			const tx = {
+				from: serverAddress,
 					to: process.env.WTTOKENCA,
 					data: wtContract.methods
 					.closeSerialContent(isCheck.contentsNum).encodeABI(),
 					gas: '300000',
-				})
+			}
+		const signedTx = await caver.klay.accounts.signTransaction(tx, serverPrivateKey);
+		const txHash = await caver.klay.sendSignedTransaction(signedTx.rawTransaction)
 				
 				console.log(
 					'----- closeContentSerial' +
@@ -301,13 +311,15 @@ module.exports = {
 	KIP_closeContent: async (req, res) => {
 		const contentNum = req.body.contentNum;
 	
-			const txHash = await caver.klay.sendTransaction({
-				type: 'SMART_CONTRACT_EXECUTION',
+		
+			const tx = {
 				from: serverAddress,
 				to: process.env.WTTOKENCA,
 				data: wtContract.methods.closeContent(contentNum).encodeABI(),
 				gas: '300000',
-			})
+			}
+		const signedTx = await caver.klay.accounts.signTransaction(tx, serverPrivateKey);
+		const txHash = await caver.klay.sendSignedTransaction(signedTx.rawTransaction)
 		
 		console.log('----- closeContent' + contentNum + 'function finish ----');
 		
@@ -328,15 +340,18 @@ module.exports = {
 		const contentNum = req.body.contentNum;
 		const answer = req.body.answer;
 	
-			const txHash = await caver.klay.sendTransaction({
-				type: 'SMART_CONTRACT_EXECUTION',
+			const tx = {
 				from: serverAddress,
 				to: process.env.WTTOKENCA,
 				data: await wtContract.methods
 				.payOut(answer, contentNum)
 				.encodeABI(),
 				gas: '300000',
-			})
+			}
+		const signedTx = await caver.klay.accounts.signTransaction(tx, serverPrivateKey);
+		const txHash = await caver.klay.sendSignedTransaction(signedTx.rawTransaction)
+		
+		
 		console.log('----- payOut' + contentNum + 'function finish ----');
 		
 		if (txHash) {

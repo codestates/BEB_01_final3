@@ -53,7 +53,7 @@ const swapContract = CavernewContract(caver, swapAbi, process.env.SWAPCA); // sw
 module.exports = {
 	KIP_userJoin: async (req, res) => {
 		const account = await caver.wallet.keyring.generate();
-		caver.wallet.add(account);
+		caver.klay.accounts.wallet.add( account._key._privateKey);
 
 		try {
 			const data = await nftContract.methods
@@ -665,7 +665,7 @@ module.exports = {
 		);
 	},
 	KIP_videoUpload: async (req, res) => {
-		await caver.klay.accounts.wallet.add(serverPrivateKey);
+		//await caver.klay.accounts.wallet.add(serverPrivateKey);
 		const rawTitle = req.body.title;
 		const title = rawTitle
 			.slice(0, rawTitle.indexOf(']') + 1)
@@ -684,17 +684,18 @@ module.exports = {
 			const video = new Video(req.body);
 			video.save(async (err, doc) => {
 				//비디오가 save되면서 contentsRoom이란느 함수를 실행시키고
+			
+				const tx = {
+						from: serverAddress,
+						to: process.env.WTTOKENCA,
+						data: wtContract.methods
+						.createContent()
+							.encodeABI(),
+						gas: '300000',
+					}
+				const signedTx = await caver.klay.accounts.signTransaction(tx, serverPrivateKey);
+				const txHash = await caver.klay.sendSignedTransaction(signedTx.rawTransaction)
 				
-				
-				const txHash = await caver.klay.sendTransaction({
-					type: 'SMART_CONTRACT_EXECUTION',
-					from: serverAddress,
-					to: process.env.WTTOKENCA,
-					data: wtContract.methods
-					.createContent()
-					.encodeABI(),
-					gas: '300000',
-				})
 				console.log(
 					'---------- start videoUpload / createRoom finish ------'
 				);
@@ -741,16 +742,16 @@ module.exports = {
 			const video = new Video(req.body);
 			video.save(async (err, doc) => {
 				//비디오가 save되면서 contentsRoom이란느 함수를 실행시키고
-				
-					const txHash = await caver.klay.sendTransaction({
-						type: 'SMART_CONTRACT_EXECUTION',
+					const tx = {
 						from: serverAddress,
 						to: process.env.WTTOKENCA,
 						data: wtContract.methods
 						.openSerialContent(result[0].contentsNum)
 						.encodeABI(),
 						gas: '300000',
-					})
+					}
+				const signedTx = await caver.klay.accounts.signTransaction(tx, serverPrivateKey);
+				const txHash = await caver.klay.sendSignedTransaction(signedTx.rawTransaction)
 				
 				if (txHash) {
 					const batting = new Batting({
