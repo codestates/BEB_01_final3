@@ -14,21 +14,20 @@ const path = require('path');
 
 const { myPage } = require('./controller/api');
 
+
 //DB connect
 const mongoose = require('mongoose');
 
 mongoose
-	.connect(
-		'mongodb+srv://project3:project3@cluster0.lrq66.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
-		{ useNewUrlParser: true }
-	)
+	.connect("mongodb+srv://kimgwhjg:rla121457@gunk.ouvru.mongodb.net/Watto?retryWrites=true&w=majority",{ useNewUrlParser: true })
 	.then(() => console.log('MongoDB Connected success !!'))
 	.catch((err) => console.log(err));
 
-app.use(express.static('client/build'));
-app.get('*', (req, res) => {
-	res.sendFile(path.resolve('client', 'build', 'index.html'));
-});
+	app.use(express.static('client/build'));
+	app.get('*', (req, res) => {
+		res.sendFile(path.resolve("client", "build", "index.html"));
+	  })
+	
 
 // app.get('/api/hello', (req, res) => res.send('Hello World!~~ '));
 
@@ -38,31 +37,23 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use('/api', apiRouter);
-// app.use('/caver_api', apiRouter);
 app.use('/uploads', express.static('uploads'));
 app.use('/api/video', require('./routes/video'));
 app.use('/api/user/video', require('./routes/uservideo'));
-app.use('/api/comment/', require('./routes/comment'));
+app.use('/api/comment/', require('./routes/comment'))
 app.use('/api/contract', coinRouter);
 app.use('/api/bat', batRouter);
-app.use('/api/like/', require('./routes/like'));
-app.use('/api/subscribe', require('./routes/subscribe'));
-// app.use('/caver_api/video', require('./routes/video'));
-// app.use('/caver_api/user/video', require('./routes/uservideo'));
-// app.use('/caver_api/comment/', require('./routes/comment'));
-// app.use('/caver_api/contract', coinRouter);
-// app.use('/caver_api/bat', batRouter);
-// app.use('/caver_api/like/', require('./routes/like'));
-// app.use('/caver_api/subscribe', require('./routes/subscribe'));
+app.use('/api/like/', require('./routes/like'))
+app.use('/api/subscribe', require('./routes/subscribe'))
 app.use(express.static('client/build'));
 //current api/contract/mypage path is error
 app.post('/', myPage);
 
-
 const port = 5000;
 
 app.get('*', (req, res) => {
-	res.sendFile(path.resolve('client', 'build', 'index.html'));
-});
-
+	res.sendFile(path.resolve("client", "build", "index.html"));
+  })
+  
+  
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
