@@ -8,12 +8,11 @@ const { Vote } = require('../models/Vote');
 const Subscriber = require('../models/Subscriber');
 const cron = require('node-cron');
 
-
 const { json } = require('body-parser');
 
 //계정부분
-let serverAddress = process.env.SERVERADDRESS;
-let serverPrivateKey = process.env.SERVERPRIVATEKEY;
+// let serverAddress = process.env.SERVERADDRESS;
+// let serverPrivateKey = process.env.SERVERPRIVATEKEY;
 // auth 권한 부여받은 계정(contract 이용가능 => msg.sender : owner)
 
 cron.schedule('*/5 * * * *', async function () {
@@ -25,57 +24,48 @@ cron.schedule('*/5 * * * *', async function () {
 
 const subManagerAddress = '';
 
-
-const { nftContract, nwtContract, wtContract, swapContract, caver, serverPrivateKey, serverAddress  } = require('./caver_ContractConnect');
+const {
+	nftContract,
+	nwtContract,
+	wtContract,
+	swapContract,
+	caver,
+	serverPrivateKey,
+	serverAddress,
+} = require('./caver_ContractConnect');
 
 module.exports = {
 	userJoin: async (req, res) => {
 		//지갑을 생성하고 지갑을 추가해주는 메서드
-		const account = await web3.eth.accounts.create(
-			web3.utils.randomHex(32)
-		);
-		await web3.eth.accounts.wallet.add({
-			address: account.address,
-			privateKey: account.privateKey,
-		});
+
+		const account = await caver.wallet.keyring.generate();
+		caver.wallet.add(account);
 
 		try {
 			const data = await nftContract.methods
-				.approveSale(account.address)
+				.approveSale(account._address)
 				.encodeABI();
-			const nonce = await web3.eth.getTransactionCount(
-				serverAddress,
-				'latest'
-			);
-			const gasprice = await web3.eth.getGasPrice();
-			const gasPrice = Math.round(
-				Number(gasprice) + Number(gasprice / 10)
-			);
 
-			const tx = {
-				from: serverAddress,
-				to: process.env.NFTTOKENCA,
-				nonce: nonce,
-				gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
-				gasLimit: 5000000,
-				data: data,
-			};
+			await caver.klay.accounts.wallet.add(serverPrivateKey);
 
-			const signedTx = await web3.eth.accounts.signTransaction(
-				tx,
-				serverPrivateKey
-			);
-			const hash = await web3.eth
-				.sendSignedTransaction(signedTx.rawTransaction)
-				.on('receipt', (txHash) => {
+			caver.klay
+				.sendTransaction({
+					type: 'SMART_CONTRACT_EXECUTION',
+					from: serverAddress,
+					to: process.env.NFTTOKENCA,
+					data: data,
+					gas: '300000',
+				})
+				.then(function (receipt) {
+					console.log(receipt);
 					const userInfo = {
 						...req.body,
-						publicKey: account.address,
-						privateKey: account.privateKey,
-						wtToken: 5,
-						nwtToken: 5,
+						publicKey: account._address,
+						privateKey: account._key._privateKey,
 						nftToken: '',
 					};
+
+					console.log(userInfo);
 					const user = new User(userInfo);
 
 					user.save((err, userInfo) => {
@@ -83,7 +73,6 @@ module.exports = {
 							res.json({ success: false, err });
 							return;
 						}
-						console.log('ui', userInfo);
 						res.status(200).json({
 							success: true,
 						});
@@ -91,14 +80,13 @@ module.exports = {
 				});
 		} catch (e) {
 			console.log(e);
-			res.json({ failed: false });
 		}
 	},
 	userLogin: (req, res) => {
 		// console.log('ping')
 		//요청된 이메일을 데이터베이스에서 있는지 찾는다.
 		User.findOne({ email: req.body.email }, (err, user) => {
-			// console.log('user', user)
+			// console.log('user', user);
 			if (!user) {
 				return res.json({
 					loginSuccess: false,
@@ -110,7 +98,7 @@ module.exports = {
 			user.comparePassword(req.body.password, (err, isMatch) => {
 				// console.log('err',err)
 
-				// console.log('isMatch',isMatch)
+				// console.log('isMatch', isMatch);
 
 				if (!isMatch)
 					return res.json({

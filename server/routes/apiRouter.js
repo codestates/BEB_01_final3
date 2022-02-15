@@ -40,7 +40,7 @@ router.get('/users/auth', auth, Auth);
 
 router.get('/users/logout', auth, userLogout);
 
-router.get('/users/tokens', auth, userTokens);
+router.get('/users/tokens', userTokens);
 
 router.post('/users/setImg', auth, setProfilImg);
 

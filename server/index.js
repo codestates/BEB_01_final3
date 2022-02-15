@@ -18,10 +18,7 @@ const { myPage } = require('./controller/api');
 const mongoose = require('mongoose');
 
 mongoose
-	.connect(
-		MONGDB,
-		{ useNewUrlParser: true }
-	)
+	.connect(process.env.MONGDB, { useNewUrlParser: true })
 	.then(() => console.log('MongoDB Connected success !!'))
 	.catch((err) => console.log(err));
 
