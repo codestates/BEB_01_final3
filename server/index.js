@@ -19,7 +19,11 @@ const { myPage } = require('./controller/api');
 const mongoose = require('mongoose');
 
 mongoose
+
 	.connect("mongodb+srv://kimgwhjg:rla121457@gunk.ouvru.mongodb.net/Watto?retryWrites=true&w=majority",{ useNewUrlParser: true })
+
+	.connect(process.env.MONGDB, { useNewUrlParser: true })
+
 	.then(() => console.log('MongoDB Connected success !!'))
 	.catch((err) => console.log(err));
 

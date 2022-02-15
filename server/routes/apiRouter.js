@@ -1,6 +1,20 @@
 const express = require('express');
 const router = express.Router();
 const { auth } = require('../middleware/auth');
+// const {
+// 	userJoin,
+// 	userLogin,
+// 	Auth,
+// 	userLogout,
+// 	userTokens,
+// 	Search,
+// 	setProfilImg,
+// 	getServerList,
+// 	addAuth,
+// 	removeAuth,
+// 	searchChannelPage,
+// } = require('../controller/api');
+
 const {
 	userJoin,
 	userLogin,
@@ -13,7 +27,9 @@ const {
 	addAuth,
 	removeAuth,
 	searchChannelPage,
+
 } = require('../controller/api');
+
 
 
 // const { default: Search } = require('../../client/src/components/Search/Search');
@@ -28,7 +44,7 @@ router.get('/users/auth', auth, Auth);
 
 router.get('/users/logout', auth, userLogout);
 
-router.get('/users/tokens', auth, userTokens);
+router.get('/users/tokens', userTokens);
 
 router.post('/users/setImg', auth, setProfilImg);
 

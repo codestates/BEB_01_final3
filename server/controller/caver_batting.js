@@ -6,23 +6,11 @@ const { Batting } = require('../models/batting');
 const { Contents } = require('../models/Contents');
 const { Vote } = require('../models/Vote');
 
-const Caver = require('caver-js');
-const caver = new Caver(
-	new Caver.providers.HttpProvider('https://api.baobab.klaytn.net:8651')
-);
-const fs = require('fs');
-
-// const { newContract, infuraWeb3Provider } = require('./index');
-const { CavernewContract } = require('./caver_index');
-const { json } = require('body-parser');
-
 //계정부분
-const serverAddress = process.env.SERVERADDRESS;
-const serverPrivateKey = process.env.SERVERPRIVATEKEY;
 // auth 권한 부여받은 계정(contract 이용가능 => msg.sender : owner)
 const subManagerAddress = '';
 
-// abi json
+
 const KIPWTABI = fs.readFileSync('server/abi/KIP_WTToken.json', 'utf-8');
 const KIPNWTABI = fs.readFileSync('server/abi/KIP_NWTToken.json', 'utf-8');
 const KIPNFTABI = fs.readFileSync('server/abi/KIP_NFTWT.json', 'utf8');
@@ -34,11 +22,7 @@ const wtAbi = JSON.parse(KIPWTABI); // wt token, exchange, vote
 const nwtAbi = JSON.parse(KIPNWTABI);
 const swapAbi = JSON.parse(KIPSWAPABI);
 
-//contract
-const nftContract = CavernewContract(caver, nftAbi, process.env.NFTTOKENCA); // nft
-const wtContract = CavernewContract(caver, wtAbi, process.env.WTTOKENCA); // wt
-const nwtContract = CavernewContract(caver, nwtAbi, process.env.NWTTOKENCA); // nwt
-const swapContract = CavernewContract(caver, swapAbi, process.env.SWAPCA); // swap
+const { wtContract, nwtContract, caver, serverPrivateKey, serverAddress  } = require('./caver_ContractConnect');
 
 module.exports = {
 	vote: async (req, res) => {

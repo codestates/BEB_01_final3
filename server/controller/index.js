@@ -42,6 +42,7 @@ const newContract = (web3, abi, ca) => {
 		gas: 3000000,
 	});
 };
+//newContract :  컨트렉트 연결
 
 // 경우 1 : 로그인한 계정이 서버한테 권한을 받고 nft 민팅을 진행하려고 함. => serverAddress 가 로그인 중인 서버 계정이어야함
 // 원래 기존의 CA배포한 서버계정(serverAddress), 로그인되어 있는 서버 주소({ _id: req.user._id }, {role:1})

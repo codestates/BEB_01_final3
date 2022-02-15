@@ -4,6 +4,31 @@ const { auth } = require('../middleware/auth');
 const { Nft } = require('../models/Nft');
 const { User } = require('../models/User');
 
+///////////////web3//////////////////
+// const {
+// 	exchange_WTToken,
+// 	SearchNft,
+// 	exchange_NWTToken,
+// 	serverWT_faucet,
+// 	serverNWT_faucet,
+// 	myPage,
+// 	TotalTokens,
+// } = require('../controller/api');
+
+
+// const {
+// 	NFTlist,
+// 	createNFT,
+// 	buyNFT,
+// 	setForSell,
+// 	cancel,
+// 	nftauction,
+// 	setToken,
+// 	bids,
+// 	withdraw,
+// 	endauction
+// } = require('../controller/nft');
+///////////////////////////////////////caver////////////////////////
 const {
 	exchange_WTToken,
 	SearchNft,
@@ -12,7 +37,7 @@ const {
 	serverNWT_faucet,
 	myPage,
 	TotalTokens,
-} = require('../controller/api');
+} = require('../controller/caver_api');
 
 
 const {
@@ -26,14 +51,8 @@ const {
 	bids,
 	withdraw,
 	endauction
-} = require('../controller/nft');
-const Web3 = require('web3');
-const { LogTimings } = require('concurrently');
-const web3 = new Web3(
-	new Web3.providers.HttpProvider(
-		'https://ropsten.infura.io/v3/c2cc008afe67457fb9a4ee32408bcac6'
-	)
-);
+} = require('../controller/caver_nft');
+
 
 // server 계정 토큰 민팅 wt, nwt
 // 버튼 완성되면 관리자 계정 로그인된 상태에서 가능할 수 있도록 수정
