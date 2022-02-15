@@ -34,7 +34,7 @@ const swapAbi = JSON.parse(SWAPABI);
 // 	return new Web3(new Web3.providers.HttpProvider(infuraURL));
 // };
 
-const CavernewContract = (web3, abi, ca) => {
+const CavernewContract = (caver, abi, ca) => {
 	return new caver.klay.Contract(abi, ca, {
 		from: process.env.SERVERADDRESS,
 		gas: 3000000,
@@ -192,7 +192,7 @@ const targetAddrPK = async (addr) => {
 
 module.exports = {
 	// infuraWeb3Provider,
-	CavernewContract,
+	// CavernewContract,
 	// changeAuther,
 	// targetServerAddress,
 	// targetAddrPK,

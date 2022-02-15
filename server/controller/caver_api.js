@@ -8,14 +8,7 @@ const { Vote } = require('../models/Vote');
 const Subscriber = require('../models/Subscriber');
 const cron = require('node-cron');
 
-const Caver = require('caver-js');
-const caver = new Caver(
-	new Caver.providers.HttpProvider('https://api.baobab.klaytn.net:8651')
-);
-const fs = require('fs');
 
-// const { newContract, infuraWeb3Provider } = require('./index');
-const { CavernewContract } = require('./caver_index');
 const { json } = require('body-parser');
 
 //계정부분
@@ -32,23 +25,8 @@ cron.schedule('*/5 * * * *', async function () {
 
 const subManagerAddress = '';
 
-// abi json
-const KIPWTABI = fs.readFileSync('../abi/KIP_WTToken.json', 'utf-8');
-const KIPNWTABI = fs.readFileSync('../abi/KIP_NWTToken.json', 'utf-8');
-const KIPNFTABI = fs.readFileSync('../abi/KIP_NFTWT.json', 'utf8');
-const KIPSWAPABI = fs.readFileSync('../abi/KIP_TokenSwap.json', 'utf-8');
 
-// abi parse
-const nftAbi = JSON.parse(KIPNFTABI);
-const wtAbi = JSON.parse(KIPWTABI); // wt token, exchange, vote
-const nwtAbi = JSON.parse(KIPNWTABI);
-const swapAbi = JSON.parse(KIPSWAPABI);
-
-//contract
-const nftContract = CavernewContract(caver, nftAbi, process.env.NFTTOKENCA); // nft
-const wtContract = CavernewContract(caver, wtAbi, process.env.WTTOKENCA); // wt
-const nwtContract = CavernewContract(caver, nwtAbi, process.env.NWTTOKENCA); // nwt
-const swapContract = CavernewContract(caver, swapAbi, process.env.SWAPCA); // swap
+const { nftContract, nwtContract, wtContract, swapContract, caver } = require('./caver_ContractConnect');
 
 module.exports = {
 	userJoin: async (req, res) => {

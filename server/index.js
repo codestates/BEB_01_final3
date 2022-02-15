@@ -19,7 +19,7 @@ const mongoose = require('mongoose');
 
 mongoose
 	.connect(
-		'mongodb+srv://project3:project3@cluster0.lrq66.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
+		MONGDB,
 		{ useNewUrlParser: true }
 	)
 	.then(() => console.log('MongoDB Connected success !!'))

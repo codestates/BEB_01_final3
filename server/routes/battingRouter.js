@@ -5,7 +5,8 @@ const { Batting } = require('../models/batting')
 const { Contents } = require('../models/Contents');
 const { Vote } = require('../models/Vote');
 const { auth } = require('../middleware/auth');
-const {vote,contentList,allowance,closeSerial,closeContent,payOut } = require('../controller/batting');
+// const {vote,contentList,allowance,closeSerial,closeContent,payOut } = require('../controller/batting');
+const {vote,contentList,allowance,closeSerial,closeContent,payOut } = require('../controller/caver_batting');
 
 
  
