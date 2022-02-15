@@ -16,7 +16,7 @@ const { auth } = require('../middleware/auth');
 // } = require('../controller/api');
 
 const {
-	userJoin,
+	KIP_userJoin,
 	userLogin,
 	Auth,
 	userLogout,
@@ -27,10 +27,9 @@ const {
 	addAuth,
 	removeAuth,
 	searchChannelPage,
+} = require('../controller/caver_api');
 
-} = require('../controller/api');
-
-const { KIP_userJoin } = require('../controller/caver_api');
+// const { KIP_userJoin } = require('../controller/caver_api');
 
 // const { default: Search } = require('../../client/src/components/Search/Search');
 
@@ -44,7 +43,7 @@ router.get('/users/auth', auth, Auth);
 
 router.get('/users/logout', auth, userLogout);
 
-router.get('/users/tokens', userTokens);
+router.get('/users/tokens', auth, userTokens);
 
 router.post('/users/setImg', auth, setProfilImg);
 
