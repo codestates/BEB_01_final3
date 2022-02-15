@@ -14,19 +14,18 @@ const path = require('path');
 
 const { myPage } = require('./controller/api');
 
-
 //DB connect
 const mongoose = require('mongoose');
 
-mongoose.connect(process.env.MONGDB, { useNewUrlParser: true })
+mongoose
+	.connect(process.env.MONGODB, { useNewUrlParser: true })
 	.then(() => console.log('MongoDB Connected success !!'))
 	.catch((err) => console.log(err));
 
-	app.use(express.static('client/build'));
-	// app.get('*', (req, res) => {
-	// 	res.sendFile(path.resolve("client", "build", "index.html"));
-	//   })
-	
+// app.use(express.static('client/build'));
+// app.get('*', (req, res) => {
+// 	res.sendFile(path.resolve('client', 'build', 'index.html'));
+// });
 
 // app.get('/api/hello', (req, res) => res.send('Hello World!~~ '));
 
@@ -39,11 +38,11 @@ app.use('/api', apiRouter);
 app.use('/uploads', express.static('uploads'));
 app.use('/api/video', require('./routes/video'));
 app.use('/api/user/video', require('./routes/uservideo'));
-app.use('/api/comment/', require('./routes/comment'))
+app.use('/api/comment/', require('./routes/comment'));
 app.use('/api/contract', coinRouter);
 app.use('/api/bat', batRouter);
-app.use('/api/like/', require('./routes/like'))
-app.use('/api/subscribe', require('./routes/subscribe'))
+app.use('/api/like/', require('./routes/like'));
+app.use('/api/subscribe', require('./routes/subscribe'));
 //app.use(express.static('client/build'));
 //current api/contract/mypage path is error
 app.post('/', myPage);
@@ -53,6 +52,5 @@ const port = 5000;
 // app.get('*', (req, res) => {
 // 	res.sendFile(path.resolve("client", "build", "index.html"));
 //   })
-  
-  
+
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));

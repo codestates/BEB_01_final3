@@ -55,31 +55,41 @@ module.exports = {
 		const account = await caver.wallet.keyring.generate();
 		caver.wallet.add(account);
 
+		console.log(account);
+
 		try {
 			const data = await nftContract.methods
 				.approveSale(account._address)
 				.encodeABI();
 
-			await caver.klay.accounts.wallet.add(serverPrivateKey);
+			// await caver.klay.accounts.wallet.add(serverPrivateKey);
 
-			caver.klay
-				.sendTransaction({
-					type: 'SMART_CONTRACT_EXECUTION',
-					from: serverAddress,
-					to: process.env.NFTTOKENCA,
-					data: data,
-					gas: '300000',
-				})
+			const tx = {
+				from: serverAddress,
+				to: process.env.NFTTOKENCA,
+				data: data,
+				gas: '300000',
+			};
+
+			const signedTx = await caver.klay.accounts.signTransaction(
+				tx,
+				serverPrivateKey
+			);
+
+			// const txHash = await caver.klay.sendSignedTransaction(
+			// 	signedTx.rawTransaction
+			// );
+
+			await caver.klay
+				.sendSignedTransaction(signedTx.rawTransaction)
 				.then(function (receipt) {
-					console.log(receipt);
+					// console.log(receipt);
 					const userInfo = {
 						...req.body,
 						publicKey: account._address,
 						privateKey: account._key._privateKey,
 						nftToken: '',
 					};
-
-					console.log(userInfo);
 					const user = new User(userInfo);
 
 					user.save((err, userInfo) => {
@@ -684,56 +694,52 @@ module.exports = {
 			const video = new Video(req.body);
 			video.save(async (err, doc) => {
 				//비디오가 save되면서 contentsRoom이란느 함수를 실행시키고
-				
-				
+
 				const txHash = await caver.klay.sendTransaction({
 					type: 'SMART_CONTRACT_EXECUTION',
 					from: serverAddress,
 					to: process.env.WTTOKENCA,
-					data: wtContract.methods
-					.createContent()
-					.encodeABI(),
+					data: wtContract.methods.createContent().encodeABI(),
 					gas: '300000',
-				})
+				});
 				console.log(
 					'---------- start videoUpload / createRoom finish ------'
 				);
 
 				if (txHash) {
 					const typesArray = [{ type: 'uint256', name: 'num' }];
-				const decodedParameters = caver.klay.abi.decodeParameters(
-					typesArray,
-					txHash.logs[0].data
-				);
-				console.log(JSON.stringify(decodedParameters));
-				const num = decodedParameters.num;
+					const decodedParameters = caver.klay.abi.decodeParameters(
+						typesArray,
+						txHash.logs[0].data
+					);
+					console.log(JSON.stringify(decodedParameters));
+					const num = decodedParameters.num;
 
-				const video = await Video.find({ title: rawTitle }).exec();
-				console.log(video);
-				console.log(video[0]._id);
-				const batting = new Batting({
-					videoId: video[0]._id,
-					contentsName: title,
-					subTitle: subTitle,
-					contentsNum: num,
-					serial: Number(serialNo),
-				});
-				const contents = new Contents({
-					contentName: title,
-					contentNum: num,
-				});
-				console.log('content가 개설되었습니다 :', num);
-				batting.save((err, info) => {
-					contents.save((err, info) => {
-						console.log(err);
-						if (err) return res.json({ success: false, err });
-						console.log(info);
-						res.status(200).json({ success: true });
+					const video = await Video.find({ title: rawTitle }).exec();
+					console.log(video);
+					console.log(video[0]._id);
+					const batting = new Batting({
+						videoId: video[0]._id,
+						contentsName: title,
+						subTitle: subTitle,
+						contentsNum: num,
+						serial: Number(serialNo),
 					});
-				});
+					const contents = new Contents({
+						contentName: title,
+						contentNum: num,
+					});
+					console.log('content가 개설되었습니다 :', num);
+					batting.save((err, info) => {
+						contents.save((err, info) => {
+							console.log(err);
+							if (err) return res.json({ success: false, err });
+							console.log(info);
+							res.status(200).json({ success: true });
+						});
+					});
 				}
-				
-				
+
 				//실행이 끝나면 DB에 방이 개설됬다고 열어주자.
 			});
 		} else {
@@ -741,17 +747,17 @@ module.exports = {
 			const video = new Video(req.body);
 			video.save(async (err, doc) => {
 				//비디오가 save되면서 contentsRoom이란느 함수를 실행시키고
-				
-					const txHash = await caver.klay.sendTransaction({
-						type: 'SMART_CONTRACT_EXECUTION',
-						from: serverAddress,
-						to: process.env.WTTOKENCA,
-						data: wtContract.methods
+
+				const txHash = await caver.klay.sendTransaction({
+					type: 'SMART_CONTRACT_EXECUTION',
+					from: serverAddress,
+					to: process.env.WTTOKENCA,
+					data: wtContract.methods
 						.openSerialContent(result[0].contentsNum)
 						.encodeABI(),
-						gas: '300000',
-					})
-				
+					gas: '300000',
+				});
+
 				if (txHash) {
 					const batting = new Batting({
 						contentsName: title,
@@ -759,13 +765,12 @@ module.exports = {
 						contentsNum: result[0].contentsNum,
 						serial: Number(serialNo),
 					});
-	
+
 					batting.save((err, info) => {
 						if (err) return res.json({ success: false, err });
 						res.status(200).json({ success: true });
-					}); 
+					});
 				}
-				
 
 				// if (err) return res.json({ success: false, err });
 				// res.status(200).json({ success: true });
