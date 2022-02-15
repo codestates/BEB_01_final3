@@ -13,10 +13,10 @@ const CavernewContract = (caver, abi, ca) => {
 	});
 };
 
-const KIPWTABI = fs.readFileSync('../abi/KIP_WTToken.json', 'utf-8');
-const KIPNWTABI = fs.readFileSync('../abi/KIP_NWTToken.json', 'utf-8');
-const KIPNFTABI = fs.readFileSync('../abi/KIP_NFTWT.json', 'utf8');
-const KIPSWAPABI = fs.readFileSync('../abi/KIP_TokenSwap.json', 'utf-8');
+const KIPWTABI = fs.readFileSync('server/abi/KIP_WTToken.json', 'utf-8');
+const KIPNWTABI = fs.readFileSync('server/abi/KIP_NWTToken.json', 'utf-8');
+const KIPNFTABI = fs.readFileSync('server/abi/KIP_NFTWT.json', 'utf-8');
+const KIPSWAPABI = fs.readFileSync('server/abi/KIP_TokenSwap.json', 'utf-8');
 
 const nftAbi = JSON.parse(KIPNFTABI);
 const wtAbi = JSON.parse(KIPWTABI); // wt token, exchange, vote
@@ -27,7 +27,6 @@ const nftContract = CavernewContract(caver, nftAbi, process.env.NFTTOKENCA); // 
 const wtContract = CavernewContract(caver, wtAbi, process.env.WTTOKENCA); // wt
 const nwtContract = CavernewContract(caver, nwtAbi, process.env.NWTTOKENCA); // nwt
 const swapContract = CavernewContract(caver, swapAbi, process.env.SWAPCA); // swap
-
 
 const serverAddress = process.env.SERVERADDRESS;
 const serverPrivateKey = process.env.SERVERPRIVATEKEY;

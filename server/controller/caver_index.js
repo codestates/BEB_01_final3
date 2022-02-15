@@ -11,9 +11,7 @@ const caver = new Caver(
 	new Caver.providers.HttpProvider('https://api.baobab.klaytn.net:8651/')
 );
 
-//계정부분
-let serverAddress = process.env.SERVERADDRESS;
-let serverPrivateKey = process.env.SERVERPRIVATEKEY;
+
 // auth 권한 부여받은 계정(contract 이용가능 => msg.sender : owner)
 const subManagerAddress = '';
 

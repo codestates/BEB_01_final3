@@ -19,7 +19,7 @@ const mongoose = require('mongoose');
 
 mongoose
 	.connect(
-		MONGDB,
+		process.env.MONGODB,
 		{ useNewUrlParser: true }
 	)
 	.then(() => console.log('MongoDB Connected success !!'))

@@ -40,21 +40,19 @@ module.exports = {
 			const data = await nftContract.methods
 				.mintNFT(tokenURI)
 				.encodeABI();
-			const nonce = await web3.eth.getTransactionCount(
-				serverAddress,
-				'latest'
-			);
-			const gasprice = await web3.eth.getGasPrice();
-			const gasPrice = Math.round(
-				Number(gasprice) + Number(gasprice / 10)
-			);
+			// const nonce = await web3.eth.getTransactionCount(
+			// 	serverAddress,
+			// 	'latest'
+			// );
+			// const gasprice = await web3.eth.getGasPrice();
+			// const gasPrice = Math.round(
+			// 	Number(gasprice) + Number(gasprice / 10)
+			// );
 
 			const tx = {
 				from: serverAddress,
 				to: process.env.NFTTOKENCA,
-				nonce: nonce,
-				gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
-				gasLimit: 5000000,
+				gas : 30000,
 				data: data,
 			};
 

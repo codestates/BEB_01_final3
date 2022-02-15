@@ -11,7 +11,7 @@ const { Vote } = require('../models/Vote');
 const subManagerAddress = '';
 
 
-const { wtContract, nwtContract, caver, serverPrivateKey, serverAddress  } = require('./caver_ContractConnect');
+const { wtContract, nwtContract, caver, serverPrivateKey, serverAddress } = require('./caver_ContractConnect');
 
 module.exports = {
 	vote: async (req, res) => {
