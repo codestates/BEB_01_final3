@@ -6,6 +6,7 @@ const ffmpeg = require('fluent-ffmpeg');
 const { Video } = require('../models/Video');
 const { Batting } = require('../models/batting');
 const { SearchContent, videoUpload } = require('../controller/api');
+const { KIP_videoUpload } = require('../controller/caver_api')
 const { closeSerial } = require('../controller/batting');
 
 let storage = multer.diskStorage({

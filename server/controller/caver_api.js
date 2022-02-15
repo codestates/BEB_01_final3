@@ -33,10 +33,10 @@ cron.schedule('*/5 * * * *', async function () {
 const subManagerAddress = '';
 
 // abi json
-const KIPWTABI = fs.readFileSync('../abi/KIP_WTToken.json', 'utf-8');
-const KIPNWTABI = fs.readFileSync('../abi/KIP_NWTToken.json', 'utf-8');
-const KIPNFTABI = fs.readFileSync('../abi/KIP_NFTWT.json', 'utf8');
-const KIPSWAPABI = fs.readFileSync('../abi/KIP_TokenSwap.json', 'utf-8');
+const KIPWTABI = fs.readFileSync('server/abi/KIP_WTToken.json', 'utf-8');
+const KIPNWTABI = fs.readFileSync('server/abi/KIP_NWTToken.json', 'utf-8');
+const KIPNFTABI = fs.readFileSync('server/abi/KIP_NFTWT.json', 'utf8');
+const KIPSWAPABI = fs.readFileSync('server/abi/KIP_TokenSwap.json', 'utf-8');
 
 // abi parse
 const nftAbi = JSON.parse(KIPNFTABI);

@@ -14,6 +14,8 @@ const {
 	removeAuth,
 	searchChannelPage,
 } = require('../controller/api');
+
+
 // const { default: Search } = require('../../client/src/components/Search/Search');
 
 //회원 가입 할떄 필요한 정보들을  client에서 가져오면

@@ -193,8 +193,10 @@ module.exports = {
 		}
 	},
 	allowance: async (req, res) => {
-		const allowance = await wtContract.methods.allowance(req.user.publicKey, serverAddress).call();
-		console.log(allowance);
+		const name = req.body.name
+		console.log(name);
+		//const allowance = await wtContract.methods.allowance(req.user.publicKey, serverAddress).call();
+		//console.log(allowance);
 	},
 	closeSerial: async (req, res) => {
 		const { contentsName, serial } = req.body;
