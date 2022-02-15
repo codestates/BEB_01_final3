@@ -12,18 +12,7 @@ const { Vote } = require('../models/Vote');
 const subManagerAddress = '';
 
 
-const KIPWTABI = fs.readFileSync('server/abi/KIP_WTToken.json', 'utf-8');
-const KIPNWTABI = fs.readFileSync('server/abi/KIP_NWTToken.json', 'utf-8');
-const KIPNFTABI = fs.readFileSync('server/abi/KIP_NFTWT.json', 'utf8');
-const KIPSWAPABI = fs.readFileSync('server/abi/KIP_TokenSwap.json', 'utf-8');
-
-// abi parse
-const nftAbi = JSON.parse(KIPNFTABI);
-const wtAbi = JSON.parse(KIPWTABI); // wt token, exchange, vote
-const nwtAbi = JSON.parse(KIPNWTABI);
-const swapAbi = JSON.parse(KIPSWAPABI);
-
-const { wtContract, nwtContract, caver, serverPrivateKey, serverAddress  } = require('./caver_ContractConnect');
+const { wtContract, nwtContract, nftContract, swapContract, caver, serverPrivateKey, serverAddress } = require('./caver_ContractConnect');
 
 module.exports = {
 	vote: async (req, res) => {

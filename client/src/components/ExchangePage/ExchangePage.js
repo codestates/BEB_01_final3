@@ -78,6 +78,7 @@ function ExchangePage() {
 				const tokens = await res.data;
 				setMyWTTokens(tokens.userTokens.wtToken);
 				setMyNWTTokens(tokens.userTokens.nwtToken);
+				console.log(res)
 			} catch (err) {
 				console.log(err);
 			}
