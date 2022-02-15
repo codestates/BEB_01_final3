@@ -18,14 +18,14 @@ const { myPage } = require('./controller/api');
 const mongoose = require('mongoose');
 
 mongoose
-	.connect(process.env.MONGDB, { useNewUrlParser: true })
+	.connect(process.env.MONGODB, { useNewUrlParser: true })
 	.then(() => console.log('MongoDB Connected success !!'))
 	.catch((err) => console.log(err));
 
-app.use(express.static('client/build'));
-app.get('*', (req, res) => {
-	res.sendFile(path.resolve('client', 'build', 'index.html'));
-});
+// app.use(express.static('client/build'));
+// app.get('*', (req, res) => {
+// 	res.sendFile(path.resolve('client', 'build', 'index.html'));
+// });
 
 // app.get('/api/hello', (req, res) => res.send('Hello World!~~ '));
 
@@ -51,7 +51,7 @@ app.use('/api/subscribe', require('./routes/subscribe'));
 // app.use('/caver_api/bat', batRouter);
 // app.use('/caver_api/like/', require('./routes/like'));
 // app.use('/caver_api/subscribe', require('./routes/subscribe'));
-app.use(express.static('client/build'));
+// app.use(express.static('client/build'));
 //current api/contract/mypage path is error
 app.post('/', myPage);
 
