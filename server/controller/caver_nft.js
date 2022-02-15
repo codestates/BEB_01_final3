@@ -7,8 +7,7 @@ const { Contents } = require('../models/Contents');
 const { Vote } = require('../models/Vote');
 
 
-
-const { nftContract, nwtContract, caver, serverPrivateKey, serverAddress } = require('./caver_ContractConnect');
+const { wtContract, nwtContract, nftContract, swapContract, caver, serverPrivateKey, serverAddress } = require('./caver_ContractConnect');
 const { json } = require('body-parser');
 
 //계정부분

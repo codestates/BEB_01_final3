@@ -92,7 +92,9 @@ function Bar({ isLogin }) {
 		setIsAdmin(res.payload.isAdmin);
 		// console.log("SA", res.payload.isAuth);
 		// console.log("SD", res.payload.isAdmin);
-	});
+  });
+  
+  console.log(isAuth,isAdmin);
 
 	const onSubmit = (e) => {
 		console.log('value', searchValue);

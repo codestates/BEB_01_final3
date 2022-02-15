@@ -17,10 +17,10 @@ const subManagerAddress = '';
 
 // abi json
 // const WTABI = fs.readFileSync('server/abi/KIP_WTToken.json', 'utf-8');
-const WTABI = fs.readFileSync('../abi/KIP_WTToken.json');
-const NWTABI = fs.readFileSync('../abi/KIP_NWTToken.json', 'utf-8');
-const NFTABI = fs.readFileSync('../abi/KIP_NFTWT.json', 'utf8');
-const SWAPABI = fs.readFileSync('../abi/KIP_TokenSwap.json', 'utf-8');
+const WTABI = fs.readFileSync('server/abi/KIP_WTToken.json','utf-8');
+const NWTABI = fs.readFileSync('server/abi/KIP_NWTToken.json', 'utf-8');
+const NFTABI = fs.readFileSync('server/abi/KIP_NFTWT.json', 'utf8');
+const SWAPABI = fs.readFileSync('server/abi/KIP_TokenSwap.json', 'utf-8');
 
 // abi parse
 const nftAbi = JSON.parse(NFTABI);
@@ -190,7 +190,7 @@ const targetAddrPK = async (addr) => {
 
 module.exports = {
 	// infuraWeb3Provider,
-	// CavernewContract,
+		 CavernewContract,
 	// changeAuther,
 	// targetServerAddress,
 	// targetAddrPK,

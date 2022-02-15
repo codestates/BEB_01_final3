@@ -8,6 +8,7 @@ const { Vote } = require('../models/Vote');
 const Subscriber = require('../models/Subscriber');
 const cron = require('node-cron');
 
+
 const { json } = require('body-parser');
 
 // auth 권한 부여받은 계정(contract 이용가능 => msg.sender : owner)
@@ -19,50 +20,50 @@ cron.schedule('*/5 * * * *', async function () {
 	// console.log(serverAddress, serverPrivateKey);
 });
 
-const subManagerAddress = '';
 
-const {
-	nftContract,
-	nwtContract,
-	wtContract,
-	swapContract,
-	caver,
-	serverPrivateKey,
-	serverAddress,
-} = require('./caver_ContractConnect');
+const { wtContract, nwtContract, nftContract, swapContract, caver, serverPrivateKey, serverAddress } = require('./caver_ContractConnect');
+
 
 module.exports = {
-	userJoin: async (req, res) => {
-		//지갑을 생성하고 지갑을 추가해주는 메서드
-
+	KIP_userJoin: async (req, res) => {
 		const account = await caver.wallet.keyring.generate();
 		caver.wallet.add(account);
+
+		console.log(account);
 
 		try {
 			const data = await nftContract.methods
 				.approveSale(account._address)
 				.encodeABI();
 
-			await caver.klay.accounts.wallet.add(serverPrivateKey);
+			// await caver.klay.accounts.wallet.add(serverPrivateKey);
 
-			caver.klay
-				.sendTransaction({
-					type: 'SMART_CONTRACT_EXECUTION',
-					from: serverAddress,
-					to: process.env.NFTTOKENCA,
-					data: data,
-					gas: '300000',
-				})
+			const tx = {
+				from: serverAddress,
+				to: process.env.NFTTOKENCA,
+				data: data,
+				gas: '300000',
+			};
+
+			const signedTx = await caver.klay.accounts.signTransaction(
+				tx,
+				serverPrivateKey
+			);
+
+			// const txHash = await caver.klay.sendSignedTransaction(
+			// 	signedTx.rawTransaction
+			// );
+
+			await caver.klay
+				.sendSignedTransaction(signedTx.rawTransaction)
 				.then(function (receipt) {
-					console.log(receipt);
+					// console.log(receipt);
 					const userInfo = {
 						...req.body,
 						publicKey: account._address,
 						privateKey: account._key._privateKey,
 						nftToken: '',
 					};
-
-					console.log(userInfo);
 					const user = new User(userInfo);
 
 					user.save((err, userInfo) => {
@@ -83,7 +84,7 @@ module.exports = {
 		// console.log('ping')
 		//요청된 이메일을 데이터베이스에서 있는지 찾는다.
 		User.findOne({ email: req.body.email }, (err, user) => {
-			// console.log('user', user);
+			// console.log('user', user)
 			if (!user) {
 				return res.json({
 					loginSuccess: false,
@@ -95,7 +96,7 @@ module.exports = {
 			user.comparePassword(req.body.password, (err, isMatch) => {
 				// console.log('err',err)
 
-				// console.log('isMatch', isMatch);
+				// console.log('isMatch',isMatch)
 
 				if (!isMatch)
 					return res.json({
@@ -647,8 +648,8 @@ module.exports = {
 			}
 		);
 	},
-	videoUpload: async (req, res) => {
-		console.log(req.body);
+	KIP_videoUpload: async (req, res) => {
+		await caver.klay.accounts.wallet.add(serverPrivateKey);
 		const rawTitle = req.body.title;
 		const title = rawTitle
 			.slice(0, rawTitle.indexOf(']') + 1)
@@ -667,70 +668,52 @@ module.exports = {
 			const video = new Video(req.body);
 			video.save(async (err, doc) => {
 				//비디오가 save되면서 contentsRoom이란느 함수를 실행시키고
-				const data = await wtContract.methods
-					.createContent()
-					.encodeABI();
-				const nonce = await web3.eth.getTransactionCount(
-					serverAddress,
-					'latest'
-				);
-				const gasprice = await web3.eth.getGasPrice();
-				const gasPrice = Math.round(
-					Number(gasprice) + Number(gasprice / 10)
-				);
 
-				const tx = {
+				const txHash = await caver.klay.sendTransaction({
+					type: 'SMART_CONTRACT_EXECUTION',
 					from: serverAddress,
 					to: process.env.WTTOKENCA,
-					nonce: nonce,
-					gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
-					gasLimit: 5000000,
-					data: data,
-				};
-
-				const signedTx = await web3.eth.accounts.signTransaction(
-					tx,
-					serverPrivateKey
-				);
+					data: wtContract.methods.createContent().encodeABI(),
+					gas: '300000',
+				});
 				console.log(
-					'---------- start videoUpload / createRoom tranction ------'
-				);
-				const hash = await web3.eth.sendSignedTransaction(
-					signedTx.rawTransaction
+					'---------- start videoUpload / createRoom finish ------'
 				);
 
-				const typesArray = [{ type: 'uint256', name: 'num' }];
+				if (txHash) {
+					const typesArray = [{ type: 'uint256', name: 'num' }];
+					const decodedParameters = caver.klay.abi.decodeParameters(
+						typesArray,
+						txHash.logs[0].data
+					);
+					console.log(JSON.stringify(decodedParameters));
+					const num = decodedParameters.num;
 
-				const decodedParameters = web3.eth.abi.decodeParameters(
-					typesArray,
-					hash.logs[0].data
-				);
-				console.log(JSON.stringify(decodedParameters));
-				const num = decodedParameters.num;
-
-				const video = await Video.find({ title: rawTitle }).exec();
-				console.log(video);
-				console.log(video[0]._id);
-				const batting = new Batting({
-					videoId: video[0]._id,
-					contentsName: title,
-					subTitle: subTitle,
-					contentsNum: num,
-					serial: Number(serialNo),
-				});
-				const contents = new Contents({
-					contentName: title,
-					contentNum: num,
-				});
-				console.log('content', num);
-				batting.save((err, info) => {
-					contents.save((err, info) => {
-						console.log(err);
-						if (err) return res.json({ success: false, err });
-						console.log(info);
-						res.status(200).json({ success: true });
+					const video = await Video.find({ title: rawTitle }).exec();
+					console.log(video);
+					console.log(video[0]._id);
+					const batting = new Batting({
+						videoId: video[0]._id,
+						contentsName: title,
+						subTitle: subTitle,
+						contentsNum: num,
+						serial: Number(serialNo),
 					});
-				});
+					const contents = new Contents({
+						contentName: title,
+						contentNum: num,
+					});
+					console.log('content가 개설되었습니다 :', num);
+					batting.save((err, info) => {
+						contents.save((err, info) => {
+							console.log(err);
+							if (err) return res.json({ success: false, err });
+							console.log(info);
+							res.status(200).json({ success: true });
+						});
+					});
+				}
+
 				//실행이 끝나면 DB에 방이 개설됬다고 열어주자.
 			});
 		} else {
@@ -738,46 +721,30 @@ module.exports = {
 			const video = new Video(req.body);
 			video.save(async (err, doc) => {
 				//비디오가 save되면서 contentsRoom이란느 함수를 실행시키고
-				const data = await wtContract.methods
-					.openSerialContent(result[0].contentsNum)
-					.encodeABI();
-				const nonce = await web3.eth.getTransactionCount(
-					serverAddress,
-					'latest'
-				);
-				const gasprice = await web3.eth.getGasPrice();
-				const gasPrice = Math.round(
-					Number(gasprice) + Number(gasprice / 10)
-				);
 
-				const tx = {
+				const txHash = await caver.klay.sendTransaction({
+					type: 'SMART_CONTRACT_EXECUTION',
 					from: serverAddress,
 					to: process.env.WTTOKENCA,
-					nonce: nonce,
-					gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
-					gasLimit: 5000000,
-					data: data,
-				};
-
-				const signedTx = await web3.eth.accounts.signTransaction(
-					tx,
-					serverPrivateKey
-				);
-				const hash = await web3.eth.sendSignedTransaction(
-					signedTx.rawTransaction
-				);
-
-				const batting = new Batting({
-					contentsName: title,
-					subTitle: subTitle,
-					contentsNum: result[0].contentsNum,
-					serial: Number(serialNo),
+					data: wtContract.methods
+						.openSerialContent(result[0].contentsNum)
+						.encodeABI(),
+					gas: '300000',
 				});
 
-				batting.save((err, info) => {
-					if (err) return res.json({ success: false, err });
-					res.status(200).json({ success: true });
-				});
+				if (txHash) {
+					const batting = new Batting({
+						contentsName: title,
+						subTitle: subTitle,
+						contentsNum: result[0].contentsNum,
+						serial: Number(serialNo),
+					});
+
+					batting.save((err, info) => {
+						if (err) return res.json({ success: false, err });
+						res.status(200).json({ success: true });
+					});
+				}
 
 				// if (err) return res.json({ success: false, err });
 				// res.status(200).json({ success: true });
