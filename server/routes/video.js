@@ -6,6 +6,7 @@ const ffmpeg = require('fluent-ffmpeg');
 const { Video } = require('../models/Video');
 const { Batting } = require('../models/batting');
 const { SearchContent, videoUpload } = require('../controller/api');
+const { KIP_videoUpload } = require('../controller/caver_api')
 const { closeSerial } = require('../controller/batting');
 
 let storage = multer.diskStorage({
@@ -49,7 +50,7 @@ router.post('/uploads', (req, res) => {
 	});
 });
 
-router.post('/uploadVideo', videoUpload);
+router.post('/uploadVideo', KIP_videoUpload);
 
 router.get('/getVideos', (req, res) => {
 	//비디오를 DB에서 가져와서 클라이언트에 보낸다.

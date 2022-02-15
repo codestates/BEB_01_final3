@@ -35,7 +35,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use('/api', apiRouter);
-// app.use('/caver_api', apiRouter);
 app.use('/uploads', express.static('uploads'));
 app.use('/api/video', require('./routes/video'));
 app.use('/api/user/video', require('./routes/uservideo'));
@@ -44,21 +43,14 @@ app.use('/api/contract', coinRouter);
 app.use('/api/bat', batRouter);
 app.use('/api/like/', require('./routes/like'));
 app.use('/api/subscribe', require('./routes/subscribe'));
-// app.use('/caver_api/video', require('./routes/video'));
-// app.use('/caver_api/user/video', require('./routes/uservideo'));
-// app.use('/caver_api/comment/', require('./routes/comment'));
-// app.use('/caver_api/contract', coinRouter);
-// app.use('/caver_api/bat', batRouter);
-// app.use('/caver_api/like/', require('./routes/like'));
-// app.use('/caver_api/subscribe', require('./routes/subscribe'));
-// app.use(express.static('client/build'));
+//app.use(express.static('client/build'));
 //current api/contract/mypage path is error
 app.post('/', myPage);
 
 const port = 5000;
 
-app.get('*', (req, res) => {
-	res.sendFile(path.resolve('client', 'build', 'index.html'));
-});
+// app.get('*', (req, res) => {
+// 	res.sendFile(path.resolve("client", "build", "index.html"));
+//   })
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));

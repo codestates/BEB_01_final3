@@ -158,6 +158,7 @@ module.exports = {
 
 	Auth: (req, res) => {
 		//여기 까지 미들웨어를 통과해 왔다는 얘기는  Authentication 이 True 라는 말.
+	
 		res.status(200).json({
 			_id: req.user._id,
 			isAdmin: req.user.role === 0 ? false : true,

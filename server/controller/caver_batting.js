@@ -1,4 +1,5 @@
 require('dotenv').config();
+const fs = require('fs');
 const { User } = require('../models/User');
 const { Nft } = require('../models/Nft');
 const { Video } = require('../models/Video');
@@ -10,6 +11,17 @@ const { Vote } = require('../models/Vote');
 // auth 권한 부여받은 계정(contract 이용가능 => msg.sender : owner)
 const subManagerAddress = '';
 
+
+const KIPWTABI = fs.readFileSync('server/abi/KIP_WTToken.json', 'utf-8');
+const KIPNWTABI = fs.readFileSync('server/abi/KIP_NWTToken.json', 'utf-8');
+const KIPNFTABI = fs.readFileSync('server/abi/KIP_NFTWT.json', 'utf8');
+const KIPSWAPABI = fs.readFileSync('server/abi/KIP_TokenSwap.json', 'utf-8');
+
+// abi parse
+const nftAbi = JSON.parse(KIPNFTABI);
+const wtAbi = JSON.parse(KIPWTABI); // wt token, exchange, vote
+const nwtAbi = JSON.parse(KIPNWTABI);
+const swapAbi = JSON.parse(KIPSWAPABI);
 
 const { wtContract, nwtContract, caver, serverPrivateKey, serverAddress  } = require('./caver_ContractConnect');
 
@@ -143,7 +155,7 @@ module.exports = {
 			}
 		}
 	},
-	contentList: async (req, res) => {
+	KIP_contentList: async (req, res) => {
 		try {
 			const contentName = req.body.contentName;
 			const info = await Batting.find({
@@ -157,13 +169,85 @@ module.exports = {
 			console.log('err발생 : ' + e);
 		}
 	},
-	allowance: async (req, res) => {
-		const allowance = await wtContract.methods
-			.allowance(req.user.publicKey, serverAddress)
-			.call();
-		console.log(allowance);
+	KIP_allowance: async (req, res) => {
+
+		 const user = "0x3018198475bD0888D2F74004905232074c2c63f1";
+
+		// const { rawTransaction: senderRawTransaction } = await caver.klay.accounts.signTransaction({
+		// 	    type :'FEE_DELEGATED_SMART_CONTRACT_EXECUTION',
+		// 		from : serverAddress,
+		// 		to : process.env.WTTOKENCA,
+		// 		data : wtContract.methods.mintToken(user,caver.utils.toPeb('30','KLAY')).encodeABI(),
+		// 		gas : '3000000',
+		// 	}, serverPrivateKey)	
+		
+		// console.log('------------------------------');
+		// //console.log(rawTransaction);
+		// 	caver.klay.sendTransaction({
+		// 		senderRawTransaction: senderRawTransaction,
+		// 		feePayer : serverAddress
+		// 	  })
+		// 	  .then((receipt)=>{
+		// 		  if(receipt.transactionHash){
+					
+		// 			  console.log("성공!");
+					  
+		// 		  }
+		// 	  })
+
+		// const bal = await wtContract.methods.balanceOf(user).call();
+		// console.log(bal);
+			
+
+		// const data = await wtContract.methods
+		// 	.mintToken(user, 1000000000000000)
+		// 	.encodeABI();
+		// const nonce = await caver.klay.getTransactionCount(
+		// 	serverAddress,
+		// 	'latest'
+		// );
+		// const gasprice = await caver.klay.getGasPrice();
+		// const gasPrice = Math.round(
+		// 	Number(gasprice) + Number(gasprice / 10)
+		// );
+		// const tx = {
+		// 	from: serverAddress,
+		// 	to: process.env.WTTOKENCA,
+		// 	nonce: nonce,
+		// 	gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
+		// 	gasLimit: 5000000,
+		// 	data: data,
+		// };
+		// const signedTx = await caver.klay.accounts.signTransaction(
+		// 	tx,
+		// 	serverPrivateKey
+		// );
+	     
+		// const hash = await caver.klay	.sendSignedTransaction(
+		// 	signedTx.rawTransaction
+		// );
+		// if (hash) {
+		// 	console.log(hash);
+		// }
+
+		const create = await caver.klay.accounts.wallet.add(serverPrivateKey);
+		
+		console.log(create);
+
+		caver.klay.sendTransaction({
+			type: 'SMART_CONTRACT_EXECUTION',
+			from: serverAddress,
+			to: process.env.WTTOKENCA,
+			data: wtContract.methods.mintToken(user,caver.utils.toPeb('30','KLAY')).encodeABI(),
+			gas: '300000',
+		})
+		.then(function(receipt){
+			console.log(receipt);
+		});
+		
+		
 	},
-	closeSerial: async (req, res) => {
+	KIP_closeSerial: async (req, res) => {
 		const { contentsName, serial } = req.body;
 		console.log(contentsName, serial);
 		// success Fe send normal data;
@@ -179,40 +263,22 @@ module.exports = {
 		console.log(isCheck);
 		try {
 			if (isCheck !== null) {
-				const data = await wtContract.methods
-					.closeSerialContent(isCheck.contentsNum)
-					.encodeABI();
-				const nonce = await web3.eth.getTransactionCount(
-					serverAddress,
-					'latest'
-				);
-				const gasprice = await web3.eth.getGasPrice();
-				const gasPrice = Math.round(
-					Number(gasprice) + Number(gasprice / 10)
-				);
-
-				const tx = {
+				const txHash = await caver.klay.sendTransaction({
+					type: 'SMART_CONTRACT_EXECUTION',
 					from: serverAddress,
 					to: process.env.WTTOKENCA,
-					nonce: nonce,
-					gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
-					gasLimit: 5000000,
-					data: data,
-				};
-
-				const signedTx = await web3.eth.accounts.signTransaction(
-					tx,
-					serverPrivateKey
-				);
+					data: wtContract.methods
+					.closeSerialContent(isCheck.contentsNum).encodeABI(),
+					gas: '300000',
+				})
+				
 				console.log(
 					'----- closeContentSerial' +
 						isCheck.contentsNum +
-						'function start ----'
+						'function finish ----'
 				);
-				const hash = await web3.eth.sendSignedTransaction(
-					signedTx.rawTransaction
-				);
-				if (hash) {
+				
+				if (txHash) {
 					res.status(201).json({
 						success: true,
 						detail: `${serial}번째 베팅이 종료 되었습니다.`,
@@ -232,36 +298,20 @@ module.exports = {
 			});
 		}
 	},
-	closeContent: async (req, res) => {
+	KIP_closeContent: async (req, res) => {
 		const contentNum = req.body.contentNum;
-		const data = await wtContract.methods
-			.closeContent(contentNum)
-			.encodeABI();
-		const nonce = await web3.eth.getTransactionCount(
-			serverAddress,
-			'latest'
-		);
-		const gasprice = await web3.eth.getGasPrice();
-		const gasPrice = Math.round(Number(gasprice) + Number(gasprice / 10));
-
-		const tx = {
-			from: serverAddress,
-			to: process.env.WTTOKENCA,
-			nonce: nonce,
-			gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
-			gasLimit: 5000000,
-			data: data,
-		};
-
-		const signedTx = await web3.eth.accounts.signTransaction(
-			tx,
-			serverPrivateKey
-		);
-		console.log('----- closeContent' + contentNum + 'function start ----');
-		const hash = await web3.eth.sendSignedTransaction(
-			signedTx.rawTransaction
-		);
-		if (hash) {
+	
+			const txHash = await caver.klay.sendTransaction({
+				type: 'SMART_CONTRACT_EXECUTION',
+				from: serverAddress,
+				to: process.env.WTTOKENCA,
+				data: wtContract.methods.closeContent(contentNum).encodeABI(),
+				gas: '300000',
+			})
+		
+		console.log('----- closeContent' + contentNum + 'function finish ----');
+		
+		if (txHash) {
 			Contents.findOneAndUpdate(
 				{ contentNum },
 				{ status: false },
@@ -274,37 +324,22 @@ module.exports = {
 			);
 		}
 	},
-	payOut: async (req, res) => {
+	KIP_payOut: async (req, res) => {
 		const contentNum = req.body.contentNum;
 		const answer = req.body.answer;
-		const data = await wtContract.methods
-			.payOut(answer, contentNum)
-			.encodeABI();
-		const nonce = await web3.eth.getTransactionCount(
-			serverAddress,
-			'latest'
-		);
-		const gasprice = await web3.eth.getGasPrice();
-		const gasPrice = Math.round(Number(gasprice) + Number(gasprice / 10));
-
-		const tx = {
-			from: serverAddress,
-			to: process.env.WTTOKENCA,
-			nonce: nonce,
-			gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
-			gasLimit: 5000000,
-			data: data,
-		};
-
-		const signedTx = await web3.eth.accounts.signTransaction(
-			tx,
-			serverPrivateKey
-		);
-		console.log('----- payOut' + contentNum + 'function start ----');
-		const hash = await web3.eth.sendSignedTransaction(
-			signedTx.rawTransaction
-		);
-		if (hash) {
+	
+			const txHash = await caver.klay.sendTransaction({
+				type: 'SMART_CONTRACT_EXECUTION',
+				from: serverAddress,
+				to: process.env.WTTOKENCA,
+				data: await wtContract.methods
+				.payOut(answer, contentNum)
+				.encodeABI(),
+				gas: '300000',
+			})
+		console.log('----- payOut' + contentNum + 'function finish ----');
+		
+		if (txHash) {
 			console.log(hash.logs[0].data);
 			console.log(hash.logs[0].topics);
 			res.status(201).json({ success: true });
