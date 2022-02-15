@@ -32,11 +32,11 @@ const serverAddress = process.env.SERVERADDRESS;
 const serverPrivateKey = process.env.SERVERPRIVATEKEY;
 
 module.exports = {
-    nftContract,
-    wtContract,
-    nwtContract,
-    swapContract,
-    caver,
-    serverAddress,
-    serverPrivateKey
-}
+	nftContract,
+	wtContract,
+	nwtContract,
+	swapContract,
+	caver,
+	serverAddress,
+	serverPrivateKey,
+};

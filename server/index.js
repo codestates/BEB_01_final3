@@ -25,10 +25,10 @@ mongoose
 	.then(() => console.log('MongoDB Connected success !!'))
 	.catch((err) => console.log(err));
 
-app.use(express.static('client/build'));
-app.get('*', (req, res) => {
-	res.sendFile(path.resolve('client', 'build', 'index.html'));
-});
+// app.use(express.static('client/build'));
+// app.get('*', (req, res) => {
+// 	res.sendFile(path.resolve('client', 'build', 'index.html'));
+// });
 
 // app.get('/api/hello', (req, res) => res.send('Hello World!~~ '));
 

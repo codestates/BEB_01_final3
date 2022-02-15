@@ -167,9 +167,6 @@ function LandingPage() {
 		});
 	}, []);
 
-	console.log('SV', Video);
-	console.log('UV', UserVideo);
-
 	const renderUserCards = UserVideo.map((video, index) => {
 		var minutes = Math.floor(video.duration / 60);
 		var seconds = Math.floor(video.duration - minutes * 60);
