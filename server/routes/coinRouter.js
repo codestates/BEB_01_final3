@@ -4,6 +4,31 @@ const { auth } = require('../middleware/auth');
 const { Nft } = require('../models/Nft');
 const { User } = require('../models/User');
 
+///////////////web3//////////////////
+// const {
+// 	exchange_WTToken,
+// 	SearchNft,
+// 	exchange_NWTToken,
+// 	serverWT_faucet,
+// 	serverNWT_faucet,
+// 	myPage,
+// 	TotalTokens,
+// } = require('../controller/api');
+
+
+// const {
+// 	NFTlist,
+// 	createNFT,
+// 	buyNFT,
+// 	setForSell,
+// 	cancel,
+// 	nftauction,
+// 	setToken,
+// 	bids,
+// 	withdraw,
+// 	endauction
+// } = require('../controller/nft');
+///////////////////////////////////////caver////////////////////////
 const {
 	exchange_WTToken,
 	SearchNft,
@@ -12,7 +37,7 @@ const {
 	serverNWT_faucet,
 	myPage,
 	TotalTokens,
-} = require('../controller/api');
+} = require('../controller/caver_api');
 
 
 const {
@@ -26,7 +51,7 @@ const {
 	bids,
 	withdraw,
 	endauction
-} = require('../controller/nft');
+} = require('../controller/caver_nft');
 
 
 // server 계정 토큰 민팅 wt, nwt

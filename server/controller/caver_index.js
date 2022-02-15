@@ -1,5 +1,5 @@
 // web3 모듈화
-const Web3 = require('web3');
+const Caver = require('caver-js');
 require('dotenv').config();
 const { User } = require('../models/User');
 const fs = require('fs');
@@ -7,12 +7,9 @@ const cron = require('node-cron');
 
 // .env 파일, 디비 서버 publickey, privatekey, 네크워크
 
-const web3 = new Web3(
-	new Web3.providers.HttpProvider(
-		'https://ropsten.infura.io/v3/c2cc008afe67457fb9a4ee32408bcac6'
-	)
+const caver = new Caver(
+	new Caver.providers.HttpProvider('https://api.baobab.klaytn.net:8651/')
 );
-// const web3 = new Web3(new Web3.providers.HttpProvider('HTTP://127.0.0.1:7545'));
 
 //계정부분
 let serverAddress = process.env.SERVERADDRESS;
@@ -21,10 +18,11 @@ let serverPrivateKey = process.env.SERVERPRIVATEKEY;
 const subManagerAddress = '';
 
 // abi json
-const WTABI = fs.readFileSync('server/abi/WTToken.json', 'utf-8');
-const NWTABI = fs.readFileSync('server/abi/NWTToken.json', 'utf-8');
-const NFTABI = fs.readFileSync('server/abi/NFTWT.json', 'utf8');
-const SWAPABI = fs.readFileSync('server/abi/TokenSwap.json', 'utf-8');
+// const WTABI = fs.readFileSync('server/abi/KIP_WTToken.json', 'utf-8');
+const WTABI = fs.readFileSync('../abi/KIP_WTToken.json');
+const NWTABI = fs.readFileSync('../abi/KIP_NWTToken.json', 'utf-8');
+const NFTABI = fs.readFileSync('../abi/KIP_NFTWT.json', 'utf8');
+const SWAPABI = fs.readFileSync('../abi/KIP_TokenSwap.json', 'utf-8');
 
 // abi parse
 const nftAbi = JSON.parse(NFTABI);
@@ -32,12 +30,12 @@ const wtAbi = JSON.parse(WTABI); // wt token, exchange, vote
 const nwtAbi = JSON.parse(NWTABI);
 const swapAbi = JSON.parse(SWAPABI);
 
-const infuraWeb3Provider = (infuraURL) => {
-	return new Web3(new Web3.providers.HttpProvider(infuraURL));
-};
+// const infuraWeb3Provider = (infuraURL) => {
+// 	return new Web3(new Web3.providers.HttpProvider(infuraURL));
+// };
 
-const newCaverContract = (web3, abi, ca) => {
-	return new web3.eth.Contract(abi, ca, {
+const CavernewContract = (caver, abi, ca) => {
+	return new caver.klay.Contract(abi, ca, {
 		from: process.env.SERVERADDRESS,
 		gas: 3000000,
 	});
@@ -61,9 +59,9 @@ const changeAuther = async (highPrivilege, loginServer) => {
 		difCheck = false;
 	}
 
-	const wtContract = newCaverContract(web3, wtAbi, process.env.WTTOKENCA); // wt
-	const nwtContract = newCaverContract(web3, nwtAbi, process.env.NWTTOKENCA); // nwt
-	const nftContract = newCaverContract(web3, nftAbi, process.env.NFTTOKENCA); // nft
+	const wtContract = newContract(web3, wtAbi, process.env.WTTOKENCA); // wt
+	const nwtContract = newContract(web3, nwtAbi, process.env.NWTTOKENCA); // nwt
+	const nftContract = newContract(web3, nftAbi, process.env.NFTTOKENCA); // nft
 
 	const serverDB_addr = await User.find({ role: 1 }).exec();
 
@@ -99,9 +97,9 @@ const changeAuther = async (highPrivilege, loginServer) => {
 // 크론을 1분마다 돌려서 서버계정을 확인해서 바꿔주는 함수
 const targetServerAddress = async (serverAddress) => {
 	// console.log('크론으로 돌리는 중');
-	const wtContract = newCaverContract(web3, wtAbi, process.env.WTTOKENCA); // wt
-	const nwtContract = newCaverContract(web3, nwtAbi, process.env.NWTTOKENCA); // nwt
-	const nftContract = newCaverContract(web3, nftAbi, process.env.NFTTOKENCA); // nft
+	const wtContract = newContract(web3, wtAbi, process.env.WTTOKENCA); // wt
+	const nwtContract = newContract(web3, nwtAbi, process.env.NWTTOKENCA); // nwt
+	const nftContract = newContract(web3, nftAbi, process.env.NFTTOKENCA); // nft
 
 	// 1순위 체크 : 서버 root 계정이 넉넉한 양의 토큰을 가지고 있는지, 이더를 보유하고 있는지 체크
 	const wtAmount = web3.utils.fromWei(
@@ -193,9 +191,9 @@ const targetAddrPK = async (addr) => {
 // 현재 로그인 되어 있는 { _id: req.user._id }
 
 module.exports = {
-	infuraWeb3Provider,
-	newCaverContract,
-	changeAuther,
-	targetServerAddress,
-	targetAddrPK,
+	// infuraWeb3Provider,
+	// CavernewContract,
+	// changeAuther,
+	// targetServerAddress,
+	// targetAddrPK,
 };
