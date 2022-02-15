@@ -28,10 +28,16 @@ const wtContract = CavernewContract(caver, wtAbi, process.env.WTTOKENCA); // wt
 const nwtContract = CavernewContract(caver, nwtAbi, process.env.NWTTOKENCA); // nwt
 const swapContract = CavernewContract(caver, swapAbi, process.env.SWAPCA); // swap
 
+
+const serverAddress = process.env.SERVERADDRESS;
+const serverPrivateKey = process.env.SERVERPRIVATEKEY;
+
 module.exports = {
     nftContract,
     wtContract,
     nwtContract,
     swapContract,
     caver,
+    serverAddress,
+    serverPrivateKey
 }

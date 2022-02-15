@@ -26,7 +26,7 @@ cron.schedule('*/5 * * * *', async function () {
 const subManagerAddress = '';
 
 
-const { nftContract, nwtContract, wtContract, swapContract, caver } = require('./caver_ContractConnect');
+const { nftContract, nwtContract, wtContract, swapContract, caver, serverPrivateKey, serverAddress  } = require('./caver_ContractConnect');
 
 module.exports = {
 	userJoin: async (req, res) => {

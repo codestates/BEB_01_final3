@@ -7,13 +7,11 @@ const { Contents } = require('../models/Contents');
 const { Vote } = require('../models/Vote');
 
 //계정부분
-const serverAddress = process.env.SERVERADDRESS;
-const serverPrivateKey = process.env.SERVERPRIVATEKEY;
 // auth 권한 부여받은 계정(contract 이용가능 => msg.sender : owner)
 const subManagerAddress = '';
 
 
-const { wtContract, nwtContract, caver } = require('./caver_ContractConnect');
+const { wtContract, nwtContract, caver, serverPrivateKey, serverAddress  } = require('./caver_ContractConnect');
 
 module.exports = {
 	vote: async (req, res) => {
