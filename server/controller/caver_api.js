@@ -8,11 +8,19 @@ const { Vote } = require('../models/Vote');
 const Subscriber = require('../models/Subscriber');
 const cron = require('node-cron');
 
+const Caver = require('caver-js');
+const caver = new Caver(
+	new Caver.providers.HttpProvider('https://api.baobab.klaytn.net:8651')
+);
+const fs = require('fs');
+
+// const { newContract, infuraWeb3Provider } = require('./index');
+const { CavernewContract } = require('./caver_index');
 const { json } = require('body-parser');
 
 //계정부분
-// let serverAddress = process.env.SERVERADDRESS;
-// let serverPrivateKey = process.env.SERVERPRIVATEKEY;
+let serverAddress = process.env.SERVERADDRESS;
+let serverPrivateKey = process.env.SERVERPRIVATEKEY;
 // auth 권한 부여받은 계정(contract 이용가능 => msg.sender : owner)
 
 cron.schedule('*/5 * * * *', async function () {
@@ -24,20 +32,26 @@ cron.schedule('*/5 * * * *', async function () {
 
 const subManagerAddress = '';
 
-const {
-	nftContract,
-	nwtContract,
-	wtContract,
-	swapContract,
-	caver,
-	serverPrivateKey,
-	serverAddress,
-} = require('./caver_ContractConnect');
+// abi json
+const KIPWTABI = fs.readFileSync('server/abi/KIP_WTToken.json', 'utf-8');
+const KIPNWTABI = fs.readFileSync('server/abi/KIP_NWTToken.json', 'utf-8');
+const KIPNFTABI = fs.readFileSync('server/abi/KIP_NFTWT.json', 'utf8');
+const KIPSWAPABI = fs.readFileSync('server/abi/KIP_TokenSwap.json', 'utf-8');
+
+// abi parse
+const nftAbi = JSON.parse(KIPNFTABI);
+const wtAbi = JSON.parse(KIPWTABI); // wt token, exchange, vote
+const nwtAbi = JSON.parse(KIPNWTABI);
+const swapAbi = JSON.parse(KIPSWAPABI);
+
+//contract
+const nftContract = CavernewContract(caver, nftAbi, process.env.NFTTOKENCA); // nft
+const wtContract = CavernewContract(caver, wtAbi, process.env.WTTOKENCA); // wt
+const nwtContract = CavernewContract(caver, nwtAbi, process.env.NWTTOKENCA); // nwt
+const swapContract = CavernewContract(caver, swapAbi, process.env.SWAPCA); // swap
 
 module.exports = {
-	userJoin: async (req, res) => {
-		//지갑을 생성하고 지갑을 추가해주는 메서드
-
+	KIP_userJoin: async (req, res) => {
 		const account = await caver.wallet.keyring.generate();
 		caver.wallet.add(account);
 
@@ -86,7 +100,7 @@ module.exports = {
 		// console.log('ping')
 		//요청된 이메일을 데이터베이스에서 있는지 찾는다.
 		User.findOne({ email: req.body.email }, (err, user) => {
-			// console.log('user', user);
+			// console.log('user', user)
 			if (!user) {
 				return res.json({
 					loginSuccess: false,
@@ -98,7 +112,7 @@ module.exports = {
 			user.comparePassword(req.body.password, (err, isMatch) => {
 				// console.log('err',err)
 
-				// console.log('isMatch', isMatch);
+				// console.log('isMatch',isMatch)
 
 				if (!isMatch)
 					return res.json({
@@ -650,8 +664,8 @@ module.exports = {
 			}
 		);
 	},
-	videoUpload: async (req, res) => {
-		console.log(req.body);
+	KIP_videoUpload: async (req, res) => {
+		await caver.klay.accounts.wallet.add(serverPrivateKey);
 		const rawTitle = req.body.title;
 		const title = rawTitle
 			.slice(0, rawTitle.indexOf(']') + 1)
@@ -670,43 +684,26 @@ module.exports = {
 			const video = new Video(req.body);
 			video.save(async (err, doc) => {
 				//비디오가 save되면서 contentsRoom이란느 함수를 실행시키고
-				const data = await wtContract.methods
-					.createContent()
-					.encodeABI();
-				const nonce = await web3.eth.getTransactionCount(
-					serverAddress,
-					'latest'
-				);
-				const gasprice = await web3.eth.getGasPrice();
-				const gasPrice = Math.round(
-					Number(gasprice) + Number(gasprice / 10)
-				);
-
-				const tx = {
+				
+				
+				const txHash = await caver.klay.sendTransaction({
+					type: 'SMART_CONTRACT_EXECUTION',
 					from: serverAddress,
 					to: process.env.WTTOKENCA,
-					nonce: nonce,
-					gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
-					gasLimit: 5000000,
-					data: data,
-				};
-
-				const signedTx = await web3.eth.accounts.signTransaction(
-					tx,
-					serverPrivateKey
-				);
+					data: wtContract.methods
+					.createContent()
+					.encodeABI(),
+					gas: '300000',
+				})
 				console.log(
-					'---------- start videoUpload / createRoom tranction ------'
-				);
-				const hash = await web3.eth.sendSignedTransaction(
-					signedTx.rawTransaction
+					'---------- start videoUpload / createRoom finish ------'
 				);
 
-				const typesArray = [{ type: 'uint256', name: 'num' }];
-
-				const decodedParameters = web3.eth.abi.decodeParameters(
+				if (txHash) {
+					const typesArray = [{ type: 'uint256', name: 'num' }];
+				const decodedParameters = caver.klay.abi.decodeParameters(
 					typesArray,
-					hash.logs[0].data
+					txHash.logs[0].data
 				);
 				console.log(JSON.stringify(decodedParameters));
 				const num = decodedParameters.num;
@@ -725,7 +722,7 @@ module.exports = {
 					contentName: title,
 					contentNum: num,
 				});
-				console.log('content', num);
+				console.log('content가 개설되었습니다 :', num);
 				batting.save((err, info) => {
 					contents.save((err, info) => {
 						console.log(err);
@@ -734,6 +731,9 @@ module.exports = {
 						res.status(200).json({ success: true });
 					});
 				});
+				}
+				
+				
 				//실행이 끝나면 DB에 방이 개설됬다고 열어주자.
 			});
 		} else {
@@ -741,46 +741,31 @@ module.exports = {
 			const video = new Video(req.body);
 			video.save(async (err, doc) => {
 				//비디오가 save되면서 contentsRoom이란느 함수를 실행시키고
-				const data = await wtContract.methods
-					.openSerialContent(result[0].contentsNum)
-					.encodeABI();
-				const nonce = await web3.eth.getTransactionCount(
-					serverAddress,
-					'latest'
-				);
-				const gasprice = await web3.eth.getGasPrice();
-				const gasPrice = Math.round(
-					Number(gasprice) + Number(gasprice / 10)
-				);
-
-				const tx = {
-					from: serverAddress,
-					to: process.env.WTTOKENCA,
-					nonce: nonce,
-					gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
-					gasLimit: 5000000,
-					data: data,
-				};
-
-				const signedTx = await web3.eth.accounts.signTransaction(
-					tx,
-					serverPrivateKey
-				);
-				const hash = await web3.eth.sendSignedTransaction(
-					signedTx.rawTransaction
-				);
-
-				const batting = new Batting({
-					contentsName: title,
-					subTitle: subTitle,
-					contentsNum: result[0].contentsNum,
-					serial: Number(serialNo),
-				});
-
-				batting.save((err, info) => {
-					if (err) return res.json({ success: false, err });
-					res.status(200).json({ success: true });
-				});
+				
+					const txHash = await caver.klay.sendTransaction({
+						type: 'SMART_CONTRACT_EXECUTION',
+						from: serverAddress,
+						to: process.env.WTTOKENCA,
+						data: wtContract.methods
+						.openSerialContent(result[0].contentsNum)
+						.encodeABI(),
+						gas: '300000',
+					})
+				
+				if (txHash) {
+					const batting = new Batting({
+						contentsName: title,
+						subTitle: subTitle,
+						contentsNum: result[0].contentsNum,
+						serial: Number(serialNo),
+					});
+	
+					batting.save((err, info) => {
+						if (err) return res.json({ success: false, err });
+						res.status(200).json({ success: true });
+					}); 
+				}
+				
 
 				// if (err) return res.json({ success: false, err });
 				// res.status(200).json({ success: true });
