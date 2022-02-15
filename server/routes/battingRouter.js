@@ -27,8 +27,7 @@ router.post('/contentList', auth, contentList);
 router.post('/closeSerial', auth, closeSerial);
 router.post('/closeContent', closeContent);
 router.post('/payOut', payOut);
-
-    
+   
 
    
 

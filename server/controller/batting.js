@@ -13,7 +13,10 @@ const web3 = new Web3(
 		'https://ropsten.infura.io/v3/c2cc008afe67457fb9a4ee32408bcac6'
 	)
 );
-// const web3 = new Web3(new Web3.providers.HttpProvider('HTTP://127.0.0.1:7545'));
+//const web3 = new Web3(new Web3.providers.HttpProvider('HTTP://127.0.0.1:7545'));
+
+const Caver = require('caver-js')
+const caver = new Caver('https://your.en.url:8651/')
 const fs = require('fs');
 
 // const { newContract, infuraWeb3Provider } = require('./index');

@@ -49,6 +49,7 @@ app.use(express.static('client/build'));
 //current api/contract/mypage path is error
 app.post('/', myPage);
 
+
 const port = 5000;
 
 app.get('*', (req, res) => {
