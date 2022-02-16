@@ -8,7 +8,6 @@ const { Vote } = require('../models/Vote');
 const Subscriber = require('../models/Subscriber');
 const cron = require('node-cron');
 
-
 const { json } = require('body-parser');
 
 // auth 권한 부여받은 계정(contract 이용가능 => msg.sender : owner)
@@ -20,9 +19,15 @@ cron.schedule('*/5 * * * *', async function () {
 	// console.log(serverAddress, serverPrivateKey);
 });
 
-
-const { wtContract, nwtContract, nftContract, swapContract, caver, serverPrivateKey, serverAddress } = require('./caver_ContractConnect');
-
+const {
+	wtContract,
+	nwtContract,
+	nftContract,
+	swapContract,
+	caver,
+	serverPrivateKey,
+	serverAddress,
+} = require('./caver_ContractConnect');
 
 module.exports = {
 	KIP_userJoin: async (req, res) => {
@@ -146,11 +151,11 @@ module.exports = {
 	},
 	// 각자 DB 사용 시 주석 제거
 	userTokens: async (req, res) => {
-		console.log('aa')
+
 		try {
 			const user = await User.findOne({ _id: req.user._id }).exec(); // login 되어 있는 user 정보확인
 			const userPK = user.publicKey; // user 의 주소
-			console.log(user)
+
 			try {
 				const wtAmount = await wtContract.methods
 					.balanceOf(userPK)
@@ -158,7 +163,6 @@ module.exports = {
 				const nwtAmount = await nwtContract.methods
 					.balanceOf(userPK)
 					.call(); // 유저의 nwt 보유량
-				console.log(wtAmount)
 				const userTokens = {
 					wtToken: caver.utils.fromPeb(wtAmount, 'KLAY'),
 					nwtToken: caver.utils.fromPeb(nwtAmount, 'KLAY'),
@@ -172,6 +176,7 @@ module.exports = {
 				});
 			}
 		} catch (err) {
+			console.log(err);
 			res.json({ success: false, message: 'DB에 오류 생김' });
 		}
 	},
@@ -206,7 +211,7 @@ module.exports = {
 		// );
 
 		// nonce 값
-		const nonce = await web3.eth.getTransactionCount(
+		const nonce = await caver.klay.getTransactionCount(
 			serverAddress,
 			'latest'
 		);
@@ -216,26 +221,24 @@ module.exports = {
 			.exchange(userPK.publicKey, parseInt(wtAmount))
 			.encodeABI();
 
-		const gasprice = await web3.eth.getGasPrice();
+		const gasprice = await caver.klay.getGasPrice();
 		const gasPrice = Math.round(Number(gasprice) + Number(gasprice / 5));
 		// transaction
 		const tx = {
 			from: serverAddress,
 			to: process.env.WTTOKENCA,
-			nonce: nonce,
-			gasPrice: gasPrice,
-			gas: 5000000,
+			gas: '300000',
 			data: data,
 		};
 
-		const signedTx = await web3.eth.accounts.signTransaction(
+		const signedTx = await caver.klay.accounts.signTransaction(
 			tx,
 			serverPrivateKey
 		);
 
 		try {
 			// 블록체인 web3 처리
-			await web3.eth
+			await caver.klay
 				.sendSignedTransaction(signedTx.rawTransaction) // sendTranscation
 				.on('receipt', (txHash) => {
 					console.log(txHash);
@@ -346,7 +349,8 @@ module.exports = {
 									)
 									.encodeABI();
 
-								const gasPrice3 = await caver.klay.getGasPrice();
+								const gasPrice3 =
+									await caver.klay.getGasPrice();
 
 								const tx3 = {
 									from: serverAddress,
