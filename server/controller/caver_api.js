@@ -221,8 +221,8 @@ module.exports = {
 			.exchange(userPK.publicKey, parseInt(wtAmount))
 			.encodeABI();
 
-		const gasprice = await caver.klay.getGasPrice();
-		const gasPrice = Math.round(Number(gasprice) + Number(gasprice / 5));
+		// const gasprice = await caver.klay.getGasPrice();
+		// const gasPrice = Math.round(Number(gasprice) + Number(gasprice / 5));
 		// transaction
 		const tx = {
 			from: serverAddress,
@@ -403,37 +403,30 @@ module.exports = {
 	serverWT_faucet: async (req, res) => {
 		// web3.eth.accounts.wallet.add(serverPrivateKey);
 
-		// nonce 값
-		const nonce = await web3.eth.getTransactionCount(
-			serverAddress,
-			'latest'
-		);
-
 		// 실행할 컨트랙트 함수 데이터
 		const data = await wtContract.methods
-			.mintToken(serverAddress, web3.utils.toWei('1000000', 'ether')) //1e18  100000000
+			.mintToken(serverAddress, caver.utils.toPeb('1000000', 'KLAY')) //1e18  100000000
 			.encodeABI();
 
-		const gasPrice = await web3.eth.getGasPrice();
+		// const gasPrice = await web3.eth.getGasPrice();
 
 		// transaction
 		const tx = {
 			from: serverAddress,
 			to: process.env.WTTOKENCA,
-			nonce: nonce,
-			gasPrice: gasPrice,
-			gas: 210000,
+			// gasPrice: gasPrice,
+			gas: '300000',
 			data: data,
 		};
 
 		// transaction 서명
-		const signedTx = await web3.eth.accounts.signTransaction(
+		const signedTx = await caver.klay.accounts.signTransaction(
 			tx,
 			serverPrivateKey
 		);
 
 		try {
-			await web3.eth
+			await caver.klay
 				.sendSignedTransaction(signedTx.rawTransaction)
 				.on('receipt', (txHash) => {
 					console.log(txHash);
@@ -453,44 +446,22 @@ module.exports = {
 		console.log('aa');
 		// web3.eth.accounts.wallet.add(serverPrivateKey);
 
-		// nonce 값
-		const nonce = await caver.klay.getTransactionCount(
-			serverAddress,
-			'latest'
-		);
-
-		// const balanceOf = await nwtContract.methods
-		// 	.balanceOf(serverAddress)
-		// 	.call();
-
-		// console.log(typeof balanceOf);
-
 		// 실행할 컨트랙트 함수 데이터
 		const data = await nwtContract.methods
 			.mintToken(
 				serverAddress,
-				caver.utils.toWei('100000', 'ether')
+				caver.utils.toPeb('100000', 'KLAY')
 				// process.env.NFTTOKENCA //1e18  100000000
 			)
 			.encodeABI();
-
-		const gasPrice = await caver.klay.getGasPrice();
-
-		// const balanceOf = await nwtContract.methods
-		// 	.balanceOf(serverAddress)
-		// 	.call();
-		// const test1 = web3.utils.fromWei('100000', 'ether');
-		// const test2 = web3.utils.toWei('100000', 'ether');
-		// console.log('test1 : ', test1);
-		// console.log('test2 : ', test2);
 
 		// transaction
 		const tx = {
 			from: serverAddress,
 			to: process.env.NWTTOKENCA,
-			nonce: nonce,
-			gasPrice: gasPrice, // 우리가 사용하는 양
-			gas: 500000, // 최대한 사용가능한 한도 210000
+			// nonce: nonce,
+			// gasPrice: gasPrice, // 우리가 사용하는 양
+			gas: '300000', // 최대한 사용가능한 한도 210000
 			data: data,
 		};
 
