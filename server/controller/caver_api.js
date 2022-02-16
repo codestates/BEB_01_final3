@@ -697,7 +697,7 @@ module.exports = {
 						txHash.logs[0].data
 					);
 					console.log(JSON.stringify(decodedParameters));
-					const num = decodedParameters.num;
+					const num = decodedParameters.num-1;
 
 					const video = await Video.find({ title: rawTitle }).exec();
 					console.log(video);

@@ -17,19 +17,21 @@ const { wtContract, nwtContract, nftContract, swapContract, caver, serverPrivate
 module.exports = {
 	KIP_vote: async (req, res) => {
 
-       //대납 계정자 feePayer
-		//const feePayer = caver.klay.accounts.wallet.add('0x{private key}')
+       //대납 계정자 feePayer(서버계정)
+		
+		//실제로 트랜잭션을 날리는 계정!
 		const sender = req.user.publicKey
-		const senderPk = '0xf830e4e084e3c6ce30a065ed17565d24a0e88fd331ce8261354e8455e93656a9';
-
+		const rawData = await User.findOne({ publicKey: sender }).exec();
+		const senderPk = rawData.privateKey
+		//const senderPk = await caver.rpc.klay.getAccount(sender);
 		//투표한 기록이 있는지 확인해주는 유효성검사 물론 블록체인에서도 검사하지만 두번유효성검사를 해줌으로써 안전에 기여하자.
 		
 		const duplicate = await Vote.findOne({
 			contentName: req.body.title,
 			userAddress: req.user.publicKey,
 		}).exec();
-		console.log(duplicate);
-		if (duplicate === null) {
+		
+		if (duplicate !== null) {
 			return res.json({
 				fail: false,
 				detail: '이미 투표를 완료했습니다.',
@@ -57,7 +59,7 @@ module.exports = {
 						.encodeABI();
 					
 			const tx = {
-				//type: 'FEE_DELEGATED_SMART_CONTRACT_EXECUTION',
+				type: 'FEE_DELEGATED_SMART_CONTRACT_EXECUTION',
 				from: sender,
 				to: process.env.WTTOKENCA,
 				data: data,
@@ -66,10 +68,9 @@ module.exports = {
 		//user is signed			
 		const signedTx = await caver.klay.accounts.signTransaction(tx, senderPk);
 		//feePayer is signed
-		// const feePayerSigned = await caver.klay.accounts.feePayerSignTransaction(signedTx.rawTransaction, serverAddress, serverPrivateKey);
-		const hash = await caver.klay.sendSignedTransaction(signedTx.rawTransaction)
-	    // console.log(feePayerSigned);
-		//const txHash = await caver.klay.sendSignedTransaction(feePayerSigned.rawTransaction)
+		 const feePayerSigned = await caver.klay.accounts.feePayerSignTransaction(signedTx.rawTransaction, serverAddress, serverPrivateKey);
+		//const hash = await caver.klay.sendSignedTransaction(signedTx.rawTransaction)
+		 const hash = await caver.klay.sendSignedTransaction(feePayerSigned.rawTransaction)
           
 					
 					console.log(hash.logs[0].data);
@@ -95,18 +96,18 @@ module.exports = {
 					const num = decodedParameters.roomNumber;
 					console.log(num);
 
-					// const vote = new Vote(info);
-					// vote.save((err, info) => {
-					// 	console.log('db저장성공', info);
-					// 	res.json({ success: true, detail: 'success db store' });
+					const vote = new Vote(info);
+					vote.save((err, info) => {
+						console.log('db저장성공', info);
+						res.json({ success: true, detail: 'success db store' });
 
-					// 	if (err) {
-					// 		return res.json({
-					// 			fail: false,
-					// 			detail: 'failed store db',
-					// 		});
-					// 	}
-					// });
+						if (err) {
+							return res.json({
+								fail: false,
+								detail: 'failed store db',
+							});
+						}
+					});
 				} catch (e) {
 					console.log('blockChain ERR : ' + e);
 					res.json({ fail: false, detail: 'failed blockChain' });
