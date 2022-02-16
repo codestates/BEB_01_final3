@@ -15,14 +15,22 @@ const subManagerAddress = '';
 const { wtContract, nwtContract, nftContract, swapContract, caver, serverPrivateKey, serverAddress } = require('./caver_ContractConnect');
 
 module.exports = {
-	vote: async (req, res) => {
+	KIP_vote: async (req, res) => {
+
+       //대납 계정자 feePayer(서버계정)
+		
+		//실제로 트랜잭션을 날리는 계정!
+		const sender = req.user.publicKey
+		const rawData = await User.findOne({ publicKey: sender }).exec();
+		const senderPk = rawData.privateKey
+		//const senderPk = await caver.rpc.klay.getAccount(sender);
 		//투표한 기록이 있는지 확인해주는 유효성검사 물론 블록체인에서도 검사하지만 두번유효성검사를 해줌으로써 안전에 기여하자.
-		console.log(req.body.title);
+		
 		const duplicate = await Vote.findOne({
 			contentName: req.body.title,
 			userAddress: req.user.publicKey,
 		}).exec();
-		console.log(duplicate);
+		
 		if (duplicate !== null) {
 			return res.json({
 				fail: false,
@@ -30,35 +38,7 @@ module.exports = {
 			});
 		} else {
 			//approveToken 함수 작성
-			const data = await nwtContract.methods
-				.approveToken(req.user.publicKey, serverAddress)
-				.encodeABI();
-			const nonce = await web3.eth.getTransactionCount(
-				serverAddress,
-				'latest'
-			);
-			const gasprice = await web3.eth.getGasPrice();
-			const gasPrice = Math.round(
-				Number(gasprice) + Number(gasprice / 10)
-			);
-			const tx = {
-				from: serverAddress,
-				to: process.env.WTTOKENCA,
-				nonce: nonce,
-				gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
-				gasLimit: 5000000,
-				data: data,
-			};
-			const signedTx = await web3.eth.accounts.signTransaction(
-				tx,
-				serverPrivateKey
-			);
-			console.log('----- approveToken function start ----');
-			const approveHash = await web3.eth.sendSignedTransaction(
-				signedTx.rawTransaction
-			);
-
-			if (approveHash) {
+		
 				try {
 					const content = await Batting.find({
 						contentsName: req.body.title,
@@ -73,58 +53,24 @@ module.exports = {
 					info.select = req.body.select;
 					info.amount = req.body.amount;
 
+					console.log(info.contentNum,info.select,"제발",sender);
 					const data = await wtContract.methods
-						.vote(info.contentNum, info.userAddress, info.select)
+						.vote(info.contentNum, info.select)
 						.encodeABI();
-					const nonce = await web3.eth.getTransactionCount(
-						serverAddress,
-						'latest'
-					);
-					const gasprice = await web3.eth.getGasPrice();
-					const gasPrice = Math.round(
-						Number(gasprice) + Number(gasprice / 10)
-					);
-
-					const tx = {
-						from: serverAddress,
-						to: process.env.WTTOKENCA,
-						nonce: nonce,
-						gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
-						gasLimit: 5000000,
-						data: data,
-					};
-
-					const signedTx = await web3.eth.accounts.signTransaction(
-						tx,
-						serverPrivateKey
-					);
-					console.log('----- vote function start ----');
-					const hash = await web3.eth.sendSignedTransaction(
-						signedTx.rawTransaction
-					);
-					console.log(hash.logs[0].data);
-					console.log(hash.logs[0].topics);
-					const typesArray = [
-						{
-							type: 'uint256',
-							name: 'roomNumber',
-							type: 'address',
-							name: 'user',
-							type: 'string',
-							name: 'select',
-							type: 'uint256',
-							name: 'amount',
-						},
-					];
-
-					const decodedParameters = web3.eth.abi.decodeParameters(
-						typesArray,
-						hash.logs[0].data
-					);
-					console.log(JSON.stringify(decodedParameters));
-					const num = decodedParameters.roomNumber;
-					console.log(num);
-
+					
+			const tx = {
+				type: 'FEE_DELEGATED_SMART_CONTRACT_EXECUTION',
+				from: sender,
+				to: process.env.WTTOKENCA,
+				data: data,
+				gas: '300000',
+			}
+		//user is signed			
+		const signedTx = await caver.klay.accounts.signTransaction(tx, senderPk);
+		//feePayer is signed
+		 const feePayerSigned = await caver.klay.accounts.feePayerSignTransaction(signedTx.rawTransaction, serverAddress, serverPrivateKey);
+		//const hash = await caver.klay.sendSignedTransaction(signedTx.rawTransaction)
+		 const hash = await caver.klay.sendSignedTransaction(feePayerSigned.rawTransaction)
 					const vote = new Vote(info);
 					vote.save((err, info) => {
 						console.log('db저장성공', info);
@@ -141,7 +87,7 @@ module.exports = {
 					console.log('blockChain ERR : ' + e);
 					res.json({ fail: false, detail: 'failed blockChain' });
 				}
-			}
+			
 		}
 	},
 	KIP_contentList: async (req, res) => {
@@ -150,9 +96,10 @@ module.exports = {
 			const info = await Batting.find({
 				contentsName: contentName,
 			}).exec();
-
+			const isContent = await Contents.find({ contentName }).exec();
+            
 			if (info[0] !== undefined) {
-				res.json({ success: true, info });
+				res.json({ success: true, info, isContent });
 			}
 		} catch (e) {
 			console.log('err발생 : ' + e);
@@ -246,20 +193,30 @@ module.exports = {
 		//Second. if we will be found data, we will change status
 		const isCheck = await Batting.findOneAndUpdate(
 			{ contentsName, serial },
-			{ status: false }
+			{ status : false }
 		).exec();
 
-		console.log(isCheck);
+	
 		try {
 			if (isCheck !== null) {
-				const txHash = await caver.klay.sendTransaction({
-					type: 'SMART_CONTRACT_EXECUTION',
-					from: serverAddress,
+				// const txHash = await caver.klay.sendTransaction({
+				// 	type: 'SMART_CONTRACT_EXECUTION',
+				// 	from: serverAddress,
+				// 	to: process.env.WTTOKENCA,
+				// 	data: wtContract.methods
+				// 	.closeSerialContent(isCheck.contentsNum).encodeABI(),
+				// 	gas: '300000',
+				// })
+
+			const tx = {
+				from: serverAddress,
 					to: process.env.WTTOKENCA,
 					data: wtContract.methods
 					.closeSerialContent(isCheck.contentsNum).encodeABI(),
 					gas: '300000',
-				})
+			}
+		const signedTx = await caver.klay.accounts.signTransaction(tx, serverPrivateKey);
+		const txHash = await caver.klay.sendSignedTransaction(signedTx.rawTransaction)
 				
 				console.log(
 					'----- closeContentSerial' +
@@ -290,13 +247,15 @@ module.exports = {
 	KIP_closeContent: async (req, res) => {
 		const contentNum = req.body.contentNum;
 	
-			const txHash = await caver.klay.sendTransaction({
-				type: 'SMART_CONTRACT_EXECUTION',
+		
+			const tx = {
 				from: serverAddress,
 				to: process.env.WTTOKENCA,
 				data: wtContract.methods.closeContent(contentNum).encodeABI(),
 				gas: '300000',
-			})
+			}
+		const signedTx = await caver.klay.accounts.signTransaction(tx, serverPrivateKey);
+		const txHash = await caver.klay.sendSignedTransaction(signedTx.rawTransaction)
 		
 		console.log('----- closeContent' + contentNum + 'function finish ----');
 		
@@ -316,22 +275,34 @@ module.exports = {
 	KIP_payOut: async (req, res) => {
 		const contentNum = req.body.contentNum;
 		const answer = req.body.answer;
+		console.log(contentNum,answer);
 	
-			const txHash = await caver.klay.sendTransaction({
-				type: 'SMART_CONTRACT_EXECUTION',
+			const tx = {
 				from: serverAddress,
 				to: process.env.WTTOKENCA,
 				data: await wtContract.methods
 				.payOut(answer, contentNum)
 				.encodeABI(),
 				gas: '300000',
-			})
-		console.log('----- payOut' + contentNum + 'function finish ----');
+			}
 		
-		if (txHash) {
-			console.log(hash.logs[0].data);
-			console.log(hash.logs[0].topics);
-			res.status(201).json({ success: true });
+		try {
+			const signedTx = await caver.klay.accounts.signTransaction(tx, serverPrivateKey);
+			const hash = await caver.klay.sendSignedTransaction(signedTx.rawTransaction)
+		
+		
+			console.log('----- payOut' + contentNum + 'function finish ----');
+		
+			if (hash) {
+				console.log(hash.logs[0].data);
+				console.log(hash.logs[0].topics);
+				await Contents.findOneAndUpdate({ contentNum }, { isPayout: false }).exec();
+				res.status(201).json({ success: true });
+			}
+		} catch (e) {
+			console.log("err확인", e);
+			res.json({ success: false });
 		}
+		
 	},
 };

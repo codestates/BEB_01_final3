@@ -60,10 +60,10 @@ function NFTbuy({ nftlist }) {
       console.log('좋아요?');
       check ? setCheck(false) : setCheck(true);
     }
-    function BuyNFT(tokenId) {
+    function BuyNFT(tokenId,price) {
        console.log(tokenId);
       setLoading(true)
-      axios.post('/api/contract/buyNFT',{tokenId:tokenId})
+      axios.post('/api/contract/buyNFT',{tokenId:tokenId,price})
       .then((res) => {
               
         
@@ -110,7 +110,7 @@ function NFTbuy({ nftlist }) {
                 </Card.Body>
                    <Card.Body>
                     <div>
-                      <Button variant="warning" style={{fontWeight:"bold"}}  onClick={()=>{BuyNFT(el.tokenId)}} >구매하기</Button>
+                      <Button variant="warning" style={{fontWeight:"bold"}}  onClick={()=>{BuyNFT(el.tokenId,el.price)}} >구매하기</Button>
                     </div> 
                   <div style={{width:"55%"}}></div>
                   <LikeDisLike userId={localStorage.getItem('userId')} nftId={ el._id } />

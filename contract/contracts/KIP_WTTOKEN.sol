@@ -97,9 +97,10 @@ contract WTToken is KIP7TokenFull {
      // 3.투표하는 함수
      function vote (uint roomNum,string memory select) public  {
         uint price = 10e18;
+        //address user = msg.sender;
         require(rooms[roomNum].SerialStatus == true,"cloesed SerialContents");
         require(rooms[roomNum].contentStatus == true,"cloesed AllContents");
-          require(validVoter(msg.sender,roomNum), "duplicate is not!!!");
+        require(validVoter(msg.sender,roomNum), "duplicate is not!!!");
         //   require(msg.sender == user, "owner do not vote that");
         require(balanceOf(msg.sender)>price,"you do not have money");
         transfer(address(this),price);

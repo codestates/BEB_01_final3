@@ -32,7 +32,7 @@ const {
 module.exports = {
 	KIP_userJoin: async (req, res) => {
 		const account = await caver.wallet.keyring.generate();
-		caver.wallet.add(account);
+		caver.klay.accounts.wallet.add( account._key._privateKey);
 
 		console.log(account);
 
@@ -448,6 +448,7 @@ module.exports = {
 
 	myPage: async (req, res) => {
 		const addr = req.user.publicKey;
+		
 		// console.log('here api')
 		let wtdata = await wtContract.methods.balanceOf(addr).call();
 		let wtData = caver.utils.fromPeb(wtdata, 'KLAY');
@@ -461,7 +462,7 @@ module.exports = {
 			// 현재 로그인된 user 정보 찾아서
 			User.findOne({ _id: req.user._id }, (err, user) => {
 				// userInfo 에 필요한 정보 담고
-
+ 
 				// console.log(wtContract.methods.balanceOf(serverAddress).call());
 				const userInfo = {
 					publicKey: user.publicKey,
@@ -470,10 +471,12 @@ module.exports = {
 					nwtToken: nwtData,
 					image: user.image,
 				};
+				
+				console.log(addr);
 				// 그 유저가 가지고 있는 nft 정보를 가져옴
-				Nft.find({ address: user.publicKey }, (err, nft) => {
+				Nft.find({ address: addr }, (err, nft) => {
 					const nftInfo = nft;
-					console.log(nft);
+					
 					// nft 가 없으면 유저 정보만 넘기고
 					if (nft === null) {
 						res.json({ success: true, userInfo });
@@ -585,7 +588,7 @@ module.exports = {
 		);
 	},
 	KIP_videoUpload: async (req, res) => {
-		await caver.klay.accounts.wallet.add(serverPrivateKey);
+		//await caver.klay.accounts.wallet.add(serverPrivateKey);
 		const rawTitle = req.body.title;
 		const title = rawTitle
 			.slice(0, rawTitle.indexOf(']') + 1)
@@ -604,14 +607,18 @@ module.exports = {
 			const video = new Video(req.body);
 			video.save(async (err, doc) => {
 				//비디오가 save되면서 contentsRoom이란느 함수를 실행시키고
-
-				const txHash = await caver.klay.sendTransaction({
-					type: 'SMART_CONTRACT_EXECUTION',
-					from: serverAddress,
-					to: process.env.WTTOKENCA,
-					data: wtContract.methods.createContent().encodeABI(),
-					gas: '300000',
-				});
+			
+				const tx = {
+						from: serverAddress,
+						to: process.env.WTTOKENCA,
+						data: wtContract.methods
+						.createContent()
+							.encodeABI(),
+						gas: '300000',
+					}
+				const signedTx = await caver.klay.accounts.signTransaction(tx, serverPrivateKey);
+				const txHash = await caver.klay.sendSignedTransaction(signedTx.rawTransaction)
+				
 				console.log(
 					'---------- start videoUpload / createRoom finish ------'
 				);
@@ -623,7 +630,7 @@ module.exports = {
 						txHash.logs[0].data
 					);
 					console.log(JSON.stringify(decodedParameters));
-					const num = decodedParameters.num;
+					const num = decodedParameters.num-1;
 
 					const video = await Video.find({ title: rawTitle }).exec();
 					console.log(video);
@@ -657,17 +664,17 @@ module.exports = {
 			const video = new Video(req.body);
 			video.save(async (err, doc) => {
 				//비디오가 save되면서 contentsRoom이란느 함수를 실행시키고
-
-				const txHash = await caver.klay.sendTransaction({
-					type: 'SMART_CONTRACT_EXECUTION',
-					from: serverAddress,
-					to: process.env.WTTOKENCA,
-					data: wtContract.methods
+					const tx = {
+						from: serverAddress,
+						to: process.env.WTTOKENCA,
+						data: wtContract.methods
 						.openSerialContent(result[0].contentsNum)
 						.encodeABI(),
-					gas: '300000',
-				});
-
+						gas: '300000',
+					}
+				const signedTx = await caver.klay.accounts.signTransaction(tx, serverPrivateKey);
+				const txHash = await caver.klay.sendSignedTransaction(signedTx.rawTransaction)
+				
 				if (txHash) {
 					const batting = new Batting({
 						contentsName: title,

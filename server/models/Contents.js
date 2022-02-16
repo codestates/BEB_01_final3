@@ -13,6 +13,10 @@ const contentsSchema = mongoose.Schema(
       type: Boolean,
       default: true
     },
+    isPayout: {
+      type: Boolean,
+      default: true
+    },
       
   },
   { timestamps: true } //만든 날짜와 update시 날짜가 표시가 된다.

@@ -91,31 +91,9 @@ transform: translateY(5px);
 	}
 	
 
-	const closeContent = (info) => {
-		setIsLoading(true);
 
-		axios.post("/api/bat/closeContent", { contentNum: info.contentNum })
-			.then(res => {
-				console.log(res);
-				setIsLoading(false);
-			})
-			
-
-	}
-	const payOut = (info) => {
-		setIsLoading(true);
-
-		axios.post("/api/bat/payOut", { contentNum: info.contentNum, answer:'ㅁㄹㅇ'})
-			.then(res => {
-				console.log(1);
-				console.log(res);
-				setIsLoading(false);
-			})
-					
-
-	}
 	function Auction(contentName,contentNum) {
-       console.log(1,contentName,contentNum);
+   
 		if (modalShow) {
 		  setModalShow(false);
 		} else {
