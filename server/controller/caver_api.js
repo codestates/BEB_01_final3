@@ -151,7 +151,7 @@ module.exports = {
 	},
 	// 각자 DB 사용 시 주석 제거
 	userTokens: async (req, res) => {
-		console.log(req.user._id);
+
 		try {
 			const user = await User.findOne({ _id: req.user._id }).exec(); // login 되어 있는 user 정보확인
 			const userPK = user.publicKey; // user 의 주소
@@ -287,8 +287,6 @@ module.exports = {
 			from: serverAddress,
 			to: process.env.WTTOKENCA,
 			nonce: nonce1,
-			gasPrice: gasPrice1,
-			// gasPrice: gasPrice1,
 			gas: 500000,
 			data: data1,
 		};
@@ -404,17 +402,17 @@ module.exports = {
 		// web3.eth.accounts.wallet.add(serverPrivateKey);
 
 		// nonce 값
-		const nonce = await web3.eth.getTransactionCount(
+		const nonce = await caver.klay.getTransactionCount(
 			serverAddress,
 			'latest'
 		);
 
 		// 실행할 컨트랙트 함수 데이터
 		const data = await wtContract.methods
-			.mintToken(serverAddress, web3.utils.toWei('1000000', 'ether')) //1e18  100000000
+			.mintToken(serverAddress, caver.utils.toWei('1000000', 'ether')) //1e18  100000000
 			.encodeABI();
 
-		const gasPrice = await web3.eth.getGasPrice();
+		const gasPrice = await caver.klay.getGasPrice();
 
 		// transaction
 		const tx = {
@@ -427,13 +425,13 @@ module.exports = {
 		};
 
 		// transaction 서명
-		const signedTx = await web3.eth.accounts.signTransaction(
+		const signedTx = await caver.klay.accounts.signTransaction(
 			tx,
 			serverPrivateKey
 		);
 
 		try {
-			await web3.eth
+			await caver.klay
 				.sendSignedTransaction(signedTx.rawTransaction)
 				.on('receipt', (txHash) => {
 					console.log(txHash);

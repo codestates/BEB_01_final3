@@ -56,7 +56,7 @@ module.exports = {
 			}
 			const signedTx = await caver.klay.accounts.signTransaction(tx, serverPrivateKey)
 			const txHash = await caver.klay.sendSignedTransaction(signedTx.rawTransaction)
-			
+
 				const tokenId = caver.utils.hexToNumber(txHash.logs[0].topics[3]);
 				const nft = new Nft();
 				nft.address = serverAddress;
