@@ -7,7 +7,7 @@ const { Vote } = require('../models/Vote');
 const { auth } = require('../middleware/auth');
 
 const {vote,contentList,allowance,closeSerial,closeContent,payOut } = require('../controller/batting');
-const {KIP_allowance,KIP_contentList,KIP_closeSerial,KIP_closeContent,KIP_payOut } = require('../controller/caver_batting');
+const {KIP_vote,KIP_allowance,KIP_contentList,KIP_closeSerial,KIP_closeContent,KIP_payOut } = require('../controller/caver_batting');
 
 // const {vote,contentList,allowance,closeSerial,closeContent,payOut } = require('../controller/batting');
 //const {vote,contentList,allowance,closeSerial,closeContent,payOut } = require('../controller/caver_batting');
@@ -28,7 +28,7 @@ router.get('/', async (req, res) => {
 
 router.post("/allowance", KIP_allowance);
  
-router.post('/vote', auth, vote);
+router.post('/vote', auth, KIP_vote);
 router.post('/contentList', auth, KIP_contentList);
 router.post('/closeSerial', auth, KIP_closeSerial);
 router.post('/closeContent', KIP_closeContent);

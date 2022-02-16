@@ -15,50 +15,28 @@ const subManagerAddress = '';
 const { wtContract, nwtContract, nftContract, swapContract, caver, serverPrivateKey, serverAddress } = require('./caver_ContractConnect');
 
 module.exports = {
-	vote: async (req, res) => {
+	KIP_vote: async (req, res) => {
+
+       //대납 계정자 feePayer
+		//const feePayer = caver.klay.accounts.wallet.add('0x{private key}')
+		const sender = req.user.publicKey
+		const senderPk = '0xf830e4e084e3c6ce30a065ed17565d24a0e88fd331ce8261354e8455e93656a9';
+
 		//투표한 기록이 있는지 확인해주는 유효성검사 물론 블록체인에서도 검사하지만 두번유효성검사를 해줌으로써 안전에 기여하자.
-		console.log(req.body.title);
+		
 		const duplicate = await Vote.findOne({
 			contentName: req.body.title,
 			userAddress: req.user.publicKey,
 		}).exec();
 		console.log(duplicate);
-		if (duplicate !== null) {
+		if (duplicate === null) {
 			return res.json({
 				fail: false,
 				detail: '이미 투표를 완료했습니다.',
 			});
 		} else {
 			//approveToken 함수 작성
-			const data = await nwtContract.methods
-				.approveToken(req.user.publicKey, serverAddress)
-				.encodeABI();
-			const nonce = await web3.eth.getTransactionCount(
-				serverAddress,
-				'latest'
-			);
-			const gasprice = await web3.eth.getGasPrice();
-			const gasPrice = Math.round(
-				Number(gasprice) + Number(gasprice / 10)
-			);
-			const tx = {
-				from: serverAddress,
-				to: process.env.WTTOKENCA,
-				nonce: nonce,
-				gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
-				gasLimit: 5000000,
-				data: data,
-			};
-			const signedTx = await web3.eth.accounts.signTransaction(
-				tx,
-				serverPrivateKey
-			);
-			console.log('----- approveToken function start ----');
-			const approveHash = await web3.eth.sendSignedTransaction(
-				signedTx.rawTransaction
-			);
-
-			if (approveHash) {
+		
 				try {
 					const content = await Batting.find({
 						contentsName: req.body.title,
@@ -73,35 +51,27 @@ module.exports = {
 					info.select = req.body.select;
 					info.amount = req.body.amount;
 
+					console.log(info.contentNum,info.select,"제발",sender);
 					const data = await wtContract.methods
-						.vote(info.contentNum, info.userAddress, info.select)
+						.vote(info.contentNum, info.select)
 						.encodeABI();
-					const nonce = await web3.eth.getTransactionCount(
-						serverAddress,
-						'latest'
-					);
-					const gasprice = await web3.eth.getGasPrice();
-					const gasPrice = Math.round(
-						Number(gasprice) + Number(gasprice / 10)
-					);
-
-					const tx = {
-						from: serverAddress,
-						to: process.env.WTTOKENCA,
-						nonce: nonce,
-						gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
-						gasLimit: 5000000,
-						data: data,
-					};
-
-					const signedTx = await web3.eth.accounts.signTransaction(
-						tx,
-						serverPrivateKey
-					);
-					console.log('----- vote function start ----');
-					const hash = await web3.eth.sendSignedTransaction(
-						signedTx.rawTransaction
-					);
+					
+			const tx = {
+				//type: 'FEE_DELEGATED_SMART_CONTRACT_EXECUTION',
+				from: sender,
+				to: process.env.WTTOKENCA,
+				data: data,
+				gas: '300000',
+			}
+		//user is signed			
+		const signedTx = await caver.klay.accounts.signTransaction(tx, senderPk);
+		//feePayer is signed
+		// const feePayerSigned = await caver.klay.accounts.feePayerSignTransaction(signedTx.rawTransaction, serverAddress, serverPrivateKey);
+		const hash = await caver.klay.sendSignedTransaction(signedTx.rawTransaction)
+	    // console.log(feePayerSigned);
+		//const txHash = await caver.klay.sendSignedTransaction(feePayerSigned.rawTransaction)
+          
+					
 					console.log(hash.logs[0].data);
 					console.log(hash.logs[0].topics);
 					const typesArray = [
@@ -117,7 +87,7 @@ module.exports = {
 						},
 					];
 
-					const decodedParameters = web3.eth.abi.decodeParameters(
+					const decodedParameters = caver.klay.abi.decodeParameters(
 						typesArray,
 						hash.logs[0].data
 					);
@@ -125,23 +95,23 @@ module.exports = {
 					const num = decodedParameters.roomNumber;
 					console.log(num);
 
-					const vote = new Vote(info);
-					vote.save((err, info) => {
-						console.log('db저장성공', info);
-						res.json({ success: true, detail: 'success db store' });
+					// const vote = new Vote(info);
+					// vote.save((err, info) => {
+					// 	console.log('db저장성공', info);
+					// 	res.json({ success: true, detail: 'success db store' });
 
-						if (err) {
-							return res.json({
-								fail: false,
-								detail: 'failed store db',
-							});
-						}
-					});
+					// 	if (err) {
+					// 		return res.json({
+					// 			fail: false,
+					// 			detail: 'failed store db',
+					// 		});
+					// 	}
+					// });
 				} catch (e) {
 					console.log('blockChain ERR : ' + e);
 					res.json({ fail: false, detail: 'failed blockChain' });
 				}
-			}
+			
 		}
 	},
 	KIP_contentList: async (req, res) => {
