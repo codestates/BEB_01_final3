@@ -40,14 +40,6 @@ module.exports = {
 			const data = await nftContract.methods
 				.mintNFT(tokenURI)
 				.encodeABI();
-			
-			// const txHash = await caver.klay.sendTransaction({
-			// 	type: 'SMART_CONTRACT_EXECUTION',
-			// 	from: serverAddress,
-			// 	to: process.env.NFTTOKENCA,
-			// 	gas: 300000,
-			// 	data: data
-			// }, serverPrivateKey)
 			const tx = {
 				from: serverAddress,
 				to: process.env.NFTTOKENCA,
@@ -86,7 +78,6 @@ module.exports = {
 		const email = req.user.email;
 		const userInfo = await User.findOne({ email: email }).exec();
 		const buyer = userInfo.publicKey;
-
 		const owner = await nftContract.methods.ownerOf(tokenId).call();
 
 		if (owner === buyer) {
@@ -99,28 +90,18 @@ module.exports = {
 			const data = await nwtContract.methods
 				.approveToken(buyer, process.env.NFTTOKENCA)
 				.encodeABI();
-			const nonce = await web3.eth.getTransactionCount(
-				serverAddress,
-				'latest'
-			);
-			const gasprice = await web3.eth.getGasPrice();
-			const gasPrice = Math.round(
-				Number(gasprice) + Number(gasprice / 10)
-			);
 			const tx = {
 				from: serverAddress,
 				to: process.env.NWTTOKENCA,
-				nonce: nonce,
-				gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
-				gasLimit: 5000000,
+				gas: 300000,
 				data: data,
 			};
-			const signedTx = await web3.eth.accounts.signTransaction(
+			const signedTx = await caver.klay.accounts.signTransaction(
 				tx,
 				serverPrivateKey
 			);
 			console.log('-----NFT Aprove function end ----');
-			const approveHash = await web3.eth.sendSignedTransaction(
+			const approveHash = await caver.klay.sendSignedTransaction(
 				signedTx.rawTransaction
 			);
 			if (approveHash) {
@@ -129,30 +110,20 @@ module.exports = {
 				const data = await nftContract.methods
 					.purchaseToken(tokenId, buyer)
 					.encodeABI();
-				const nonce = await web3.eth.getTransactionCount(
-					serverAddress,
-					'latest'
-				);
-				const gasprice = await web3.eth.getGasPrice();
-				const gasPrice = Math.round(
-					Number(gasprice) + Number(gasprice / 10)
-				);
-
+				
 				const tx = {
 					from: serverAddress,
 					to: process.env.NFTTOKENCA,
-					nonce: nonce,
-					gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
-					gasLimit: 5000000,
+					gas: 300000,
 					data: data,
 				};
 
-				const signedTx = await web3.eth.accounts.signTransaction(
+				const signedTx = await caver.klay.accounts.signTransaction(
 					tx,
 					serverPrivateKey
 				);
 				console.log('----- purchaseToken function start ----');
-				const sellHash = await web3.eth.sendSignedTransaction(
+				const sellHash = await caver.klay.sendSignedTransaction(
 					signedTx.rawTransaction
 				);
 
@@ -206,30 +177,23 @@ module.exports = {
 
 		console.log('sell', tokenId, privateKey, sellPrice);
 		const data = await nftContract.methods
-			.setForSale(tokenId, web3.utils.toWei(sellPrice, 'ether'))
+			.setForSale(tokenId, caver.utils.toPeb(sellPrice, 'KLAY'))
 			.encodeABI();
-		const nonce = await web3.eth.getTransactionCount(
-			serverAddress,
-			'latest'
-		);
-		const gasprice = await web3.eth.getGasPrice();
-		const gasPrice = Math.round(Number(gasprice) + Number(gasprice / 10));
+		
 		const tx = {
 			from: serverAddress,
 			to: process.env.NFTTOKENCA,
-			nonce: nonce,
-			gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
-			gasLimit: 5000000,
+			gas: 300000,
 			data: data,
 		};
 
 		try {
-			const signedTx = await web3.eth.accounts.signTransaction(
+			const signedTx = await caver.klay.accounts.signTransaction(
 				tx,
 				serverPrivateKey
 			);
 			console.log('----- setForSale function start ----');
-			const hash = await web3.eth.sendSignedTransaction(
+			const hash = await caver.klay.sendSignedTransaction(
 				signedTx.rawTransaction
 			);
 
@@ -280,11 +244,11 @@ module.exports = {
 	},
 
 	nftauction: async (req, res) => {
-		const loginServer = req.user.publicKey;
-		serverAddress = await changeAuther(serverAddress, loginServer);
-		if (serverAddress === loginServer) {
-			serverPrivateKey = req.user.privateKey;
-		}
+		// const loginServer = req.user.publicKey;
+		// serverAddress = await changeAuther(serverAddress, loginServer);
+		// if (serverAddress === loginServer) {
+		// 	serverPrivateKey = req.user.privateKey;
+		// }
 		const tokenId = req.body.tokenId;
 		const privateKey = req.body.privateKey;
 		const Auctionsell = req.body.Auctionsell;
@@ -305,32 +269,24 @@ module.exports = {
 			.startAuction(
 				tokenId,
 				publickey,
-				web3.utils.toWei(Auctionsell, 'ether')
+				caver.utils.toPeb(Auctionsell, 'KLAY')
 			)
 			.encodeABI();
-		const nonce = await web3.eth.getTransactionCount(
-			serverAddress,
-			'latest'
-			//내가 몇번째 트렌잭션을 날리는지
-		);
-		const gasprice = await web3.eth.getGasPrice();
-		const gasPrice = Math.round(Number(gasprice) + Number(gasprice / 5));
+		
 		const tx = {
 			from: serverAddress,
 			to: process.env.NFTTOKENCA,
-			nonce: nonce,
-			gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
-			gasLimit: 5000000,
+			gas: 300000,
 			data: data,
 		};
 		console.log('----- auction function start ----');
 		try {
-			const signedTx = await web3.eth.accounts.signTransaction(
+			const signedTx = await caver.klay.accounts.signTransaction(
 				tx,
 				serverPrivateKey
 			);
 			console.log('----- sign end -----');
-			const hash = await web3.eth.sendSignedTransaction(
+			const hash = await caver.klay.sendSignedTransaction(
 				signedTx.rawTransaction
 			);
 			console.log(hash);
@@ -433,60 +389,42 @@ module.exports = {
 			const data = await nwtContract.methods
 				.approveToken(buyer, process.env.NFTTOKENCA)
 				.encodeABI();
-			const nonce = await web3.eth.getTransactionCount(
-				serverAddress,
-				'latest'
-			);
-			const gasprice = await web3.eth.getGasPrice();
-			const gasPrice = Math.round(
-				Number(gasprice) + Number(gasprice / 10)
-			);
+			
 			const tx = {
 				from: serverAddress,
 				to: process.env.NWTTOKENCA,
-				nonce: nonce,
-				gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
-				gasLimit: 5000000,
+				gas: 300000,
 				data: data,
 			};
-			const signedTx = await web3.eth.accounts.signTransaction(
+			const signedTx = await caver.klay.accounts.signTransaction(
 				tx,
 				serverPrivateKey
 			);
 			console.log('----- bids function start ----');
-			const approveHash = await web3.eth.sendSignedTransaction(
+			const approveHash = await caver.klay.sendSignedTransaction(
 				signedTx.rawTransaction
 			);
 			if (approveHash) {
 				//approveToken 함수 작성 끝
 
 				const data = await nftContract.methods
-					.bid(tokenId, buyer, web3.utils.toWei(bidPrice, 'ether'))
+					.bid(tokenId, buyer, caver.utils.toPeb(bidPrice, 'KLAY'))
 					.encodeABI();
-				const nonce = await web3.eth.getTransactionCount(
-					serverAddress,
-					'latest'
-				);
-				const gasprice = await web3.eth.getGasPrice();
-				const gasPrice = Math.round(
-					Number(gasprice) + Number(gasprice / 10)
-				);
+				
 				const tx = {
 					from: serverAddress,
 					to: process.env.NFTTOKENCA,
-					nonce: nonce,
-					gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
-					gasLimit: 5000000,
+					gas: 300000,
 					data: data,
 				};
 
-				const signedTx = await web3.eth.accounts.signTransaction(
+				const signedTx = await caver.klay.accounts.signTransaction(
 					tx,
 					serverPrivateKey
 				);
 
 				console.log('----- sign end -----');
-				const sellHash = await web3.eth.sendSignedTransaction(
+				const sellHash = await caver.klay.sendSignedTransaction(
 					signedTx.rawTransaction
 				);
 				console.log('----- sign send end -----');
@@ -532,56 +470,40 @@ module.exports = {
 		const data = await nwtContract.methods
 			.approveToken(process.env.NFTTOKENCA, process.env.NFTTOKENCA)
 			.encodeABI();
-		const nonce = await web3.eth.getTransactionCount(
-			serverAddress,
-			'latest'
-		);
-		const gasprice = await web3.eth.getGasPrice();
-		const gasPrice = Math.round(Number(gasprice) + Number(gasprice / 10));
+	
 		const tx = {
 			from: serverAddress,
 			to: process.env.NWTTOKENCA,
-			nonce: nonce,
-			gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
-			gasLimit: 5000000,
+			gas: 300000,
 			data: data,
 		};
-		const signedTx = await web3.eth.accounts.signTransaction(
+		const signedTx = await caver.klay.accounts.signTransaction(
 			tx,
 			serverPrivateKey
 		);
 		console.log('----- withdraw function start ----');
-		const approveHash = await web3.eth.sendSignedTransaction(
+		const approveHash = await caver.klay.sendSignedTransaction(
 			signedTx.rawTransaction
 		);
 		if (approveHash) {
 			const data = await nftContract.methods
 				.withdraw(withdrawer, tokenId)
 				.encodeABI();
-			const nonce = await web3.eth.getTransactionCount(
-				serverAddress,
-				'latest'
-			);
-			const gasprice = await web3.eth.getGasPrice();
-			const gasPrice = Math.round(
-				Number(gasprice) + Number(gasprice / 10)
-			);
+			
 			const tx = {
 				from: serverAddress,
 				to: process.env.NFTTOKENCA,
-				nonce: nonce,
-				gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
-				gasLimit: 5000000,
+				gas: 300000,
 				data: data,
 			};
 
-			const signedTx = await web3.eth.accounts.signTransaction(
+			const signedTx = await caver.klay.accounts.signTransaction(
 				tx,
 				serverPrivateKey
 			);
 
 			console.log('----- sign end ----');
-			const sellHash = await web3.eth.sendSignedTransaction(
+			const sellHash = await caver.klay.sendSignedTransaction(
 				signedTx.rawTransaction
 			);
 			console.log(sellHash);
@@ -596,82 +518,57 @@ module.exports = {
 		const data = await nwtContract.methods
 			.approveToken(process.env.NFTTOKENCA, process.env.NFTTOKENCA)
 			.encodeABI();
-		const nonce = await web3.eth.getTransactionCount(
-			serverAddress,
-			'latest'
-		);
-		const gasprice = await web3.eth.getGasPrice();
-		const gasPrice = Math.round(Number(gasprice) + Number(gasprice / 10));
+		
 		const tx = {
 			from: serverAddress,
 			to: process.env.NWTTOKENCA,
-			nonce: nonce,
-			gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
-			gasLimit: 5000000,
+			gas: 300000,
 			data: data,
 		};
-		const signedTx = await web3.eth.accounts.signTransaction(
+		const signedTx = await caver.klay.accounts.signTransaction(
 			tx,
 			serverPrivateKey
 		);
 		console.log('----- purchaseToken function start ----');
-		const approveHash = await web3.eth.sendSignedTransaction(
+		const approveHash = await caver.klay.sendSignedTransaction(
 			signedTx.rawTransaction
 		);
 		if (approveHash) {
 			const data = await nftContract.methods
 				.approveSale(process.env.NFTTOKENCA)
 				.encodeABI();
-			const nonce = await web3.eth.getTransactionCount(
-				serverAddress,
-				'latest'
-			);
-			const gasprice = await web3.eth.getGasPrice();
-			const gasPrice = Math.round(
-				Number(gasprice) + Number(gasprice / 10)
-			);
+			
 			const tx = {
 				from: serverAddress,
 				to: process.env.NFTTOKENCA,
-				nonce: nonce,
-				gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
-				gasLimit: 5000000,
+				gas: 300000,
 				data: data,
 			};
-			const signedTx = await web3.eth.accounts.signTransaction(
+			const signedTx = await caver.klay.accounts.signTransaction(
 				tx,
 				serverPrivateKey
 			);
 			console.log('----- EndAuction function start ----');
-			const endHash = await web3.eth.sendSignedTransaction(
+			const endHash = await caver.klay.sendSignedTransaction(
 				signedTx.rawTransaction
 			);
 			if (endHash) {
 				const data = await nftContract.methods.end(tokenId).encodeABI();
-				const nonce = await web3.eth.getTransactionCount(
-					serverAddress,
-					'latest'
-				);
-				const gasprice = await web3.eth.getGasPrice();
-				const gasPrice = Math.round(
-					Number(gasprice) + Number(gasprice / 10)
-				);
+				
 				const tx = {
 					from: serverAddress,
 					to: process.env.NFTTOKENCA,
-					nonce: nonce,
-					gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
-					gasLimit: 5000000,
+					gas: 300000,
 					data: data,
 				};
 
-				const signedTx = await web3.eth.accounts.signTransaction(
+				const signedTx = await caver.klay.accounts.signTransaction(
 					tx,
 					serverPrivateKey
 				);
 
 				console.log('----- sign end ----');
-				const sellHash = await web3.eth.sendSignedTransaction(
+				const sellHash = await caver.klay.sendSignedTransaction(
 					signedTx.rawTransaction
 				);
 
@@ -714,27 +611,20 @@ module.exports = {
 		const data = await nftContract.methods
 			.setToken(process.env.NWTTOKENCA)
 			.encodeABI();
-		const nonce = await web3.eth.getTransactionCount(
-			serverAddress,
-			'latest'
-		);
-		const gasprice = await web3.eth.getGasPrice();
-		const gasPrice = Math.round(Number(gasprice) + Number(gasprice / 3));
+		
 		const tx = {
 			from: serverAddress,
 			to: process.env.NFTTOKENCA,
-			nonce: nonce,
-			gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
-			gasLimit: 5000000,
+			gas: 300000,
 			data: data,
 		};
 
-		const signedTx = await web3.eth.accounts.signTransaction(
+		const signedTx = await caver.klay.accounts.signTransaction(
 			tx,
 			serverPrivateKey
 		);
 		console.log('----- setToken function start ----');
-		const hash = await web3.eth.sendSignedTransaction(
+		const hash = await caver.klay.sendSignedTransaction(
 			signedTx.rawTransaction
 		);
 
