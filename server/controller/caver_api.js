@@ -446,18 +446,6 @@ module.exports = {
 		console.log('aa');
 		// web3.eth.accounts.wallet.add(serverPrivateKey);
 
-		// nonce 값
-		const nonce = await caver.klay.getTransactionCount(
-			serverAddress,
-			'latest'
-		);
-
-		// const balanceOf = await nwtContract.methods
-		// 	.balanceOf(serverAddress)
-		// 	.call();
-
-		// console.log(typeof balanceOf);
-
 		// 실행할 컨트랙트 함수 데이터
 		const data = await nwtContract.methods
 			.mintToken(
@@ -466,16 +454,6 @@ module.exports = {
 				// process.env.NFTTOKENCA //1e18  100000000
 			)
 			.encodeABI();
-
-		const gasPrice = await caver.klay.getGasPrice();
-
-		// const balanceOf = await nwtContract.methods
-		// 	.balanceOf(serverAddress)
-		// 	.call();
-		// const test1 = web3.utils.fromWei('100000', 'ether');
-		// const test2 = web3.utils.toWei('100000', 'ether');
-		// console.log('test1 : ', test1);
-		// console.log('test2 : ', test2);
 
 		// transaction
 		const tx = {
