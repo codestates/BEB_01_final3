@@ -33,6 +33,8 @@ function BetDetail(props,{show,betData}) {
   const navigate = useNavigate();
   const [userbids, setuserbids] = useState("");
   const [topPrice, setTopPrice] = useState("");
+  const [isContent, setIsContent] = useState("");
+  const [isPayout, setIsPayout] = useState("");
   const [list, setList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [serialLoading, setSerialLoading] = useState(false);
@@ -43,13 +45,17 @@ function BetDetail(props,{show,betData}) {
     axios.post("/api/bat/contentList", {contentName:props.betData}).then((res) => {
       //데이터 가공을 해주어야합니다. 같은 content끼리묵어야 합니다.
       //일단 몇개의 데이터가 있는지 확인해 봅시다.
-    
+       
       if (res.data.success) {
-        console.log(res.data.success);
         setList(res.data.info);
+        setIsContent(res.data.isContent[0].status);
+        setIsPayout(res.data.isContent[0].isPayout)
       }
     });
   }, []);
+
+
+
   
 
   function closeSerial(contentsName, serial) {
@@ -86,6 +92,7 @@ function BetDetail(props,{show,betData}) {
       }
     });
   }
+
   const closeContent = () => {
 		setIsLoading(true);
 
@@ -105,7 +112,32 @@ function BetDetail(props,{show,betData}) {
 			})
 			
 
-	}
+  }
+  
+  const payOut = (info) => {
+		setIsLoading(true);
+		axios.post("/api/bat/payOut", { contentNum: props.contentNum, answer:'안형준'})
+			.then(res => {
+        if (res.data.success) {
+          Swal.fire({
+            icon: "success",
+            title: "정산완료",
+          }).then((res) => {
+            setIsLoading(false);
+            window.location.reload();
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "정산 실패. 다시확인해주세요",
+          }).then((res) => {
+            setIsLoading(false);
+          });
+        }
+			})
+  }
+  
+ 
   
   return (
     <Modal
@@ -158,9 +190,21 @@ function BetDetail(props,{show,betData}) {
         }
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="danger" onClick={closeContent}>
-          컨텐츠 종료   
-        </Button>
+        {isContent === true ?
+          <Button variant="danger" onClick={closeContent}>
+            컨텐츠 종료
+          </Button> :<>
+          {
+            isPayout === true ?
+            <Button variant="warning" onClick={payOut}>
+            정산하기
+            </Button> :
+              <Button  variant="black">
+              정산종료
+                </Button> 
+          }
+        </>
+}
         <Button onClick={props.show}>Close</Button>
       </Modal.Footer>
     </Modal>

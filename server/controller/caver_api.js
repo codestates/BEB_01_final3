@@ -489,6 +489,7 @@ module.exports = {
 
 	myPage: async (req, res) => {
 		const addr = req.user.publicKey;
+		
 		// console.log('here api')
 		let wtdata = await wtContract.methods.balanceOf(addr).call();
 		let wtData = caver.utils.fromPeb(wtdata, 'KLAY');
@@ -502,7 +503,7 @@ module.exports = {
 			// 현재 로그인된 user 정보 찾아서
 			User.findOne({ _id: req.user._id }, (err, user) => {
 				// userInfo 에 필요한 정보 담고
-
+ 
 				// console.log(wtContract.methods.balanceOf(serverAddress).call());
 				const userInfo = {
 					publicKey: user.publicKey,
@@ -511,10 +512,12 @@ module.exports = {
 					nwtToken: nwtData,
 					image: user.image,
 				};
+				
+				console.log(addr);
 				// 그 유저가 가지고 있는 nft 정보를 가져옴
-				Nft.find({ address: user.publicKey }, (err, nft) => {
+				Nft.find({ address: addr }, (err, nft) => {
 					const nftInfo = nft;
-					console.log(nft);
+					
 					// nft 가 없으면 유저 정보만 넘기고
 					if (nft === null) {
 						res.json({ success: true, userInfo });

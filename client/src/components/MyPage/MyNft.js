@@ -68,6 +68,7 @@ function MyNft () {
     const [auction, setAuction] = useState(false);
   const [modalInfo, setModalInfo] = useState({});
   const [sale, setSale] = useState(true);
+  const [change, setChange] = useState(true);
 
     const navigate = useNavigate();
 
@@ -96,25 +97,29 @@ function MyNft () {
     });
   }, []);
 
+
   function sellNFT(tokenId, imgUri, sellPrice) {
 
     if (userInfo.image === imgUri) {
+   
       axios 
         .post("/api/contract/nft/sell", {
           tokenId,
           sellPrice,
-          privateKey : userInfo.privateKey
+          privateKey: userInfo.privateKey,
+          isImage : true
         })
         .then((res) => {
        
           if (res.data.success) {
-            setProfile(wtImg);
+           
             Swal.fire({
               icon: 'success',
               title: `${sellPrice}NWT 가격이 설정되었습니다.` ,  
             }).then(res => {
+              setProfile(wtImg);
               setFixed(false);
-              return
+              window.location.reload();
             })
           } else {
             Swal.fire({
@@ -122,7 +127,7 @@ function MyNft () {
               title: 'price need to number' ,  
             }).then(res => {
               setFixed(false);
-              return
+             
             })
           }
         });
@@ -131,6 +136,8 @@ function MyNft () {
         .post("/api/contract/nft/sell", {
           tokenId,
           sellPrice,
+          privateKey: userInfo.privateKey,
+          isImage : false
         })
         .then((res) => {
           if (res.data.success) {
@@ -138,8 +145,8 @@ function MyNft () {
               icon: 'success',
               title: `${sellPrice}NWT 가격이 설정되었습니다.` ,  
             }).then(res => {
-              setFixed(false);
-              return
+              setFixed(true);
+              window.location.reload();
             })
           } else {
             Swal.fire({
@@ -147,7 +154,7 @@ function MyNft () {
               title: 'price need to number',  
             }).then(res => {
               setFixed(false);
-              return;
+              
             })
           }
         });

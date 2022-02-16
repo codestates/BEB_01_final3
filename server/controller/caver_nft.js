@@ -86,106 +86,122 @@ module.exports = {
 		const email = req.user.email;
 		const userInfo = await User.findOne({ email: email }).exec();
 		const buyer = userInfo.publicKey;
+		const buyerPk = userInfo.privateKey;
+        
 
-		const owner = await nftContract.methods.ownerOf(tokenId).call();
+		const ownerInfo = await Nft.findOne({ tokenId }).exec();
+		const rawData = await User.findOne({ publicKey: ownerInfo.address }).exec();
+		const owner = rawData.publicKey;
+		const ownerPk = rawData.privateKey;
+		const amount = await nwtContract.methods.balanceOf(buyer).call();
+		
+		
 
-		if (owner === buyer) {
+		if (owner === buyer || amount < req.body.price) {
 			console.log('owner is not buy');
-			res.json({ failed: false, reason: 'owner is not buy ' });
+			res.json({ failed: false, reason: 'owner is not buy || your not enough amount nwt Token' });
 			return;
 		}
 		try {
 			//approveToken 함수 작성
-			const data = await nwtContract.methods
-				.approveToken(buyer, process.env.NFTTOKENCA)
-				.encodeABI();
-			const nonce = await web3.eth.getTransactionCount(
-				serverAddress,
-				'latest'
-			);
-			const gasprice = await web3.eth.getGasPrice();
-			const gasPrice = Math.round(
-				Number(gasprice) + Number(gasprice / 10)
-			);
 			const tx = {
-				from: serverAddress,
+				type: 'FEE_DELEGATED_SMART_CONTRACT_EXECUTION',
+				from: buyer,
 				to: process.env.NWTTOKENCA,
-				nonce: nonce,
-				gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
-				gasLimit: 5000000,
-				data: data,
+				gas: '300000',
+				data: nwtContract.methods.approveToken(buyer, process.env.NFTTOKENCA).encodeABI()
 			};
-			const signedTx = await web3.eth.accounts.signTransaction(
+
+			const signedTx = await caver.klay.accounts.signTransaction(
 				tx,
-				serverPrivateKey
+				buyerPk
 			);
-			console.log('-----NFT Aprove function end ----');
-			const approveHash = await web3.eth.sendSignedTransaction(
-				signedTx.rawTransaction
+			const feePayerSigned = await caver.klay.accounts.feePayerSignTransaction(signedTx.rawTransaction, serverAddress, serverPrivateKey);
+			const approveToken = await caver.klay.sendSignedTransaction(
+				feePayerSigned.rawTransaction
 			);
-			if (approveHash) {
-				//approveToken 함수 작성 끝
 
-				const data = await nftContract.methods
-					.purchaseToken(tokenId, buyer)
-					.encodeABI();
-				const nonce = await web3.eth.getTransactionCount(
-					serverAddress,
-					'latest'
-				);
-				const gasprice = await web3.eth.getGasPrice();
-				const gasPrice = Math.round(
-					Number(gasprice) + Number(gasprice / 10)
-				);
-
+			if (approveToken) {
+				
 				const tx = {
-					from: serverAddress,
+					type: 'FEE_DELEGATED_SMART_CONTRACT_EXECUTION',
+					from: owner,
 					to: process.env.NFTTOKENCA,
-					nonce: nonce,
-					gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
-					gasLimit: 5000000,
-					data: data,
+					gas: '300000',
+					data: nftContract.methods.approve(buyer,tokenId).encodeABI()
 				};
-
-				const signedTx = await web3.eth.accounts.signTransaction(
+				
+				const signedTx = await caver.klay.accounts.signTransaction(
 					tx,
-					serverPrivateKey
+					ownerPk
 				);
-				console.log('----- purchaseToken function start ----');
-				const sellHash = await web3.eth.sendSignedTransaction(
-					signedTx.rawTransaction
+				const feePayerSigned = await caver.klay.accounts.feePayerSignTransaction(signedTx.rawTransaction, serverAddress, serverPrivateKey);
+				const approveHash = await caver.klay.sendSignedTransaction(
+					feePayerSigned.rawTransaction
 				);
-
-				if (sellHash) {
-					const owner = await nftContract.methods
-						.ownerOf(tokenId)
-						.call();
-					console.log(owner);
-					Nft.findOneAndUpdate(
-						{ tokenId: tokenId },
-						{ address: owner, sale: false },
-						(err, result) => {
-							console.log('DB success');
-
-							res.json({
-								success: true,
-								detail: 'db store success and block update success',
-							});
-						}
+				console.log('성공');
+				
+				if (approveHash) {
+					console.log('nftbuy 실행');
+					//approveToken 함수 작성 끝
+					const tx = {
+						type: 'FEE_DELEGATED_SMART_CONTRACT_EXECUTION',
+						from: buyer,
+						to: process.env.NFTTOKENCA,				
+						gas: '300000',
+						data: nftContract.methods.purchaseToken(tokenId, buyer).encodeABI()
+					};
+	
+					const signedTx = await caver.klay.accounts.signTransaction(
+						tx,
+						buyerPk
 					);
+				
+					const feePayerSigned = await caver.klay.accounts.feePayerSignTransaction(signedTx.rawTransaction, serverAddress, serverPrivateKey);
+					const sellHash = await caver.klay.sendSignedTransaction(
+						feePayerSigned.rawTransaction
+					);
+					console.log('----- purchaseToken function finfish ----');
+	
+					if (sellHash) {
+					
+					
+						Nft.findOneAndUpdate(
+							{ tokenId: tokenId },
+							{ address: buyer, sale: false },
+							(err, result) => {
+								console.log('DB success');
+	
+								res.json({
+									success: true,
+									detail: 'db store success and block update success',
+								});
+							}
+						);
+					}
 				}
+
+
 			}
+
+			
 		} catch (e) {
 			console.log(e);
 			// res.json({ failed: false, reason: 'i do not know' });
 		}
 	},
 	setForSell: async (req, res) => {
-		const tokenId = req.body.tokenId;
-		const privateKey = req.body.privateKey;
+		const userAccount = req.user.publicKey
+		const userPk = req.body.privateKey;
+		const role = req.user.role
 		const sellPrice = req.body.sellPrice;
-		const owner = await nftContract.methods.ownerOf(tokenId).call();
+		const tokenId = req.body.tokenId;
+		const ownerInfo = await Nft.findOne({ tokenId }).exec();
+		const rawData = await User.findOne({ publicKey: ownerInfo.address }).exec();
+		const owner = rawData.publicKey;
 		const dbOwner = await Nft.find({ tokenId: tokenId }).exec();
+		const isImage = req.body.image;
+	
 
 		//가격에 숫자이외의 문자가 들어오지 않게 하기위한 정규식
 		var regexp = /^[0-9]*$/;
@@ -197,82 +213,126 @@ module.exports = {
 			return;
 		}
 
-		if (owner !== dbOwner[0].address) {
-			res.json({
-				fail: false,
-				detail: '소유자가 다르다, 확인바람',
-			});
-		}
-
-		console.log('sell', tokenId, privateKey, sellPrice);
-		const data = await nftContract.methods
-			.setForSale(tokenId, web3.utils.toWei(sellPrice, 'ether'))
-			.encodeABI();
-		const nonce = await web3.eth.getTransactionCount(
-			serverAddress,
-			'latest'
-		);
-		const gasprice = await web3.eth.getGasPrice();
-		const gasPrice = Math.round(Number(gasprice) + Number(gasprice / 10));
-		const tx = {
-			from: serverAddress,
-			to: process.env.NFTTOKENCA,
-			nonce: nonce,
-			gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction
-			gasLimit: 5000000,
-			data: data,
-		};
 
 		try {
-			const signedTx = await web3.eth.accounts.signTransaction(
-				tx,
-				serverPrivateKey
-			);
-			console.log('----- setForSale function start ----');
-			const hash = await web3.eth.sendSignedTransaction(
-				signedTx.rawTransaction
-			);
 
-			if (hash) {
-				//프로필이랑 팔려고하는 사진이랑 다른 경우
-				if (privateKey === undefined) {
-					Nft.findOneAndUpdate(
-						{ tokenId: tokenId },
-						{ sale: true, price: sellPrice, type: 'fixed' },
-						(err, result) => {
-							console.log('DB success');
-							res.json({
-								success: true,
-								detail: 'success set sell and change basic image',
-							});
-							if (err) console.log(err);
-						}
-					);
-				} else {
-					Nft.findOneAndUpdate(
-						{ tokenId: tokenId },
-						{ sale: true, price: sellPrice, type: 'fixed' },
-						(err, result) => {
-							console.log(privateKey);
-							User.findOneAndUpdate(
-								{
-									privateKey: privateKey,
-								},
-								{
-									image: 'cryptoWT',
-								},
-								(err, result) => {
-									console.log('DB success');
-									res.json({
-										success: true,
-										detail: 'success set sell and change basic image',
-									});
-									if (err) console.log(err);
-								}
-							);
-						}
-					);
+			if (role === 0) {
+				console.log('admint setForSell');
+				const tx = {
+					type: 'FEE_DELEGATED_SMART_CONTRACT_EXECUTION',
+					from: userAccount,
+					to: process.env.NFTTOKENCA,
+					gas: '300000',
+					data: nftContract.methods.setForSale(tokenId, caver.utils.toPeb(sellPrice, 'KLAY')).encodeABI()
+				};
+			
+				const signedTx = await caver.klay.accounts.signTransaction(tx, userPk);
+				const feePayerSigned = await caver.klay.accounts.feePayerSignTransaction(signedTx.rawTransaction, serverAddress, serverPrivateKey);
+				console.log('----- setForSale function start ----');
+				const hash = await caver.klay.sendSignedTransaction(
+					feePayerSigned.rawTransaction
+				);
+
+				if (hash) {
+					//프로필이랑 팔려고하는 사진이랑 다른 경우
+					if (isImage === false) {
+						Nft.findOneAndUpdate(
+							{ tokenId: tokenId },
+							{ sale: true, price: sellPrice, type: 'fixed' },
+							(err, result) => {
+								console.log('DB success');
+								res.json({
+									success: true,
+									detail: 'success set sell and change basic image',
+								});
+								if (err) console.log(err);
+							}
+						);
+					} else {
+						console.log('image change cryptoWT');	
+						Nft.findOneAndUpdate(
+							{ tokenId: tokenId },
+							{ sale: true, price: sellPrice, type: 'fixed' },
+							(err, result) => {
+								
+								User.findOneAndUpdate(
+									{
+										privateKey: userPk,
+									},
+									{
+										image: 'cryptoWT',
+									},
+									(err, result) => {
+										console.log('DB success');
+										res.json({
+											success: true,
+											detail: 'success set sell and change basic image',
+										});
+										if (err) console.log(err);
+									}
+								);
+							}
+						);
+					}
 				}
+			
+			} else if (role === 1) {
+				console.log('admin setForSell');
+				const tx = {
+					from: userAccount,
+					to: process.env.NFTTOKENCA,
+					gas: '300000',
+					data: nftContract.methods.setForSale(tokenId, caver.utils.toPeb(sellPrice, 'KLAY')).encodeABI()
+				};
+				const signedTx = await caver.klay.accounts.signTransaction(tx, userPk);
+				console.log('----- setForSale function start ----');
+				const hash = await caver.klay.sendSignedTransaction(
+					signedTx.rawTransaction
+				);
+
+				if (hash) {
+					//프로필이랑 팔려고하는 사진이랑 다른 경우
+					if (isImage === false) {
+						Nft.findOneAndUpdate(
+							{ tokenId: tokenId },
+							{ sale: true, price: sellPrice, type: 'fixed' },
+							(err, result) => {
+								console.log('DB success');
+								res.json({
+									success: true,
+									detail: 'success set sell and change basic image',
+								});
+								if (err) console.log(err);
+							}
+						);
+					} else {
+						console.log('image change cryptoWT');
+						Nft.findOneAndUpdate(
+							{ tokenId: tokenId },
+							{ sale: true, price: sellPrice, type: 'fixed' },
+							(err, result) => {
+								console.log(userPk);
+								User.findOneAndUpdate(
+									{
+										privateKey: userPk	,
+									},
+									{
+										image: 'cryptoWT',
+									},
+									(err, result) => {
+										console.log('DB success');
+										res.json({
+											success: true,
+											detail: 'success set sell and change basic image',
+										});
+										if (err) console.log(err);
+									}
+								);
+							}
+						);
+					}
+				}
+			
 			}
 		} catch (e) {
 			console.log(e);
@@ -656,8 +716,8 @@ module.exports = {
 				const gasPrice = Math.round(
 					Number(gasprice) + Number(gasprice / 10)
 				);
-				const tx = {
-					from: serverAddress,
+					const tx = {
+						from: serverAddress,
 					to: process.env.NFTTOKENCA,
 					nonce: nonce,
 					gasPrice: gasPrice, // maximum price of gas you are willing to pay for this transaction

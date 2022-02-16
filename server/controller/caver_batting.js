@@ -71,31 +71,6 @@ module.exports = {
 		 const feePayerSigned = await caver.klay.accounts.feePayerSignTransaction(signedTx.rawTransaction, serverAddress, serverPrivateKey);
 		//const hash = await caver.klay.sendSignedTransaction(signedTx.rawTransaction)
 		 const hash = await caver.klay.sendSignedTransaction(feePayerSigned.rawTransaction)
-          
-					
-					console.log(hash.logs[0].data);
-					console.log(hash.logs[0].topics);
-					const typesArray = [
-						{
-							type: 'uint256',
-							name: 'roomNumber',
-							type: 'address',
-							name: 'user',
-							type: 'string',
-							name: 'select',
-							type: 'uint256',
-							name: 'amount',
-						},
-					];
-
-					const decodedParameters = caver.klay.abi.decodeParameters(
-						typesArray,
-						hash.logs[0].data
-					);
-					console.log(JSON.stringify(decodedParameters));
-					const num = decodedParameters.roomNumber;
-					console.log(num);
-
 					const vote = new Vote(info);
 					vote.save((err, info) => {
 						console.log('db저장성공', info);
@@ -121,9 +96,10 @@ module.exports = {
 			const info = await Batting.find({
 				contentsName: contentName,
 			}).exec();
-
+			const isContent = await Contents.find({ contentName }).exec();
+            
 			if (info[0] !== undefined) {
-				res.json({ success: true, info });
+				res.json({ success: true, info, isContent });
 			}
 		} catch (e) {
 			console.log('err발생 : ' + e);
@@ -217,10 +193,10 @@ module.exports = {
 		//Second. if we will be found data, we will change status
 		const isCheck = await Batting.findOneAndUpdate(
 			{ contentsName, serial },
-			{ status: false }
+			{ status : false }
 		).exec();
 
-		console.log(isCheck);
+	
 		try {
 			if (isCheck !== null) {
 				// const txHash = await caver.klay.sendTransaction({
@@ -299,6 +275,7 @@ module.exports = {
 	KIP_payOut: async (req, res) => {
 		const contentNum = req.body.contentNum;
 		const answer = req.body.answer;
+		console.log(contentNum,answer);
 	
 			const tx = {
 				from: serverAddress,
@@ -308,16 +285,24 @@ module.exports = {
 				.encodeABI(),
 				gas: '300000',
 			}
-		const signedTx = await caver.klay.accounts.signTransaction(tx, serverPrivateKey);
-		const txHash = await caver.klay.sendSignedTransaction(signedTx.rawTransaction)
+		
+		try {
+			const signedTx = await caver.klay.accounts.signTransaction(tx, serverPrivateKey);
+			const hash = await caver.klay.sendSignedTransaction(signedTx.rawTransaction)
 		
 		
-		console.log('----- payOut' + contentNum + 'function finish ----');
+			console.log('----- payOut' + contentNum + 'function finish ----');
 		
-		if (txHash) {
-			console.log(hash.logs[0].data);
-			console.log(hash.logs[0].topics);
-			res.status(201).json({ success: true });
+			if (hash) {
+				console.log(hash.logs[0].data);
+				console.log(hash.logs[0].topics);
+				await Contents.findOneAndUpdate({ contentNum }, { isPayout: false }).exec();
+				res.status(201).json({ success: true });
+			}
+		} catch (e) {
+			console.log("err확인", e);
+			res.json({ success: false });
 		}
+		
 	},
 };
