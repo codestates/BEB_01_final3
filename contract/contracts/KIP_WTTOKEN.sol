@@ -86,7 +86,7 @@ contract WTToken is KIP7TokenFull {
     }
 
      // 2. 유효성검사를 해주는 함수.
-     function validVoter(address voter, uint roomNum) view public onlyOwner returns(bool){
+     function validVoter(address voter, uint roomNum) view public returns(bool){
         for(uint i=0; i<rooms[roomNum].taker.length; i++){
            if(voter == rooms[roomNum].taker[i].addr){
                return false;

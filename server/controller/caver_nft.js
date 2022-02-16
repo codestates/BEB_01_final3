@@ -244,11 +244,7 @@ module.exports = {
 	},
 
 	nftauction: async (req, res) => {
-		// const loginServer = req.user.publicKey;
-		// serverAddress = await changeAuther(serverAddress, loginServer);
-		// if (serverAddress === loginServer) {
-		// 	serverPrivateKey = req.user.privateKey;
-		// }
+		
 		const tokenId = req.body.tokenId;
 		const privateKey = req.body.privateKey;
 		const Auctionsell = req.body.Auctionsell;
@@ -265,68 +261,70 @@ module.exports = {
 				detail: '정확한 가격을 작성해주세요!!',
 			});
 		}
-		const data = await nftContract.methods
-			.startAuction(
-				tokenId,
-				publickey,
-				caver.utils.toPeb(Auctionsell, 'KLAY')
-			)
-			.encodeABI();
-		
-		const tx = {
-			from: serverAddress,
-			to: process.env.NFTTOKENCA,
-			gas: 300000,
-			data: data,
-		};
-		console.log('----- auction function start ----');
-		try {
-			const signedTx = await caver.klay.accounts.signTransaction(
-				tx,
-				serverPrivateKey
-			);
-			console.log('----- sign end -----');
-			const hash = await caver.klay.sendSignedTransaction(
-				signedTx.rawTransaction
-			);
-			console.log(hash);
-			console.log('----- sign send end -----');
-			if (hash) {
-				if (privateKey !== undefined) {
-					Nft.findOneAndUpdate(
-						{ tokenId: tokenId },
-						{
-							spender: process.env.NFTTOKENCA,
-							sale: true,
-							price: Auctionsell,
-							type: 'Auction',
-						},
-						(err, result) => {
-							console.log('DB success');
-							res.json({
-								success: true,
-								detail: 'success set sell and change basic image',
-							});
-							if (err) console.log(err);
-						}
+		// approve 함수 추가
+		// 1. 프론트에서 경매 시작 버튼 클릭
+		// 2. if address == serverAdress
+		// 3. approve(NFTCont, tokenId), tx ={from : serverAdd}
+		// 4. else 
+		// 5. approve(NFTCont, tokenId), tx = {from : userAdd}
+		if( serverAddress == publickey) {
+			const data = await nftContract.methods
+				.approve(
+					process.env.NFTTOKENCA,
+					tokenId
+				)
+				.encodeABI();
+			const approvetx = {
+				from: serverAddress,
+				to: process.env.NFTTOKENCA,
+				gas: 300000,
+				data: data
+			}
+			console.log('---------approve start-----------');
+			try{
+				const signedTx = await caver.klay.accounts.signTransaction(
+					approvetx,
+					serverPrivateKey
+				);
+				const approvehash = await caver.klay.sendSignedTransaction(
+					signedTx.rawTransaction
+				)
+
+			console.log('---------approve success-----------');
+				if(approvehash){
+					const data = await nftContract.methods
+						.startAuction(
+							tokenId,
+							publickey,
+							caver.utils.toPeb(Auctionsell, 'KLAY')
+						)
+						.encodeABI();
+					const tx = {
+							from: serverAddress,
+							to: process.env.NFTTOKENCA,
+							gas: 300000,
+							data: data,
+						};
+					console.log('----- auction function start ----');
+					const signedTx = await caver.klay.accounts.signTransaction(
+						tx,
+						serverPrivateKey
 					);
-				} else {
-					Nft.findOneAndUpdate(
-						{ tokenId: tokenId },
-						{
-							spender: process.env.NFTTOKENCA,
-							sale: true,
-							price: Auctionsell,
-							type: 'Auction',
-						},
-						(err, result) => {
-							console.log('DB success');
-							User.findOneAndUpdate(
+					console.log('----- sign end -----');
+					const hash = await caver.klay.sendSignedTransaction(
+						signedTx.rawTransaction
+					);
+					console.log(hash);
+					console.log('----- sign send end -----');
+					if (hash) {
+						if (privateKey !== undefined) {
+							Nft.findOneAndUpdate(
+								{ tokenId: tokenId },
 								{
-									privateKey: privateKey,
-								},
-								{
-									image: 'cryptoWT',
+									spender: process.env.NFTTOKENCA,
+									sale: true,
+									price: Auctionsell,
+									type: 'Auction',
 								},
 								(err, result) => {
 									console.log('DB success');
@@ -337,13 +335,156 @@ module.exports = {
 									if (err) console.log(err);
 								}
 							);
+						} else {
+							Nft.findOneAndUpdate(
+								{ tokenId: tokenId },
+								{
+									spender: process.env.NFTTOKENCA,
+									sale: true,
+									price: Auctionsell,
+									type: 'Auction',
+								},
+								(err, result) => {
+									console.log('DB success');
+									User.findOneAndUpdate(
+										{
+											privateKey: privateKey,
+										},
+										{
+											image: 'cryptoWT',
+										},
+										(err, result) => {
+											console.log('DB success');
+											res.json({
+												success: true,
+												detail: 'success set sell and change basic image',
+											});
+											if (err) console.log(err);
+										}
+									);
+								}
+							);
 						}
-					);
+					}	
 				}
+
+			}catch (e) {
+				console.log(e);
+				res.json({ failed: false });
 			}
-		} catch (e) {
-			console.log(e);
-			res.json({ failed: false });
+		}else{
+			const data = await nftContract.methods
+				.approve(
+					process.env.NFTTOKENCA,
+					tokenId
+				)
+				.encodeABI();
+			const approvetx = {
+				from: publickey,
+				to: process.env.NFTTOKENCA,
+				gas: 300000,
+				data: data
+			}
+			console.log('---------approve success-----------');
+			try{
+				const signedTx = await caver.klay.accounts.signTransaction(
+					approvetx,
+					serverPrivateKey
+				);
+				const feePay = await caver.klay.accounts.feePayerSignTransaction(
+					signedTx.rawTransaction, 
+					serverAddress, 
+					serverPrivateKey);
+				const approvehash = await caver.klay.sendSignedTransaction(
+					feePay.rawTransaction
+				);
+				if(approvehash){
+					const data = await nftContract.methods
+						.startAuction(
+							tokenId,
+							publickey,
+							caver.utils.toPeb(Auctionsell, 'KLAY')
+						)
+						.encodeABI();
+					const tx = {
+							from: serverAddress,
+							to: process.env.NFTTOKENCA,
+							gas: 300000,
+							data: data,
+						};
+					console.log('----- auction function start ----');
+					const signedTx = await caver.klay.accounts.signTransaction(
+						tx,
+						serverPrivateKey
+					);
+					console.log('----- sign end -----');
+
+					const feePay = await caver.klay.accounts.feePayerSignTransaction(
+						signedTx.rawTransaction, 
+						serverAddress, 
+						serverPrivateKey);
+
+					const hash = await caver.klay.sendSignedTransaction(
+						feePay.rawTransaction
+					);
+					console.log(hash);
+					console.log('----- sign send end -----');
+					if (hash) {
+						if (privateKey !== undefined) {
+							Nft.findOneAndUpdate(
+								{ tokenId: tokenId },
+								{
+									spender: process.env.NFTTOKENCA,
+									sale: true,
+									price: Auctionsell,
+									type: 'Auction',
+								},
+								(err, result) => {
+									console.log('DB success');
+									res.json({
+										success: true,
+										detail: 'success set sell and change basic image',
+									});
+									if (err) console.log(err);
+								}
+							);
+						} else {
+							Nft.findOneAndUpdate(
+								{ tokenId: tokenId },
+								{
+									spender: process.env.NFTTOKENCA,
+									sale: true,
+									price: Auctionsell,
+									type: 'Auction',
+								},
+								(err, result) => {
+									console.log('DB success');
+									User.findOneAndUpdate(
+										{
+											privateKey: privateKey,
+										},
+										{
+											image: 'cryptoWT',
+										},
+										(err, result) => {
+											console.log('DB success');
+											res.json({
+												success: true,
+												detail: 'success set sell and change basic image',
+											});
+											if (err) console.log(err);
+										}
+									);
+								}
+							);
+						}
+					}	
+				}
+
+			}catch (e) {
+				console.log(e);
+				res.json({ failed: false });
+			}
 		}
 	},
 
@@ -351,6 +492,7 @@ module.exports = {
 		// ----- 구매자 정보  ------- //
 		const buyerInfo = await User.findOne({ _id: req.user._id }).exec();
 		const buyer = buyerInfo.publicKey;
+		const buyerPrivate = buyerInfo.privateKey;
 		// ----- auction info  ------- //
 		const tokenId = req.body.tokenId;
 		const ownerInfo = await Nft.findOne({ tokenId: tokenId }).exec();
@@ -391,18 +533,24 @@ module.exports = {
 				.encodeABI();
 			
 			const tx = {
-				from: serverAddress,
+				type: 'FEE_DELEGATED_SMART_CONTRACT_EXECUTION',
+				from: buyer,
 				to: process.env.NWTTOKENCA,
 				gas: 300000,
 				data: data,
 			};
 			const signedTx = await caver.klay.accounts.signTransaction(
 				tx,
-				serverPrivateKey
+				buyerPrivate
 			);
+			const feePay = await caver.klay.accounts.feePayerSignTransaction(
+				signedTx.rawTransaction, 
+				serverAddress, 
+				serverPrivateKey);
+
 			console.log('----- bids function start ----');
 			const approveHash = await caver.klay.sendSignedTransaction(
-				signedTx.rawTransaction
+				feePay.rawTransaction
 			);
 			if (approveHash) {
 				//approveToken 함수 작성 끝
@@ -412,7 +560,8 @@ module.exports = {
 					.encodeABI();
 				
 				const tx = {
-					from: serverAddress,
+					type: 'FEE_DELEGATED_SMART_CONTRACT_EXECUTION',
+					from: buyer,
 					to: process.env.NFTTOKENCA,
 					gas: 300000,
 					data: data,
@@ -420,12 +569,16 @@ module.exports = {
 
 				const signedTx = await caver.klay.accounts.signTransaction(
 					tx,
-					serverPrivateKey
+					buyerPrivate
 				);
+				const feePay = await caver.klay.accounts.feePayerSignTransaction(
+					signedTx.rawTransaction, 
+					serverAddress, 
+					serverPrivateKey);
 
 				console.log('----- sign end -----');
 				const sellHash = await caver.klay.sendSignedTransaction(
-					signedTx.rawTransaction
+					feePay.rawTransaction
 				);
 				console.log('----- sign send end -----');
 				if (sellHash) {
@@ -466,24 +619,31 @@ module.exports = {
 		const email = req.user.email;
 		const userInfo = await User.findOne({ email: email }).exec();
 		const withdrawer = userInfo.publicKey;
+		const withdrawerPrivate = userInfo.privateKey
 
 		const data = await nwtContract.methods
 			.approveToken(process.env.NFTTOKENCA, process.env.NFTTOKENCA)
 			.encodeABI();
 	
 		const tx = {
-			from: serverAddress,
+			type: 'FEE_DELEGATED_SMART_CONTRACT_EXECUTION',
+			from: withdrawer,
 			to: process.env.NWTTOKENCA,
 			gas: 300000,
 			data: data,
 		};
 		const signedTx = await caver.klay.accounts.signTransaction(
 			tx,
-			serverPrivateKey
+			withdrawerPrivate
 		);
+		const feePay = await caver.klay.accounts.feePayerSignTransaction(
+			signedTx.rawTransaction, 
+			serverAddress, 
+			serverPrivateKey);
+
 		console.log('----- withdraw function start ----');
 		const approveHash = await caver.klay.sendSignedTransaction(
-			signedTx.rawTransaction
+			feePay.rawTransaction
 		);
 		if (approveHash) {
 			const data = await nftContract.methods
@@ -491,7 +651,8 @@ module.exports = {
 				.encodeABI();
 			
 			const tx = {
-				from: serverAddress,
+				type: 'FEE_DELEGATED_SMART_CONTRACT_EXECUTION',
+				from: withdrawer,
 				to: process.env.NFTTOKENCA,
 				gas: 300000,
 				data: data,
@@ -499,12 +660,16 @@ module.exports = {
 
 			const signedTx = await caver.klay.accounts.signTransaction(
 				tx,
-				serverPrivateKey
+				withdrawerPrivate
 			);
+			const feePay = await caver.klay.accounts.feePayerSignTransaction(
+				signedTx.rawTransaction, 
+				serverAddress, 
+				serverPrivateKey);
 
 			console.log('----- sign end ----');
 			const sellHash = await caver.klay.sendSignedTransaction(
-				signedTx.rawTransaction
+				feePay.rawTransaction
 			);
 			console.log(sellHash);
 			console.log('----- sign send end ----');
@@ -514,24 +679,30 @@ module.exports = {
 		const tokenId = req.body.tokenId;
 		const email = req.user.email;
 		const userInfo = await User.findOne({ email: email }).exec();
-
+		const ownerPublic = userInfo.publicKey;
+		const ownerPrivate = userInfo.privateKey
 		const data = await nwtContract.methods
 			.approveToken(process.env.NFTTOKENCA, process.env.NFTTOKENCA)
 			.encodeABI();
 		
 		const tx = {
-			from: serverAddress,
+			type: 'FEE_DELEGATED_SMART_CONTRACT_EXECUTION',
+			from: ownerPublic,
 			to: process.env.NWTTOKENCA,
 			gas: 300000,
 			data: data,
 		};
 		const signedTx = await caver.klay.accounts.signTransaction(
 			tx,
-			serverPrivateKey
+			ownerPrivate
 		);
+		const feePay = await caver.klay.accounts.feePayerSignTransaction(
+			signedTx.rawTransaction, 
+			serverAddress, 
+			serverPrivateKey);
 		console.log('----- purchaseToken function start ----');
 		const approveHash = await caver.klay.sendSignedTransaction(
-			signedTx.rawTransaction
+			feePay.rawTransaction
 		);
 		if (approveHash) {
 			const data = await nftContract.methods
@@ -539,24 +710,30 @@ module.exports = {
 				.encodeABI();
 			
 			const tx = {
-				from: serverAddress,
+				type: 'FEE_DELEGATED_SMART_CONTRACT_EXECUTION',
+				from: ownerPublic,
 				to: process.env.NFTTOKENCA,
 				gas: 300000,
 				data: data,
 			};
 			const signedTx = await caver.klay.accounts.signTransaction(
 				tx,
-				serverPrivateKey
+				ownerPrivate
 			);
+			const feePay = await caver.klay.accounts.feePayerSignTransaction(
+				signedTx.rawTransaction, 
+				serverAddress, 
+				serverPrivateKey);
 			console.log('----- EndAuction function start ----');
 			const endHash = await caver.klay.sendSignedTransaction(
-				signedTx.rawTransaction
+				feePay.rawTransaction
 			);
 			if (endHash) {
 				const data = await nftContract.methods.end(tokenId).encodeABI();
 				
 				const tx = {
-					from: serverAddress,
+					type: 'FEE_DELEGATED_SMART_CONTRACT_EXECUTION',
+					from: ownerPublic,
 					to: process.env.NFTTOKENCA,
 					gas: 300000,
 					data: data,
@@ -564,12 +741,15 @@ module.exports = {
 
 				const signedTx = await caver.klay.accounts.signTransaction(
 					tx,
-					serverPrivateKey
+					ownerPrivate
 				);
-
+				const feePay = await caver.klay.accounts.feePayerSignTransaction(
+					signedTx.rawTransaction, 
+					serverAddress, 
+					serverPrivateKey);
 				console.log('----- sign end ----');
 				const sellHash = await caver.klay.sendSignedTransaction(
-					signedTx.rawTransaction
+					feePay.rawTransaction
 				);
 
 				console.log('----- sign send end ----');
