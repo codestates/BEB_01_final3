@@ -78,7 +78,6 @@ module.exports = {
 		const email = req.user.email;
 		const userInfo = await User.findOne({ email: email }).exec();
 		const buyer = userInfo.publicKey;
-<<<<<<< HEAD
 		const buyerPk = userInfo.privateKey;
         
 
@@ -91,89 +90,46 @@ module.exports = {
 		
 
 		if (owner === buyer || amount < req.body.price) {
-=======
-		const owner = await nftContract.methods.ownerOf(tokenId).call();
-
-		if (owner === buyer) {
->>>>>>> upstream/main
 			console.log('owner is not buy');
 			res.json({ failed: false, reason: 'owner is not buy || your not enough amount nwt Token' });
 			return;
 		}
 		try {
 			//approveToken 함수 작성
-<<<<<<< HEAD
-=======
-			const data = await nwtContract.methods
-				.approveToken(buyer, process.env.NFTTOKENCA)
-				.encodeABI();
->>>>>>> upstream/main
 			const tx = {
 				type: 'FEE_DELEGATED_SMART_CONTRACT_EXECUTION',
 				from: buyer,
 				to: process.env.NWTTOKENCA,
-<<<<<<< HEAD
 				gas: '300000',
 				data: nwtContract.methods.approveToken(buyer, process.env.NFTTOKENCA).encodeABI()
 			};
 
-=======
-				gas: 300000,
-				data: data,
-			};
->>>>>>> upstream/main
 			const signedTx = await caver.klay.accounts.signTransaction(
 				tx,
 				buyerPk
 			);
-<<<<<<< HEAD
 			const feePayerSigned = await caver.klay.accounts.feePayerSignTransaction(signedTx.rawTransaction, serverAddress, serverPrivateKey);
 			const approveToken = await caver.klay.sendSignedTransaction(
 				feePayerSigned.rawTransaction
 			);
 
 			if (approveToken) {
-=======
-			console.log('-----NFT Aprove function end ----');
-			const approveHash = await caver.klay.sendSignedTransaction(
-				signedTx.rawTransaction
-			);
-			if (approveHash) {
-				//approveToken 함수 작성 끝
-
-				const data = await nftContract.methods
-					.purchaseToken(tokenId, buyer)
-					.encodeABI();
->>>>>>> upstream/main
 				
 				const tx = {
 					type: 'FEE_DELEGATED_SMART_CONTRACT_EXECUTION',
 					from: owner,
 					to: process.env.NFTTOKENCA,
-<<<<<<< HEAD
 					gas: '300000',
 					data: nftContract.methods.approve(buyer,tokenId).encodeABI()
 				};
 				
-=======
-					gas: 300000,
-					data: data,
-				};
-
->>>>>>> upstream/main
 				const signedTx = await caver.klay.accounts.signTransaction(
 					tx,
 					ownerPk
 				);
-<<<<<<< HEAD
 				const feePayerSigned = await caver.klay.accounts.feePayerSignTransaction(signedTx.rawTransaction, serverAddress, serverPrivateKey);
 				const approveHash = await caver.klay.sendSignedTransaction(
 					feePayerSigned.rawTransaction
-=======
-				console.log('----- purchaseToken function start ----');
-				const sellHash = await caver.klay.sendSignedTransaction(
-					signedTx.rawTransaction
->>>>>>> upstream/main
 				);
 				console.log('성공');
 				
@@ -249,39 +205,8 @@ module.exports = {
 			return;
 		}
 
-<<<<<<< HEAD
 
 		try {
-=======
-		if (owner !== dbOwner[0].address) {
-			res.json({
-				fail: false,
-				detail: '소유자가 다르다, 확인바람',
-			});
-		}
-
-		console.log('sell', tokenId, privateKey, sellPrice);
-		const data = await nftContract.methods
-			.setForSale(tokenId, caver.utils.toPeb(sellPrice, 'KLAY'))
-			.encodeABI();
-		
-		const tx = {
-			from: serverAddress,
-			to: process.env.NFTTOKENCA,
-			gas: 300000,
-			data: data,
-		};
-
-		try {
-			const signedTx = await caver.klay.accounts.signTransaction(
-				tx,
-				serverPrivateKey
-			);
-			console.log('----- setForSale function start ----');
-			const hash = await caver.klay.sendSignedTransaction(
-				signedTx.rawTransaction
-			);
->>>>>>> upstream/main
 
 			if (role === 0) {
 				console.log('admint setForSell');
@@ -893,23 +818,10 @@ module.exports = {
 			);
 			if (endHash) {
 				const data = await nftContract.methods.end(tokenId).encodeABI();
-<<<<<<< HEAD
-				const nonce = await web3.eth.getTransactionCount(
-					serverAddress,
-					'latest'
-				);
-				const gasprice = await web3.eth.getGasPrice();
-				const gasPrice = Math.round(
-					Number(gasprice) + Number(gasprice / 10)
-				);
-					const tx = {
-						from: serverAddress,
-=======
 				
 				const tx = {
 					type: 'FEE_DELEGATED_SMART_CONTRACT_EXECUTION',
 					from: ownerPublic,
->>>>>>> upstream/main
 					to: process.env.NFTTOKENCA,
 					gas: 300000,
 					data: data,
