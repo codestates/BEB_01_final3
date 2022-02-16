@@ -7,7 +7,7 @@ const AuctionModal = ({ check, modalInfo, userInfo }) => {
     const [Auctionsell, setsellPrice] = useState("");
     
     const publicKey = userInfo.publicKey
-    
+    const privateKey = userInfo.privateKey
     
 
     function sell(tokenId, imgUri) {
@@ -15,7 +15,7 @@ const AuctionModal = ({ check, modalInfo, userInfo }) => {
       if (userInfo.image === imgUri) {
         axios.post("/api/contract/nft/auction", {
           tokenId,
-          privateKey: userInfo.privateKey,
+          privateKey,
           Auctionsell,
           publicKey,
           userInfo
@@ -30,7 +30,7 @@ const AuctionModal = ({ check, modalInfo, userInfo }) => {
       axios
           .post("/api/contract/nft/auction", {
             tokenId,
-            Auctionsell,
+            privateKey,
             publicKey,
             Auctionsell
           })

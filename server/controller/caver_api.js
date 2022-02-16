@@ -261,69 +261,41 @@ module.exports = {
 
 		const user = await User.findOne({ _id: req.user._id }).exec();
 
-		const nonce1 = await caver.klay.getTransactionCount(
-			// user.publicKey,
-			serverAddress,
-			'latest'
-		);
-
-		// const inputWT = web3.utils.toWei(nwtAmount, 'ether');
-
-		const data1 = await wtContract.methods
-			.approveToken(user.publicKey, process.env.SWAPCA)
-			.encodeABI();
-
-		// const data1 = await wtContract.methods
-		// 	.approve(process.env.SWAPCA, inputWT)
-		// 	.encodeABI();
-
-		const gasPrice1 = await caver.klay.getGasPrice();
-
-		const gasPricee = Math.round(
-			Number(gasPrice1) + Number(gasPrice1 / 30)
-		);
-
 		const tx1 = {
-			from: serverAddress,
+			type: 'FEE_DELEGATED_SMART_CONTRACT_EXECUTION',
+			from: user.publicKey,
 			to: process.env.WTTOKENCA,
-			nonce: nonce1,
-			gasPrice: gasPrice1,
-			// gasPrice: gasPrice1,
-			gas: 500000,
-			data: data1,
+			gas: '300000',
+			data: wtContract.methods
+				.approveToken(user.publicKey, process.env.SWAPCA)
+				.encodeABI(),
 		};
 
 		const signedTx1 = await caver.klay.accounts.signTransaction(
 			tx1,
-			serverPrivateKey
+			user.privateKey
 		);
 
+		const feePayerSignedTx1 =
+			await caver.klay.accounts.feePayerSignTransaction(
+				signedTx1.rawTransaction,
+				serverAddress,
+				serverPrivateKey
+			);
+
 		await caver.klay
-			.sendSignedTransaction(signedTx1.rawTransaction)
+			.sendSignedTransaction(feePayerSignedTx1.rawTransaction)
 			.on('receipt', async (txHash) => {
 				// console.log(txHash);
 				console.log('유저 approve 성공');
 				try {
-					const nonce2 = await caver.klay.getTransactionCount(
-						// user.publicKey,
-						serverAddress,
-						'latest'
-					);
-
-					const data2 = await nwtContract.methods
-						.approveToken(serverAddress, process.env.SWAPCA)
-						.encodeABI();
-
-					const gasPrice2 = await caver.klay.getGasPrice();
-
 					const tx2 = {
 						from: serverAddress,
 						to: process.env.NWTTOKENCA,
-						nonce: nonce2,
-						gasPrice: gasPrice2,
-						// gasPrice: gasPrice1,
-						gas: 500000,
-						data: data2,
+						gas: '300000',
+						data: nwtContract.methods
+							.approveToken(serverAddress, process.env.SWAPCA)
+							.encodeABI(),
 					};
 					const signedTx2 = await caver.klay.accounts.signTransaction(
 						tx2,
@@ -335,33 +307,20 @@ module.exports = {
 							console.log('유저, 서버 둘다 approve 성공');
 
 							try {
-								const nonce3 =
-									await caver.klay.getTransactionCount(
-										// user.publicKey,
-										serverAddress,
-										'latest'
-									);
-								const data3 = await swapContract.methods
-									.swap(
-										parseInt(nwtAmount),
-										user.publicKey,
-										process.env.SWAPCA,
-										process.env.WTTOKENCA,
-										process.env.NWTTOKENCA
-									)
-									.encodeABI();
-
-								const gasPrice3 =
-									await caver.klay.getGasPrice();
-
 								const tx3 = {
 									from: serverAddress,
 									to: process.env.SWAPCA,
-									nonce: nonce3,
-									gasPrice: gasPrice3,
 									// gasPrice: gasPrice1,
-									gas: 500000,
-									data: data3,
+									gas: '300000',
+									data: swapContract.methods
+										.swap(
+											parseInt(nwtAmount),
+											user.publicKey,
+											process.env.SWAPCA,
+											process.env.WTTOKENCA,
+											process.env.NWTTOKENCA
+										)
+										.encodeABI(),
 								};
 								const signedTx3 =
 									await caver.klay.accounts.signTransaction(
@@ -576,20 +535,20 @@ module.exports = {
 		if (server.role === 1) {
 			try {
 				let dataWT = await wtContract.methods.totalSupply().call();
-				let totalWt = caver.utils.fromWei(dataWT, 'ether'); // 총 발행된 wt tokens
+				let totalWt = caver.utils.fromPeb(dataWT, 'KLAY'); // 총 발행된 wt tokens
 
 				let dataNWT = await nwtContract.methods.totalSupply().call();
-				let totalNwt = caver.utils.fromWei(dataNWT, 'ether'); // 총 발행된 nwt tokens
+				let totalNwt = caver.utils.fromPeb(dataNWT, 'KLAY'); // 총 발행된 nwt tokens
 
 				let data_server_WT = await wtContract.methods
 					.balanceOf(serverAddress) // 관리자 추가 생기면 server.publicKey로 교체
 					.call();
-				let server_WT = caver.utils.fromWei(data_server_WT, 'ether'); // server wt tokens
+				let server_WT = caver.utils.fromPeb(data_server_WT, 'KLAY'); // server wt tokens
 
 				let data_server_NWT = await nwtContract.methods
 					.balanceOf(serverAddress) // 관리자 추가 생기면 server.publicKey로 교체
 					.call();
-				let server_NWT = caver.utils.fromWei(data_server_NWT, 'ether'); // server nwt tokens
+				let server_NWT = caver.utils.fromPeb(data_server_NWT, 'KLAY'); // server nwt tokens
 
 				let data = {
 					totalWT: totalWt,
@@ -763,10 +722,10 @@ module.exports = {
 					.call();
 				// token total
 				totalCurrentWT += parseInt(
-					web3.utils.fromWei(serverWT, 'ether')
+					caver.utils.fromPeb(serverWT, 'KLAY')
 				);
 				totalCurrentNWT += parseInt(
-					web3.utils.fromWei(serverNWT, 'ether')
+					caver.utils.fromPeb(serverNWT, 'KLAY')
 				);
 
 				checkAuth = await wtContract.methods
@@ -816,6 +775,7 @@ module.exports = {
 			});
 		} catch (err) {
 			console.log('DB에서 불러오지 못 함');
+			// console.log(err);
 			res.json({ success: false, message: '디비에서 불러오지 못 함' });
 		}
 	},

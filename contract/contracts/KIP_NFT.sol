@@ -5,9 +5,9 @@ import "../klaytn-contracts-master/contracts/token/KIP7/KIP7.sol";
 import "../klaytn-contracts-master/contracts/token/KIP17/KIP17.sol";
 import "../klaytn-contracts-master/contracts/drafts/Counters.sol";
 import "../klaytn-contracts-master/contracts/token/KIP17/KIP17Full.sol";
-import "../klaytn-contracts-master/contracts/ownership/Ownable.sol";
 
-    contract WATTONFT is KIP17Full, Ownable {  
+
+    contract WATTONFT is KIP17Full{  
         using Counters for Counters.Counter;
         Counters.Counter private _tokenIds;
 

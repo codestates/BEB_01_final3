@@ -336,15 +336,6 @@
 			},
 			{
 				"constant": false,
-				"inputs": [],
-				"name": "renounceOwnership",
-				"outputs": [],
-				"payable": false,
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"constant": false,
 				"inputs": [
 					{
 						"name": "nftId",
@@ -363,34 +354,6 @@
 				"outputs": [],
 				"payable": false,
 				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "owner",
-				"outputs": [
-					{
-						"name": "",
-						"type": "address"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": true,
-				"inputs": [],
-				"name": "isOwner",
-				"outputs": [
-					{
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"payable": false,
-				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -532,20 +495,6 @@
 				],
 				"payable": false,
 				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"constant": false,
-				"inputs": [
-					{
-						"name": "newOwner",
-						"type": "address"
-					}
-				],
-				"name": "transferOwnership",
-				"outputs": [],
-				"payable": false,
-				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -719,23 +668,6 @@
 				"inputs": [
 					{
 						"indexed": true,
-						"name": "previousOwner",
-						"type": "address"
-					},
-					{
-						"indexed": true,
-						"name": "newOwner",
-						"type": "address"
-					}
-				],
-				"name": "OwnershipTransferred",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": true,
 						"name": "from",
 						"type": "address"
 					},
@@ -829,15 +761,9 @@
 					},
 					"return": "bool whether the given operator is approved by the given owner"
 				},
-				"isOwner()": {
-					"details": "Returns true if the caller is the current owner."
-				},
 				"name()": {
 					"details": "Gets the token name.",
 					"return": "string representing the token name"
-				},
-				"owner()": {
-					"details": "Returns the address of the current owner."
 				},
 				"ownerOf(uint256)": {
 					"details": "Gets the owner of the specified token ID.",
@@ -845,9 +771,6 @@
 						"tokenId": "uint256 ID of the token to query the owner of"
 					},
 					"return": "address currently marked as the owner of the given token ID"
-				},
-				"renounceOwnership()": {
-					"details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner.     * > Note: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner."
 				},
 				"safeTransferFrom(address,address,uint256)": {
 					"details": "Safely transfers the ownership of a given token ID to another address If the target address is a contract, it must implement `onKIP17Received`, which is called upon a safe transfer, and return the magic value `bytes4(keccak256(\"onKIP17Received(address,address,uint256,bytes)\"))`; otherwise, the transfer is reverted. Requires the msg.sender to be the owner, approved, or operator",
@@ -912,9 +835,6 @@
 						"to": "address to receive the ownership of the given token ID",
 						"tokenId": "uint256 ID of the token to be transferred"
 					}
-				},
-				"transferOwnership(address)": {
-					"details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
 				}
 			}
 		},
@@ -936,9 +856,9 @@
 	},
 	"sources": {
 		"contract/contracts/KIP_NFT.sol": {
-			"keccak256": "0x813512a31df9cd466826e3dbacc94592a5b83ce2bc29590e6a21b00873de3600",
+			"keccak256": "0x164bb28981a0217918066fd07e924ac38b0d424678bd1453ba3ecc4501fb9d02",
 			"urls": [
-				"bzzr://459e62c59fbb4bba5f9ab70c11650bd344b03aae5ab46840ef8367409963671e"
+				"bzzr://4d3a0a829f803c01891d70c4b555e6d34765a252e2dba12ba2d0eabc22ebd564"
 			]
 		},
 		"contract/klaytn-contracts-master/contracts/drafts/Counters.sol": {
@@ -963,12 +883,6 @@
 			"keccak256": "0x640b6dee7a4b830bdfd52b5031a07fc2b12209f5b2e29e5d364a7d37f69d8076",
 			"urls": [
 				"bzzr://292843005e754e752644f767477ec5ad7a1ffc91ddb18c38b8079c62f3993cad"
-			]
-		},
-		"contract/klaytn-contracts-master/contracts/ownership/Ownable.sol": {
-			"keccak256": "0xc9b4f8e4eeaab9ef9d0f83e2ab2ba2b0808115cf5e5d1e4d1a6bb94b0753b495",
-			"urls": [
-				"bzzr://f5b1c257ce6b6586c16aa6c515d0bf9f7f53bf870fff3abf4224b072ec11a447"
 			]
 		},
 		"contract/klaytn-contracts-master/contracts/token/KIP17/IERC721Receiver.sol": {
